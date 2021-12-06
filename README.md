@@ -55,7 +55,7 @@ https://pypi.org/project/pipx/
       $ python3 -m pip install --user -U pipx
       
 ## Etape 2 : installer virtualenv 
-https://virtualenv.pypa.io/en/stable/
+      https://virtualenv.pypa.io/en/stable/
       $ pipx install virtualenv
 
 ## Etape 3 : créer l'environnement virtuel dans le repertoire
