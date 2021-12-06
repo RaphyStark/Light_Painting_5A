@@ -1,7 +1,4 @@
 Hello team Light Painting
 
-$ git add README.md
 
-$ git commit -m 'modification README.md'
-
-$ git push
+This is the README.md from master branch
