@@ -50,6 +50,7 @@ cf. https://stackoverflow.com/questions/41992104/usr-bin-python-vs-usr-local-bin
 
 ## Etape 1 : installer pipx
       (cf. https://pypi.org/project/pipx/)
+      (Utiliser brew sur MacOS, voir dans le lien)
       $ python3 -m pip install --user pipx
       $ python3 -m pipx ensurepath
       $ python3 -m pip install --user -U pipx
