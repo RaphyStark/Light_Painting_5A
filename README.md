@@ -48,27 +48,28 @@ cf. https://stackoverflow.com/questions/41992104/usr-bin-python-vs-usr-local-bin
 
 #### Installation de virtualenv : 
 
-## Etape 1 : installer pipx
+#### Etape 1 : installer pipx
       (cf. https://pypi.org/project/pipx/)
       (Utiliser brew sur MacOS, voir dans le lien)
       $ python3 -m pip install --user pipx
       $ python3 -m pipx ensurepath
       $ python3 -m pip install --user -U pipx
       
-## Etape 2 : installer virtualenv 
+#### Etape 2 : installer virtualenv 
       (cf. https://virtualenv.pypa.io/en/stable/)
       $ pipx install virtualenv
 
-## Etape 3 : créer l'environnement virtuel dans le repertoire
+#### Etape 3 : créer l'environnement virtuel dans le repertoire
       $ virtualenv -p python3 .
-      $ virtualenv -p python3 <desired-path> (depuis ailleurs)
+      OU $ virtualenv -p python3 <desired-path> (depuis ailleurs)
       $ source ./bin/activate
-      $ source <desired-path>/bin/activate (depuis ailleurs)
+      OU $ source <desired-path>/bin/activate (depuis ailleurs)
 
-## Etape 4 : sélectionner l'environnement virtuel fraichement créé dans VSCode
+#### Etape 4 : sélectionner l'environnement virtuel fraichement créé dans VSCode
 En cliquant sur python en bas à gauche
 
 
 
-#### Installation d'Open CV
+#### Installation d'Open CV dans l'environnement virtuel
+Après avoir mis en place le virtualenv et l'avoir sélectionné comme interpréteur dans VSCode
         $ pip install opencv-python
