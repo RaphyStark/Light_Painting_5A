@@ -1,6 +1,4 @@
 Hello team Light Painting
 
 
-
-rgg
-
+This is the README.md from master branch
