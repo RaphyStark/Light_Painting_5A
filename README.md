@@ -72,4 +72,4 @@ En cliquant sur python en bas à gauche
 
 ## Installation d'Open CV dans l'environnement virtuel
 Après avoir mis en place le virtualenv et l'avoir sélectionné comme interpréteur dans VSCode
-        $ pip install opencv-python
+      $ pip install opencv-python
