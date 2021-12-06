@@ -1,4 +1,4 @@
-Hello team
+Hello team Light Painting
 
 $ git add README.md
 
