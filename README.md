@@ -15,7 +15,7 @@
         $ git push
 
 
-## Comment récupérer un dossier du master vers une branch
+## Récupérer un dossier du master vers une branch
         $ git checkout <branch_name>
         $ git stash (si besoin)
         $ git checkout <branch_name>
