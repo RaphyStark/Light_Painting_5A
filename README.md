@@ -24,3 +24,9 @@
         $ git commit -m 'modif README.md'
         $ git push
         $ git merge origin/master
+        $ git fetch
+        $ git push
+        $ git pull (résoudre les problèmes dans la fenêtre vsc (accept upcoming changes)
+        $ git add README.md
+        $ git commit -m 'update after merge'
+       
