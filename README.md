@@ -64,5 +64,5 @@ cf. https://stackoverflow.com/questions/41992104/usr-bin-python-vs-usr-local-bin
       $ source ./bin/activate
       $ source <desired-path>/bin/activate (depuis ailleurs)
 
-## Etape 4 : sélectionner l'environnement virtuel fraichement crée depuis VSCode
+## Etape 4 : sélectionner l'environnement virtuel fraichement créé dans VSCode
 En cliquant sur python en bas à gauche
