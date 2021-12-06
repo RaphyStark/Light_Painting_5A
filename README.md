@@ -46,6 +46,23 @@ cf. https://stackoverflow.com/questions/41992104/usr-bin-python-vs-usr-local-bin
 “If it's a virtualenv, that also makes cleanup easier; just delete the virtualenv when you no longer need it as opposed to trying to uninstall libraries installed at the system level.”
 
 
-#### Installation de virtualenv : https://virtualenv.pypa.io/en/stable/
+#### Installation de virtualenv : 
 
+## Etape 1 : installer pipx
+https://pypi.org/project/pipx/
+      $ python3 -m pip install --user pipx
+      $ python3 -m pipx ensurepath
+      $ python3 -m pip install --user -U pipx
+      
+## Etape 2 : installer virtualenv 
+https://virtualenv.pypa.io/en/stable/
+      $ pipx install virtualenv
 
+## Etape 3 : créer l'environnement virtuel dans le repertoire
+      $ virtualenv -p python3 .
+      $ virtualenv -p python3 <desired-path> (depuis ailleurs)
+      $ source ./bin/activate
+      $ source <desired-path>/bin/activate (depuis ailleurs)
+
+## Etape 4 : sélectionner l'environnement virtuel fraichement crée depuis VSCode
+En cliquant sur python en bas à gauche
