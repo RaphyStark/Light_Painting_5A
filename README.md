@@ -67,3 +67,8 @@ cf. https://stackoverflow.com/questions/41992104/usr-bin-python-vs-usr-local-bin
 
 ## Etape 4 : sélectionner l'environnement virtuel fraichement créé dans VSCode
 En cliquant sur python en bas à gauche
+
+
+
+#### Installation d'Open CV
+        $ pip install opencv-python
