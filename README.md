@@ -49,7 +49,7 @@ cf. https://stackoverflow.com/questions/41992104/usr-bin-python-vs-usr-local-bin
 #### Installation de virtualenv : 
 
 ## Etape 1 : installer pipx
-https://pypi.org/project/pipx/
+      (cf. https://pypi.org/project/pipx/)
       $ python3 -m pip install --user pipx
       $ python3 -m pipx ensurepath
       $ python3 -m pip install --user -U pipx
