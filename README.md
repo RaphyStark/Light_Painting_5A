@@ -29,6 +29,10 @@ Pour corriger cette dernière erreur, il faut changer l'import dans le fichier s
 L'erreur relative à l'import du json disparait mais de nouvelles aparaissent.
 Il semblerait donc que ce tutoriel a été mis en place avec une version trop ancienne de json et qu'il serait alors plus utilisable.
 
+https://forum.raspberry-pi.fr/t/resolu-raspberry-plus-nrf24l01/11219
+
+Ce topic soulève justement le fait que la librairie n'existe plus
+
 
 https://forum.arduino.cc/t/simple-nrf24l01-2-4ghz-transceiver-demo/405123
 
@@ -83,6 +87,10 @@ La dernière partie du tutoriel fournit des indications pour améliorer le dispo
 
 
 https://tlfong01.blog/2020/01/24/raspberry-pi-3-tutorial-14-wireless-pi-to-arduino-communication-with-nrf24l01/
+
+
+
+https://nrf24.github.io/RF24/md_docs_linux_install.html
 
 
 TODO : trouver un tutoriel permettant de mettre en place la liaison radio entre la Raspberry Pi et l'Arduino.
