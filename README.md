@@ -1,9 +1,13 @@
 # README master
 
-#### Hello team Light Painting
+# Instructions générales sur la mise en plac de l'environnement Arduino
+Installer Arduino sur son PC.
+Sur Ubuntu :
+        $ sudo snap install arduino
+        $ sudo usermod -a -G dialout $USER
+        
 
-
-
+# Instructions générales sur la mise en place de l'environnement de travail (git ...)
 
 ## Envoyer un gros fichier sur git
   https://git-lfs.github.com/
