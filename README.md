@@ -19,18 +19,22 @@ Cliquer sur "Importer bibliothèque", "Ajouter librairie".
 Taper nrf24L01 dans le champ de recherche et sélectionner RF24.
 
 ## Environnement RaspberryPi avec NRF24L01
-Bien que le lien suivant est une impasse, il fournit les schémas des branchements des modules :
+
 https://forums.framboise314.fr/viewtopic.php?f=44&t=1284
+
+Ce tutoriel ne fonctionne pas :
 D'abord la librairie libjson0-dev n'existe plus.
 Et lorsqu'on la remplace par libjson11-1 (ou encore libjson11-1-dev), on obtient une nouvelle erreur lors de l'execution de la commande make.
 Pour corriger cette dernière erreur, il faut changer l'import dans le fichier sender.cpp que le tutoriel demande de télécharger.
 L'erreur relative à l'import du json disparait mais de nouvelles aparaissent.
 Il semblerait donc que ce tutoriel a été mis en place avec une version trop ancienne de json et qu'il serait alors plus utilisable.
 
-Second tuto essayé :
+
 https://forum.arduino.cc/t/simple-nrf24l01-2-4ghz-transceiver-demo/405123
+
 Ce lien ne permet que de faire communiquer deux Arduino ensemble.
-Il fournit néanmois les informations suivantes :
+Il fournit néanmoins les schémas des branchements des modules.
+Ainsi que les informations suivantes :
 - il est important d'utiliser une capa lorsqu'on utilise la puce Atmega328 sur une breadboard.
 Etant donné que la puce est sur une carte Arduino cela n'est pas obligatoire pour le bon fonctionnement du module (même sur une UNO).
 - ainsi que des informations techniques sur les modules
