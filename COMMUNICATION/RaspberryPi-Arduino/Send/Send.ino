@@ -25,8 +25,7 @@ void loop(void)
 {
   radio.startListening();
   Serial.println("Starting loop. Turning on the radio");
-  char receivedMessage[32] = {
-    0  };
+  char receivedMessage[32] = {0};
   if (radio.available()) 
   {
     radio.read(receivedMessage, sizeof(receivedMessage));

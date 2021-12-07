@@ -3,7 +3,9 @@ from lib_nrf24 import NRF24
 import time
 import spidev
 GPIO.setmode(GPIO.BCM)
+
 pipes = [[0xE8E8F0F0E1], [0xF0F0F0F0E1]]
+
 radio = NRF24(GPIO, spidev.SpiDev())
 radio.begin(0, 17)
 radio.setPayloadSize(32)
@@ -16,6 +18,8 @@ radio.enableAckPayload()
 radio.openWritingPipe(pipes[0])
 radio.openReadingPipe(1, pipes[1])
 radio.printDetails()
+
+
 
 message = list("GETSTRING")
 while len(message) <= 32:

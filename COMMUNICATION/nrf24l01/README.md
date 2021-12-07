@@ -1,0 +1,1 @@
+Ce dossier doit être copié à la racine de la RaspberryPi
