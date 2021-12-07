@@ -5,8 +5,8 @@
 
 // objects for motors encoders
 #include <Encoder.h>
-  Encoder leftEnc(19, 18);
-  Encoder rightEnc(20, 21);
+Encoder leftEnc(19, 18);
+Encoder rightEnc(20, 21);
 
 /*
 byte inducPin;
