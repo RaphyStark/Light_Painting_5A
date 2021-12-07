@@ -93,6 +93,11 @@ https://tlfong01.blog/2020/01/24/raspberry-pi-3-tutorial-14-wireless-pi-to-ardui
 https://nrf24.github.io/RF24/md_docs_linux_install.html
 
 
+http://electroniqueamateur.blogspot.com/2017/02/communication-entre-raspberry-pi-et.html
+
+Utiliser les codes de ce site.
+Un commentaire fourni également une bonne info :
+Pour vérifier la communication j'ai ajouté coté Arduino et coté Raspberry PI la commande radio.printDetails(). Bien vérifier les adresses RX_ADDR_P0-1 coté Arduino et TXADDR coté Raspberry PI sont le mêmes. Vérifier également la vitesse Data rate.
 TODO : trouver un tutoriel permettant de mettre en place la liaison radio entre la Raspberry Pi et l'Arduino.
 
 
