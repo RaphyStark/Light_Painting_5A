@@ -42,6 +42,46 @@ Both TX and RX must use the same channel. The default channel for the RF24 libra
 When the TX sends a message every RX listening on the same channel will receive the message. The TX includes an “address” in the message and the RX will ignore messages that do not have its address. The address is similar in concept to a phone number except that you cannot easily change the number of your phone. The address is a 5 byte number.
 
 
+https://forum.arduino.cc/t/communication-sans-fil-arduino-raspberry/197354/3
+Cette page ne fournie pas beaucoup d'informations si ce n'est qu'il est possible de retranscrire un code pour Arduino en un code pour RPi à l'aide de wiringpi par exemple, en utilisant les ports GPIO et I2C.
+
+Les réponses fournies à la question posée redirigent vers plusieurs sites internets, notamment :
+https://www.carnetdumaker.net/articles/communiquer-sans-fil-avec-un-module-nrf24l01-la-bibliotheque-mirf-et-une-carte-arduino-genuino/
+Ce site utilise la bibliothèque mirf, qui permet une communication bidirectionnelle.
+Ainsi que ce site:
+https://www.carnetdumaker.net/articles/communiquer-sans-fil-en-433mhz-avec-la-bibliotheque-virtualwire-et-une-carte-arduino-genuino/
+Qui utilise la bibliothèque virtualwire.
+
+
+https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
+
+Cette page explique le fonctionnement du module nrf24l01.
+
+Il compare également les deux versions de module nrf24l01 :
+- nrf24l01 + wireless module (la version compacte que nous avons avec une antenne intégrée)
+- nrf24l01 + PA/LNA module (version avec antenne externe et une chip pour gérer le PA/LNA & transmission-reception)
+La différence est que cette dernière version permet une transmission sur 1000m (pas utile pour notre projet).
+
+Il explique également comment se fait la transaction avec accusé de reception et interruption (IRQ) :
+Transaction with acknowledgement and interrupt :
+The transmitter starts a communication by sending a data packet to the receiver. 
+Once the whole packet is transmitted, it waits (around 130 µs) for the acknowledgement packet (ACK packet) to receive. 
+When the receiver receives the packet, it sends ACK packet to the transmitter. 
+On receiving the ACK packet the transmitter asserts interrupt (IRQ) signal to indicate the new data is available.
+
+Il y a également un paragraphe pour les branchements :
+CTRL-F : "Wiring – Connecting nRF24L01+ transceiver module to Arduino UNO"
+
+Ainsi qu'un autre paragraphe pour la mise en place de l'environnement :
+CTRL-F : "RF24 Arduino Library for nRF24L01+ Module"
+
+Enfin, il fournit les codes pour la communication entre deux Arduinos (un transmitter et un receiver)
+CTRL-F : "Arduino Code – For Transmitter"
+CTRL-F : "Arduino Code – For Receiver"
+
+La dernière partie du tutoriel fournit des indications pour améliorer le dispositif si des problèmes survenaient.
+
+
 TODO : trouver un tutoriel permettant de mettre en place la liaison radio entre la Raspberry Pi et l'Arduino.
 
 
