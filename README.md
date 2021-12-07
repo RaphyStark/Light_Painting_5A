@@ -82,6 +82,9 @@ CTRL-F : "Arduino Code – For Receiver"
 La dernière partie du tutoriel fournit des indications pour améliorer le dispositif si des problèmes survenaient.
 
 
+https://tlfong01.blog/2020/01/24/raspberry-pi-3-tutorial-14-wireless-pi-to-arduino-communication-with-nrf24l01/
+
+
 TODO : trouver un tutoriel permettant de mettre en place la liaison radio entre la Raspberry Pi et l'Arduino.
 
 
