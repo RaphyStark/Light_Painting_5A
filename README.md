@@ -19,12 +19,15 @@ Cliquer sur "Importer bibliothèque", "Ajouter librairie".
 Taper nrf24L01 dans le champ de recherche et sélectionner RF24.
 
 ## Environnement RaspberryPi avec NRF24L01
-Ce lien est une impasse : https://forums.framboise314.fr/viewtopic.php?f=44&t=1284
+Bien que le lien suivant est une impasse, il fournit les schémas des branchements des modules :
+https://forums.framboise314.fr/viewtopic.php?f=44&t=1284
 D'abord la librairie libjson0-dev n'existe plus.
 Et lorsqu'on la remplace par libjson11-1 (ou encore libjson11-1-dev), on obtient une nouvelle erreur lors de l'execution de la commande make.
 Pour corriger cette dernière erreur, il faut changer l'import dans le fichier sender.cpp que le tutoriel demande de télécharger.
 L'erreur relative à l'import du json disparait mais de nouvelles aparaissent.
 Il semblerait donc que ce tutoriel a été mis en place avec une version trop ancienne de json et qu'il serait alors plus utilisable.
+
+
 
 TODO : trouver un tutoriel permettant de mettre en place la liaison radio entre la Raspberry Pi et l'Arduino.
 
