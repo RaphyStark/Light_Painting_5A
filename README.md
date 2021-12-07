@@ -27,6 +27,15 @@ Pour corriger cette dernière erreur, il faut changer l'import dans le fichier s
 L'erreur relative à l'import du json disparait mais de nouvelles aparaissent.
 Il semblerait donc que ce tutoriel a été mis en place avec une version trop ancienne de json et qu'il serait alors plus utilisable.
 
+Second tuto essayé :
+https://forum.arduino.cc/t/simple-nrf24l01-2-4ghz-transceiver-demo/405123
+Ce lien ne permet que de faire communiquer deux Arduino ensemble.
+Il fournit néanmois les informations suivantes :
+- il est important d'utiliser une capa lorsqu'on utilise la puce Atmega328 sur une breadboard.
+Etant donné que la puce est sur une carte Arduino cela n'est pas obligatoire pour le bon fonctionnement du module (même sur une UNO).
+- ainsi que des informations techniques sur les modules
+Both TX and RX must use the same channel. The default channel for the RF24 library is 76.
+When the TX sends a message every RX listening on the same channel will receive the message. The TX includes an “address” in the message and the RX will ignore messages that do not have its address. The address is similar in concept to a phone number except that you cannot easily change the number of your phone. The address is a 5 byte number.
 
 
 TODO : trouver un tutoriel permettant de mettre en place la liaison radio entre la Raspberry Pi et l'Arduino.
