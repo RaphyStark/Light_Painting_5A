@@ -1,7 +1,7 @@
 //SendReceive.ino
-#include<SPI.h>
+#include <SPI.h>
 #include <nRF24L01.h>
-#include<RF24.h>
+#include <RF24.h>
 // CE, CSN pins
 RF24 radio(9, 10);
 
