@@ -178,7 +178,25 @@ En cliquant sur python en bas à gauche
 
 
 # Workflow GIT
-## Installer Visual Studio Code
+## Installer Visual Studio Code (ou pas)
+
+# Cloner le repo distant en local
+
+Attention, dans la section "Adding your SSH key to the ssh-agent" il y a une coquille
+Ils demande de copier la clé sans préciser qu'il s'agit de la clé publique
+La commande pour récupérer la clé publique n'est donc pas :
+        $ cat ~/.ssh/id_ed25519
+Mais
+        $ cat ~/.ssh/id_ed25519.pub
+
+Suivre le tuto pour générer la clé sur son PC à l'adresse :
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+Une fois la clé ssh de son pc ajoutée sur git, taper la commande pour cloner le repo en local :
+        $ git clone git@github.com:RaphyStark/Light_Painting_5A.git
+
+
+
 ## Envoyer un gros fichier sur git
   https://git-lfs.github.com/
 ## Créer et push un fichier
