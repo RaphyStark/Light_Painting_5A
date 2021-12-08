@@ -1,10 +1,10 @@
-Pin de l'arduino MEGA pour le code tmrh20Arduinocode
+Pin de l'arduino MEGA pour le code tmrh20Arduinocode et gettingstarted.cpp
 
-MODULE  -> MEGA
-1       ->GND
-2       ->3.3V
-3       ->7
-4       ->8
-5       ->52
-6       ->51
-7       ->50
+MODULE  -> MEGA -> RPI
+1       ->GND   -> 17
+2       ->3.3V  -> 20
+3       ->7     -> 15
+4       ->8     -> 24
+5       ->52    -> 23
+6       ->51    -> 19
+7       ->50    -> 21
