@@ -15,13 +15,13 @@ pixel_list =[]
 #Gestion des frames de la vidéo
 def gestion_frame():
       
-    cap = cv.VideoCapture('C:/Users/Falitiana/Documents/Python Scripts/E.mp4')
+    cap = cv.VideoCapture(0)
     success, frame = cap.read()
     currentframe = 0
 
     # créer un dossiers pour stocker les frames s'il n'existe pas 
-    if not os.path.exists('C:/Users/Falitiana/Documents/Python Scripts/frames'):
-        os.mkdir('C:/Users/Falitiana/Documents/Python Scripts/frames')
+    if not os.path.exists('frames'):
+        os.mkdir('frames')
     print(success)
     while success:
     # Capture frame-by-frame
@@ -32,7 +32,7 @@ def gestion_frame():
             break
     
     #cv.imshow("output", frame)
-        cv.imwrite('C:/Users/Falitiana/Documents/Python Scripts/frames/'+str(currentframe)+ '.jpg', frame)  # save frame as JPEG file
+        cv.imwrite('frames/'+str(currentframe)+ '.jpg', frame)  # save frame as JPEG file
         print ("Frame number: ", currentframe)
         calcul_coord(frame)
         print(" ")
