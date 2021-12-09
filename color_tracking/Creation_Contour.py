@@ -6,13 +6,9 @@ Created on Wed Nov 10 16:28:06 2021
 """
 
 from __future__ import print_function
-
 import cv2 as cv
-
 import numpy as np
-
 import argparse
-
 import random as rng
 
 rng.seed(12345)
@@ -20,26 +16,20 @@ rng.seed(12345)
 
 
 def thresh_callback(val):
-
     threshold = val
-
 # Detect edges using Canny
-
     canny_output = cv.Canny(src_gray, threshold, threshold * 2)
 
 # Find contours, RETR_TREE, RETR_LIST, RETR_EXTERNAL and RETR_CCOMP
-
     contours, hierarchy = cv.findContours(canny_output, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
 
 # Draw contours
-
     drawing = np.zeros((canny_output.shape[0], canny_output.shape[1], 3), dtype=np.uint8)
 
     for i in range(len(contours)):
 
         color = (rng.randint(0,256), rng.randint(0,256), rng.randint(0,256))
         cv.drawContours(drawing, contours, i, color, 2, cv.LINE_8)
-
 
 # Show in a window
     cv.imshow('Contours', drawing)
@@ -48,7 +38,7 @@ def thresh_callback(val):
 
 parser = argparse.ArgumentParser(description='Code for Finding contours in your image tutorial.')
     
-parser.add_argument('--input', help='Path to input image.', default='mandala.jpg')
+parser.add_argument('--input', help='Path to input image.', default='./frames/123.jpg')
 
 args = parser.parse_args()
 src = cv.imread(cv.samples.findFile(args.input))

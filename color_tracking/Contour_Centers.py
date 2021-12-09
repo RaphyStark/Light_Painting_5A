@@ -23,19 +23,13 @@ def thresh_callback(val):
 
     threshold = val
 
-
-
 # convert the image to grayscale
-
     gray_image = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
 # convert the grayscale image to binary image
-
     ret,thresh = cv.threshold(gray_image,127,255,0)
 
-
 # find contours in the binary image
-
     im2, contours, hierarchy = cv.findContours(threshold,cv.RETR_EXTERNAL,cv.CHAIN_APPROX_SIMPLE)
 
     for c in contours:
@@ -70,11 +64,14 @@ parser.add_argument('--input', help='Path to input image.', default='mandala.jpg
 args = parser.parse_args()
 src = cv.imread(cv.samples.findFile(args.input))
 
+
+
 if src is None:
 
     print('Could not open or find the image:', args.input)
 
     exit(0)
+
 
 # Convert image to gray and blur it
 
