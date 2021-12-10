@@ -4,6 +4,7 @@ Created on Sun Apr 05 2015
 @author: S. Bertrand
 """
 
+
 import math
 import numpy as np
 import matplotlib.pyplot as plt

@@ -11,6 +11,7 @@ Way Point navigtion
 # WPlist a besoin des coordonées
 
 
+
 import math
 import Robot as rob
 import numpy as np
@@ -125,7 +126,6 @@ for t in simu.t:
         # calcul de Vr (reference vitesse)
         Vr = k1 * np.sqrt((WPManager.xr - robot.x)**2 + (WPManager.yr - robot.y)**2)
 
-
         # calcul de thetar (reference orientation)
         thetar = np.arctan2(WPManager.yr - robot.y,WPManager.xr - robot.x)
 
@@ -176,49 +176,3 @@ carte.plotPathOnMap(path, noFig)
 
 # show plots
 plt.show()
-
-'''
-# Animation *********************************
-fig = plt.figure()
-ax = fig.add_subplot(111, aspect='equal', autoscale_on=False, xlim=(-5, 5), ylim=(-5, 5))
-ax.grid()
-ax.set_xlabel('x (m)')
-ax.set_ylabel('y (m)')
-
-robotBody, = ax.plot([], [], 'o-', lw=2)
-robotDirection, = ax.plot([], [], '-', lw=1, color='k')
-wayPoint, = ax.plot([], [], 'o-', lw=2, color='b')
-time_template = 'time = %.1fs'
-time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
-WPArea, = ax.plot([], [], ':', lw=1, color='b')
-
-thetaWPArea = np.arange(0.0,2.0*math.pi+2*math.pi/30.0, 2.0*math.pi/30.0)
-xWPArea = WPManager.epsilonWP*np.cos(thetaWPArea)
-yWPArea = WPManager.epsilonWP*np.sin(thetaWPArea)
-
-def initAnimation():
-    robotDirection.set_data([], [])
-    robotBody.set_data([], [])
-    wayPoint.set_data([], [])
-    WPArea.set_data([], [])
-    robotBody.set_color('r')
-    robotBody.set_markersize(20)    
-    time_text.set_text('')
-    return robotBody,robotDirection, wayPoint, time_text, WPArea  
-    
-def animate(i):  
-    robotBody.set_data(simu.x[i], simu.y[i])          
-    wayPoint.set_data(simu.xr[i], simu.yr[i])
-    WPArea.set_data(simu.xr[i]+xWPArea.transpose(), simu.yr[i]+yWPArea.transpose())    
-    thisx = [simu.x[i], simu.x[i] + 0.5*math.cos(simu.theta[i])]
-    thisy = [simu.y[i], simu.y[i] + 0.5*math.sin(simu.theta[i])]
-    robotDirection.set_data(thisx, thisy)
-    time_text.set_text(time_template%(i*simu.dt))
-    return robotBody,robotDirection, wayPoint, time_text, WPArea
-
-ani = animation.FuncAnimation(fig, animate, np.arange(1, len(simu.t)),
-    interval=4, blit=True, init_func=initAnimation, repeat=False)
-#interval=25
-
-#ani.save('robot.mp4', fps=15)
-'''
