@@ -7,11 +7,14 @@ Created on Wed Dec  8 10:41:31 2021
 
 from __future__ import print_function
 import cv2 as cv
+import numpy as np
 import random as rng
 import os
-rng.seed(12345)
+import glob
 
-def calcul_coord(frame):
+
+
+def calcul_coord(src):
        
     # convert the image to grayscale
     gray_image = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
@@ -55,7 +58,16 @@ if __name__=='__main__':
     if not os.path.exists('frames'):
         os.mkdir('frames')
 
-    while success:
+    dimX = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
+    dimY = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
+
+
+    frameSize = (dimX, dimY)
+    
+
+    
+
+    while (success and currentframe != 120) :
 
         # Capture frame-by-frame
         success, frame = cap.read()
@@ -76,4 +88,15 @@ if __name__=='__main__':
 
     # When everything done, release the capture
     cap.release()
+
+    
+    #out = cv.VideoWriter('output_video.avi',cv.VideoWriter_fourcc(*'DIVX'), 60, frameSize)
+    out = cv.VideoWriter('out.avi', cv.VideoWriter_fourcc(*'DIVX'), 60, frameSize)
+    
+    for filename in glob.glob('frames/*.jpg'):
+        img = cv.imread(filename)
+        out.write(img)
+
+    out.release()
+
     cv.destroyAllWindows()
