@@ -1,16 +1,17 @@
 import cv2 as cv
+import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 import numpy as np
-#import codes/AStar
+from numpy.lib.type_check import imag
 
-def setup()
+import AStar
+
+
+def setup() :
     cap = cv.VideoCapture(0)
     if not cap.isOpened():
         print("Cannot open camera")
         exit()
-    success, frame = cap.read()
-    if not ret:
-        print("Can't receive frame (stream end?). Exiting ...")
-        break
 
     dimX = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
     dimY = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
@@ -21,15 +22,22 @@ def setup()
     return cap, dimX, dimY
 
 
-def calc_coord()
-    if success :
-        success, frame = cap.read()
+def read_img():
+    success, frame = cap.read()
+    if not success :
+        print("Can't receive frame (stream end?). Exiting ...")
+    return frame
+
+
+def calc_coord(frame) :
 
         # convert the image to grayscale
-        gray_image = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
+        gray_image = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         gray_image = cv.blur(gray_image, (5,3))
 
-        ret,thresh = cv.threshold(gray_image,127,255,0)
+        success,thresh = cv.threshold(gray_image,127,255,0)
+        if not success :
+            print("threshold problem")
 
         # find contours in the binary image
         contours, hierarchy = cv.findContours(thresh,cv.RETR_TREE,cv.CHAIN_APPROX_TC89_KCOS)
@@ -42,8 +50,9 @@ def calc_coord()
             if (M["m00"] != 0) :
                 X = int(M["m10"] / M["m00"])    
                 Y = int(M["m01"] / M["m00"])
-            
+
             return X, Y
+
 
 
 # if __name__=='__main__':
@@ -52,13 +61,102 @@ def calc_coord()
 cap, dimX, dimY = setup()
 
 
+#print(dimX)    # 1280
+#print(dimY)    # 720
+
+
+
+# nombre de colonnes du tableau img
+#dimY = len(img[0])
+
+# nombre de lignes
+#dimX = len(img)
+
+#               1ere colonne    2eme colonne ...    1280e colonne
+# 1ere ligne    occG[0][0]
+# 2eme ligne
+# ...
+# 720                                               occG[719][1279]
+
+dimX = int(dimX)
+dimY = int(dimY)
+
+
+
+#print(dimX)    # 1280
+#print(dimY)    # 720
+
 # 2. Générer une matrice d'occupation aléatoire
-occupancyGrid = np.zeros([dimX, dimY])
-# TODO : générer des obstacles aléatoirement
+img = cv.imread("out3.jpg")
 
 
+
+img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+
+img = cv.GaussianBlur(img, (5,5), 3, 3)
+
+img = cv.Canny(img,170,200, True)
+
+img = cv.threshold(img, 130, 1, 0)
+img = img[1]
+
+#print(img.shape[0])    #890
+#print(img.shape[1])    #970
+
+dimY = int(img.shape[0]/10)
+dimX = int(img.shape[1]/10)
+
+img = cv.resize(img, (dimX, dimY))
+
+
+
+
+#print(len(img[len(img)-1]))
+
+# quand j'affiche la dernière ligne du tableau
+# il m'affiche 128 éléments
+
+wait=[]
+list=[]
+
+#print(img[dimY-1][dimX-1])
+
+# on créé une liste de ligne de la grille
+for y in range(0, dimX):
+    for x in range(0, dimY):
+        wait.append(img[x][y])
+    list.append(wait)
+    wait=[]
+
+list = np.array(list)
+
+#'''
+#occupancyGrid = np.zeros([dimX-1, dimY-1])
+occupancyGrid = list
+# max adjacency degree
+adjacency = 8
+
+# create and plot map
+carte = AStar.Map(dimX, dimY, adjacency)
+carte.initCoordinates()
+
+#carte.generateRandObstacles()
+
+#print("load")
+carte.loadOccupancy(occupancyGrid)
+#print("genere")
+carte.generateGraph()
+
+noFig = 0
+#print("plot")
+carte.plot(noFig)
+plt.show()
+#'''
+
+'''
 # 3. Récupérer les coordonnées initiales du robot
-robot.x0, robot.y0 = calcul_coord(frame)
+frame = read_img()
+x0, y0 = calc_coord(frame)
 
 
 # 4. Trouver le noeud correspondant
@@ -69,6 +167,7 @@ startNodeNo = 0
 # 5. Générer aléatoirement les coordonnées du noeud d'arrivée
 # TODO
 goalNodeNo = 5
+
 
 
 # 6. Générer un chemin avec l'algorithme A*
@@ -114,3 +213,6 @@ for i in range(len(path)):
 
 # When everything done, release the capture
 cap.release()
+
+
+'''
