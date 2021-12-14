@@ -1,28 +1,45 @@
 import cv2 as cv
-import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import numpy as np
-import Robot as rob
-from numpy.lib.type_check import imag
-import AStar
-import Timer as tmr
-import math
-#import Tkinter as tk
-
 from matplotlib.backend_bases import MouseButton
 
+import AStar
+#import Robot as rob
+#import Timer as tmr
+#import matplotlib.patches as patches
+#from numpy.lib.type_check import imag
+#import math
 
+
+
+name = "spirale.jpg"
+
+
+# explications sur certaines parties du code
 # dimX = 27
 # dimY = 25
 # size = dimX*dimY
 # lastNodeNo = size - 1
 # anyNodeNo = (dimX * anyNode.y)  + anyNode.x
 
+
+# eps = 1 : A* calssique
+# eps = 0 : dijskra
+# eps compris entre 0 et 1 : A* pondéré en proba
+# eps > 1 : chemin de plus en plus court
+
+
+# trajecto 9
+# appeler le code de Faly (fonction calc_coord())
+# convertir les coordonnées du pixel lumineux en noeud (à un facteur d'échelle près)
+# 3. Faire correspondre les dimensions de la carte avec celles de la caméra
+
+
+
 class Coord():
     def __init__(self):
-        self.x = 15
-        self.y = 15
-
+        self.x = 0
+        self.y = 0
 
 def onclick(event):
     c_x = event.x
@@ -31,12 +48,10 @@ def onclick(event):
     print(c_y)
     return c_x,c_y
 
-
 def change_res(cap, width, height):
     cap.set(3, width)
     cap.set(4, height)
     return cap
-
 
 def setup(img_X, img_Y) :
     cap = cv.VideoCapture(0)
@@ -67,50 +82,31 @@ def setup(img_X, img_Y) :
 
     return cap, dimX, dimY
 
-
 def read_img():
     success, frame = cap.read()
     if not success :
         print("Can't receive frame (stream end?). Exiting ...")
     return frame
 
-
 def calc_coord() :
-
-    '''
-    # copie du début de la fonction setup()
-    cap = cv.VideoCapture(0)
-    if not cap.isOpened():
-        print("Cannot open camera")
-        exit()
-    '''
-
     success, frame = cap.read()
-
-    #currentframe = 0
-
+    # currentframe = 0
     # convert the image to grayscale
     gray_image = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     gray_image = cv.blur(gray_image, (5,3))
-
     success,thresh = cv.threshold(gray_image,127,255,0)
     if not success :
         print("threshold problem")
-
     # find contours in the binary image
     contours, hierarchy = cv.findContours(thresh,cv.RETR_TREE,cv.CHAIN_APPROX_TC89_KCOS)
-
     for c in contours:
         # calculate moments for each contour
         M = cv.moments(c)
-
         # calculate x,y coordinate of center        
         if (M["m00"] != 0) :
             X = int(M["m10"] / M["m00"])    
             Y = int(M["m01"] / M["m00"])
-
         return X, Y
-
 
 def find_no_from_coord() :
     current_node = 0
@@ -137,7 +133,6 @@ def find_no_from_coord() :
 
     return current_node
 
-
 def on_move(event):
     # get the x and y pixel coords
     x, y = event.x, event.y
@@ -151,9 +146,6 @@ def on_click(event):
         plt.disconnect(binding_id)
         plt.close()
 
-
-name = "spirale.jpg"
-#name = "rabbit.jpeg"
 
 # 1. Récupérer la dimension du champ de vision de la caméra
 cap = cv.VideoCapture(1)
@@ -178,12 +170,12 @@ LOGITECH_WIDTH = 160
 cap.set(cv.CAP_PROP_FRAME_WIDTH, LOGITECH_WIDTH)
 cap.set(cv.CAP_PROP_FRAME_HEIGHT, LOGITECH_HEIGHT)
 
-rect, frame = cap.read()
+success, frame = cap.read()
 
 capX = 0
 capY = 0
 
-if rect is True :
+if success is True :
     print(int(frame.shape[0])) # HEIGHT
     print(int(frame.shape[1]))
     capY = int(frame.shape[0])
@@ -261,34 +253,22 @@ print("goal x = " + str(coord.x))
 print("goal y = " + str(coord.y))
 
 
-
-#'''
 # 6. Génération du path en fonction des noeuds de départ et d'arrivée
 start_node_no   = (capX * start_node_y)  + start_node_x
 goal_node_no    = (capX * goal_node_y)  + goal_node_x
 
 
-
 # 7. Générer un chemin entre les deux noeuds avec l'algorithme A*
-# eps = 1 : A* calssique
-# eps = 0 : dijskra
-# eps compris entre 0 et 1 : A* pondéré en proba
-# eps > 1 : chemin de plus en plus court
 closedList, successFlag = carte.AStarFindPath(start_node_no, goal_node_no, epsilon=0.1)
-
 if (successFlag==True):
     path, lenpath = carte.builtPath(closedList)
     carte.plotPathOnMap(path, 1)
     plt.show()
-    #carte.plotExploredTree(closedList, 3)
-    # print("trajectoire : " + str(path))
-
-
+    #carte.plotExploredTree(closedList, 2)
 
 
 
 # 8. Générer une liste de coordonnées de points de passage
-# list of way points: list of [x coord, y coord]
 WPlist = []
 for i in range(len(path)):
     current_node = path[i]
@@ -303,13 +283,12 @@ for i in range(len(path)):
 
 
 # 9. Obtenir les coordonnées du robot grâce au script python de localisation
+robotX, robotY = calc_coord()
+print("robotX = " + str(robotX))
+print("robotY = " + str(robotY))
 
-# TODO
-# appeler le code de Faly
-# convertir les coordonnées du pixel lumineux en noeud (à un facteur d'échelle près)
-# 3. Faire correspondre les dimensions de la carte avec celles de la caméra
 
-#'''
+
 '''
 
 # initialisation d'un objet robot : pose (x,y,theta)
