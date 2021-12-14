@@ -30,6 +30,7 @@ import matplotlib.patches as patches
 import numpy as np
 
 
+
 class Node:
 
     def __init__(self, no, x, y, g=np.inf, f=0.0):
@@ -168,6 +169,7 @@ class Map:
                                     self.graph.adjacencyMatrix[nc, nc-self.dimX-1] = 1
 
 
+
     # plot map
     def plot(self, noFig=1):
         fig1 = plt.figure(noFig)
@@ -187,13 +189,12 @@ class Map:
         for j in range(-1, self.dimY+2):
             axPlt.add_patch(patches.Rectangle((-1.5,j-0.5), 1, 1,color='gray'))
             axPlt.add_patch(patches.Rectangle((self.dimX-0.5,j-0.5), 1, 1,color='gray'))
-
         axPlt.grid(True)
 
 
     # weighted Astar
     # parent node of each node is modified durring path finding and can be used to built path from closedList
-    def AStarFindPath(self, startNodeNo, goalNodeNo, epsilon=1.0):
+    def AStarFindPath(self, startNodeNo, goalNodeNo, epsilon):
 
         iterationNb = 0
 
@@ -210,7 +211,7 @@ class Map:
 
         while (len(openList)>0):
 
-            print("iteration nb = " + str(iterationNb))
+            # print("iteration nb = " + str(iterationNb))
 
             # find node with lowest score f in openList
             nc = openList[0]

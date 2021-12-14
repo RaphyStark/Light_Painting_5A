@@ -7,6 +7,30 @@ from numpy.lib.type_check import imag
 import AStar
 import Timer as tmr
 import math
+#import Tkinter as tk
+
+from matplotlib.backend_bases import MouseButton
+
+
+# dimX = 27
+# dimY = 25
+# size = dimX*dimY
+# lastNodeNo = size - 1
+# anyNodeNo = (dimX * anyNode.y)  + anyNode.x
+
+class Coord():
+    def __init__(self):
+        self.x = 15
+        self.y = 15
+
+
+def onclick(event):
+    c_x = event.x
+    c_y = event.y
+    print(c_x)
+    print(c_y)
+    return c_x,c_y
+
 
 def change_res(cap, width, height):
     cap.set(3, width)
@@ -114,27 +138,28 @@ def find_no_from_coord() :
     return current_node
 
 
+def on_move(event):
+    # get the x and y pixel coords
+    x, y = event.x, event.y
+    if event.inaxes:
+        ax = event.inaxes  # the axes instance
+
+def on_click(event):
+    if event.button is MouseButton.LEFT:
+        coord.x = event.xdata
+        coord.y = event.ydata
+        plt.disconnect(binding_id)
+        plt.close()
+
+
 name = "spirale.jpg"
 #name = "rabbit.jpeg"
 
-
-
-
 # 1. Récupérer la dimension du champ de vision de la caméra
-#cap, capX, capY = setup(imgX, imgY)
-
-####
-cap = cv.VideoCapture(0)
+cap = cv.VideoCapture(1)
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
-
-#print(imgX) # 750
-#print(imgY) # 477
-
-#if (dimX >= img_X and dimY >= img_Y):
-#cap = change_res(cap, img_X, img_Y)
-
 
 # LOGITECH
 # 90,160
@@ -144,10 +169,19 @@ if not cap.isOpened():
 # 896, 1600
 # 1080,1920
 
-cap.set(cv.CAP_PROP_FRAME_WIDTH, 160)
-cap.set(cv.CAP_PROP_FRAME_HEIGHT, 90)
+LOGITECH_HEIGHT = 90
+LOGITECH_WIDTH = 160
+
+# WEBCAM_HEIGHT = 288
+# WEBCAM_WIDTH = 352
+
+cap.set(cv.CAP_PROP_FRAME_WIDTH, LOGITECH_WIDTH)
+cap.set(cv.CAP_PROP_FRAME_HEIGHT, LOGITECH_HEIGHT)
 
 rect, frame = cap.read()
+
+capX = 0
+capY = 0
 
 if rect is True :
     print(int(frame.shape[0])) # HEIGHT
@@ -156,31 +190,36 @@ if rect is True :
     capX = int(frame.shape[1])
 
 else :
-    print("NON")
+    print("NON!")
 
 
-
-
-#'''
-# 2. Faire correspondre les dimensions de la carte avec celles de la caméra
+# 2. Redimmensionner l'image en fonction de la dimension de la caméra
 img = cv.imread(name)
 img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+capX = int(capX/5)
+capY = int(capY/5)
 img = cv.resize(img, (capX, capY))
 
+'''
+source_window = 'resize'
+cv.namedWindow(source_window)
+cv.imshow(source_window, img)
+cv.waitKey()
+'''
 
-
-#source_window = 'Source'
-#cv.namedWindow(source_window)
-#cv.imshow(source_window, img)
-#cv.waitKey()
-
-
-# Passage de l'image en binaire
-img = cv.threshold(img, 254, 1, 0)
+# 3. Passage de l'image en binaire
+img = cv.threshold(img, 200, 1, 0)
 img = img[1]
 
+# Inversion des obstacles en cases
+for i in range(len(img)):
+    for j in range (len(img[0])) :
+        if img[i][j] == 0:
+            img[i][j] = 1
+        else :
+            img[i][j] = 0
 
-# Générer une grille d'occupation à partir d'un tableau binaire de l'image
+# 4. Générer une grille d'occupation à partir d'un tableau binaire de l'image
 wait=[]
 list=[]
 for y in range(0, capX):
@@ -191,70 +230,64 @@ for y in range(0, capX):
 list = np.array(list)
 occupancyGrid = list
 
-
-
-
-# 3. Création de la carte
-
-adjacency = 8
+# 5. Création de la carte
+adjacency = 4
 carte = AStar.Map(capX, capY, adjacency)
 carte.initCoordinates()
 #carte.generateRandObstacles()
 carte.loadOccupancy(occupancyGrid)
+#print("go gener")
 carte.generateGraph()
-#carte.plot(1)
-#plt.show()
-#print("size adjacency matrix = " + str(carte.graph.adjacencyMatrix))
+#print("done gener")
+fig1 = plt.figure(1)
+carte.plot(1)
+coord = Coord()
+binding_id = plt.connect('motion_notify_event', on_move)
+plt.connect('button_press_event', on_click)
+plt.show()
+start_node_x = round(coord.x)
+start_node_y = round(coord.y)
+print("start x = " + str(coord.x))
+print("start y = " + str(coord.y))
+coord = Coord()
+binding_id = plt.connect('motion_notify_event', on_move)
+plt.connect('button_press_event', on_click)
+fig1 = plt.figure(1)
+carte.plot(1)
+plt.show()
+goal_node_x = round(coord.x)
+goal_node_y = round(coord.y)
+print("goal x = " + str(coord.x))
+print("goal y = " + str(coord.y))
 
 
 
-
-# 4. Générer les numéros des noeuds de départ et d'arrivée
-
-# dimX = 27
-# dimY = 25
-# size = dimX*dimY
-# lastNodeNo = size - 1
-# anyNodeNo = (dimX * anyNode.y)  + anyNode.x
 #'''
+# 6. Génération du path en fonction des noeuds de départ et d'arrivée
+start_node_no   = (capX * start_node_y)  + start_node_x
+goal_node_no    = (capX * goal_node_y)  + goal_node_x
 
 
 
-
-
-########
-
-
-
-
-
-'''
-start_node_x = 210
-start_node_y = 235
-
-goal_node_x = 115
-goal_node_y = 135
-
-
-start_node_no   = (dimX * start_node_y)  + start_node_x
-goal_node_no    = (dimX * goal_node_y)  + goal_node_x
-
-
-
-# 6. Générer un chemin entre les deux noeuds avec l'algorithme A*
-
-closedList, successFlag = carte.AStarFindPath(start_node_no, goal_node_no, epsilon=0.5)
+# 7. Générer un chemin entre les deux noeuds avec l'algorithme A*
+# eps = 1 : A* calssique
+# eps = 0 : dijskra
+# eps compris entre 0 et 1 : A* pondéré en proba
+# eps > 1 : chemin de plus en plus court
+closedList, successFlag = carte.AStarFindPath(start_node_no, goal_node_no, epsilon=0.1)
 
 if (successFlag==True):
     path, lenpath = carte.builtPath(closedList)
-    #carte.plotPathOnMap(path, 1)
-    #plt.show()
-    # carte.plotExploredTree(closedList, 3)
+    carte.plotPathOnMap(path, 1)
+    plt.show()
+    #carte.plotExploredTree(closedList, 3)
     # print("trajectoire : " + str(path))
 
-#print("A Star done computing")
 
-# 7. Générer une liste de points de passage
+
+
+
+# 8. Générer une liste de coordonnées de points de passage
 # list of way points: list of [x coord, y coord]
 WPlist = []
 for i in range(len(path)):
@@ -265,10 +298,19 @@ for i in range(len(path)):
     WPlist.append(coord)
 
 
+# TODO : récupérer WPlist dans un fichier de sauvegarde
 
 
-# 8. Obtenir les coordonnées du robot grâce au script python de localisation
 
+# 9. Obtenir les coordonnées du robot grâce au script python de localisation
+
+# TODO
+# appeler le code de Faly
+# convertir les coordonnées du pixel lumineux en noeud (à un facteur d'échelle près)
+# 3. Faire correspondre les dimensions de la carte avec celles de la caméra
+
+#'''
+'''
 
 # initialisation d'un objet robot : pose (x,y,theta)
 # theta0 en réel
