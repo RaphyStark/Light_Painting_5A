@@ -210,6 +210,8 @@ class Map:
 
         while (len(openList)>0):
 
+            print("iteration nb = " + str(iterationNb))
+
             # find node with lowest score f in openList
             nc = openList[0]
             ncNo = 0

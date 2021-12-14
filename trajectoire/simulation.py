@@ -22,7 +22,7 @@ import AStar
 
 
 # TD1 Génération de trajectoire
-'''
+
 # dimensions of the map
 dimX = 20
 dimY = 10
@@ -44,11 +44,6 @@ occupancyGrid[16:18,3]=1
 occupancyGrid[18:20,5]=1
 occupancyGrid[14,7:9]=1
 occupancyGrid[16,7:10]=1
-'''
-
-
-
-
 
 
 # max adjacency degree

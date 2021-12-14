@@ -65,7 +65,11 @@ class WPManager:
         self.currentWP = self.WPList.pop(0) # current WP
         self.xr = self.currentWP[0] # x coordinate of current WP
         self.yr = self.currentWP[1] # y coordinate of current WP
-        
+        array_length = len(self.WPList)
+        self.goalWP = self.WPList[array_length - 1]
+        self.xf = self.goalWP[0]
+        self.yf = self.goalWP[1]
+
         
     def switchToNextWP(self):
         if not(self.isWPListEmpty()):
@@ -84,6 +88,8 @@ class WPManager:
     def distanceToCurrentWP(self, x, y):
         return np.sqrt(math.pow(x-self.xr,2) + math.pow(y-self.yr,2))
 
+    def distanceToGoalWP(self, x, y):
+        return np.sqrt(math.pow(x-self.xf,2) + math.pow(y-self.yf,2))
 
 # *** end of class WPManager **************************************************
 
