@@ -26,11 +26,15 @@ def setup(img_X, img_Y) :
     print(img_X)
     print(img_Y)
 
+    print(int(cap.get(cv.CAP_PROP_FRAME_WIDTH)))
+    print(int(cap.get(cv.CAP_PROP_FRAME_HEIGHT)))
+
     #if (dimX >= img_X and dimY >= img_Y):
     #cap = change_res(cap, img_X, img_Y)
     cap.set(3, img_X)
     cap.set(4, img_Y)
-    print(int(cap.get(3))) #cv.CAP_PROP_FRAME_WIDTH
+
+    print(int(cap.get(cv.CAP_PROP_FRAME_WIDTH)))
     print(int(cap.get(cv.CAP_PROP_FRAME_HEIGHT)))
 
 
@@ -110,20 +114,13 @@ def find_no_from_coord() :
     return current_node
 
 
-#name = "spirale.jpg"
-name = "rabbit.jpeg"
-
-# 1. Récupération de la dimension du dessin
-img = cv.imread(name)
-img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-img = cv.threshold(img, 253, 1, 0)
-img = img[1]
-imgY = int(img.shape[0])#/10)
-imgX = int(img.shape[1])#/10)
-img = cv.resize(img, (imgX, imgY))
+name = "spirale.jpg"
+#name = "rabbit.jpeg"
 
 
-# 2. Récupérer la dimension du champ de vision de la caméra
+
+
+# 1. Récupérer la dimension du champ de vision de la caméra
 #cap, capX, capY = setup(imgX, imgY)
 
 ####
@@ -132,56 +129,62 @@ if not cap.isOpened():
     print("Cannot open camera")
     exit()
 
-print(imgX) # 750
-print(imgY) # 477
+#print(imgX) # 750
+#print(imgY) # 477
 
 #if (dimX >= img_X and dimY >= img_Y):
 #cap = change_res(cap, img_X, img_Y)
 
-cap.set(3, 640)
-cap.set(4, 480)
+
+# LOGITECH
+# 90,160
+# 288, 352
+# 480, 640
+# 600, 800
+# 896, 1600
+# 1080,1920
+
+cap.set(cv.CAP_PROP_FRAME_WIDTH, 160)
+cap.set(cv.CAP_PROP_FRAME_HEIGHT, 90)
 
 rect, frame = cap.read()
 
 if rect is True :
-    print(int(frame.shape[0]))
+    print(int(frame.shape[0])) # HEIGHT
     print(int(frame.shape[1]))
+    capY = int(frame.shape[0])
+    capX = int(frame.shape[1])
 
 else :
     print("NON")
 
-#print(int(cap.get(cv.CAP_PROP_FRAME_WIDTH)))
-#print(int(cap.get(cv.CAP_PROP_FRAME_HEIGHT)))
-
-
-#dimX = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
-#dimY = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
-####
-
-#print(dimX)    # 1280
-#print(dimY)    # 720
-
-#print(dimX_cam)    # 1280
-#print(dimY_cam)    # 720
 
 
 
+#'''
+# 2. Faire correspondre les dimensions de la carte avec celles de la caméra
+img = cv.imread(name)
+img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+img = cv.resize(img, (capX, capY))
 
 
 
-
-'''
-# 3. Faire correspondre les dimensions de la carte avec celles de la caméra
-
-
-# TODO
+#source_window = 'Source'
+#cv.namedWindow(source_window)
+#cv.imshow(source_window, img)
+#cv.waitKey()
 
 
-# Générer une grille d'occupation à partir d'une image
+# Passage de l'image en binaire
+img = cv.threshold(img, 254, 1, 0)
+img = img[1]
+
+
+# Générer une grille d'occupation à partir d'un tableau binaire de l'image
 wait=[]
 list=[]
-for y in range(0, dimX):
-    for x in range(0, dimY):
+for y in range(0, capX):
+    for x in range(0, capY):
         wait.append(img[x][y])
     list.append(wait)
     wait=[]
@@ -194,7 +197,7 @@ occupancyGrid = list
 # 3. Création de la carte
 
 adjacency = 8
-carte = AStar.Map(dimX, dimY, adjacency)
+carte = AStar.Map(capX, capY, adjacency)
 carte.initCoordinates()
 #carte.generateRandObstacles()
 carte.loadOccupancy(occupancyGrid)
@@ -213,8 +216,19 @@ carte.generateGraph()
 # size = dimX*dimY
 # lastNodeNo = size - 1
 # anyNodeNo = (dimX * anyNode.y)  + anyNode.x
+#'''
 
 
+
+
+
+########
+
+
+
+
+
+'''
 start_node_x = 210
 start_node_y = 235
 
@@ -375,8 +389,8 @@ plt.show()
 # When everything done, release the capture
 #cap.release()
 
-'''
 
+'''
 
 
 
@@ -397,8 +411,6 @@ plt.show()
 #print(dimX)    # 1280
 #print(dimY)    # 720
 
-
-
 # nombre de colonnes du tableau img
 #dimY = len(img[0])
 
@@ -413,8 +425,6 @@ plt.show()
 
 #dimX = int(dimX)
 #dimY = int(dimY)
-'''
-
 
 #print(dimX)    # 1280
 #print(dimY)    # 720
@@ -422,30 +432,35 @@ plt.show()
 #print(img.shape[0])    #890
 #print(img.shape[1])    #970
 
-
 #print(len(img[len(img)-1]))
 #print(img[dimY-1][dimX-1])
 
-
-
 # img = cv.GaussianBlur(img, (5,5), 3, 3)
-
 # img = cv.Canny(img,170,200, True)
-
-
-
 
 #xf = 12.0
 #yf = 12.0
 #print("WPManager.xf = " + str(WPManager.xf))
 #print("WPManager.yf = " + str(WPManager.yf))
 
+# print("dimX = {}".format(dimX))
+# print("dimY = {}".format(dimY))
+
+# print(int(cap.get(cv.CAP_PROP_FRAME_WIDTH)))
+# print(int(cap.get(cv.CAP_PROP_FRAME_HEIGHT)))
+
+# dimX = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
+# dimY = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
+
+#print(dimX)    # 1280
+#print(dimY)    # 720
+
+#print(dimX_cam)    # 1280
+#print(dimY_cam)    # 720
 
 
 
 
-'''
-
-
-    # print("dimX = {}".format(dimX))
-    # print("dimY = {}".format(dimY))
+#imgY = int(img.shape[0])#/10)
+#imgX = int(img.shape[1])#/10)
+###################################################
