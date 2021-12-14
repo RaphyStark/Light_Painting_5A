@@ -91,12 +91,13 @@ def read_img():
 def calc_coord() :
     success, frame = cap.read()
     # currentframe = 0
-    # convert the image to grayscale
+    if not success :
+        print("cap read not successed")   
     gray_image = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     gray_image = cv.blur(gray_image, (5,3))
     success,thresh = cv.threshold(gray_image,127,255,0)
     if not success :
-        print("threshold problem")
+        print("threshold not successed")
     # find contours in the binary image
     contours, hierarchy = cv.findContours(thresh,cv.RETR_TREE,cv.CHAIN_APPROX_TC89_KCOS)
     for c in contours:
@@ -107,8 +108,8 @@ def calc_coord() :
             X = int(M["m10"] / M["m00"])    
             Y = int(M["m01"] / M["m00"])
         return X, Y
-
-def find_no_from_coord() :
+'''
+def find_no_from_coord(dimX, dimY) :
     current_node = 0
     last_node = dimX*dimY - 1
 
@@ -132,7 +133,7 @@ def find_no_from_coord() :
 
 
     return current_node
-
+'''
 def on_move(event):
     # get the x and y pixel coords
     x, y = event.x, event.y
@@ -148,7 +149,7 @@ def on_click(event):
 
 
 # 1. Récupérer la dimension du champ de vision de la caméra
-cap = cv.VideoCapture(1)
+cap = cv.VideoCapture(0)
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
@@ -161,14 +162,15 @@ if not cap.isOpened():
 # 896, 1600
 # 1080,1920
 
-LOGITECH_HEIGHT = 90
-LOGITECH_WIDTH = 160
+
+# LOGITECH_HEIGHT = 90
+# LOGITECH_WIDTH = 160
 
 # WEBCAM_HEIGHT = 288
 # WEBCAM_WIDTH = 352
 
-cap.set(cv.CAP_PROP_FRAME_WIDTH, LOGITECH_WIDTH)
-cap.set(cv.CAP_PROP_FRAME_HEIGHT, LOGITECH_HEIGHT)
+#cap.set(cv.CAP_PROP_FRAME_WIDTH, 100)
+#cap.set(cv.CAP_PROP_FRAME_HEIGHT, 100)
 
 success, frame = cap.read()
 
@@ -176,28 +178,24 @@ capX = 0
 capY = 0
 
 if success is True :
-    print(int(frame.shape[0])) # HEIGHT
-    print(int(frame.shape[1]))
+    #print(int(frame.shape[0])) # HEIGHT
+    #print(int(frame.shape[1]))
     capY = int(frame.shape[0])
     capX = int(frame.shape[1])
 
 else :
-    print("NON!")
+    print("Nop ! Can't open cam!")
+    exit()
 
-
+# 1280 720
+'''
 # 2. Redimmensionner l'image en fonction de la dimension de la caméra
 img = cv.imread(name)
 img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-capX = int(capX/5)
-capY = int(capY/5)
-img = cv.resize(img, (capX, capY))
+capX = int(capX/10)
+capY = int(capY/10)
+#img = cv.resize(img, (capX, capY))
 
-'''
-source_window = 'resize'
-cv.namedWindow(source_window)
-cv.imshow(source_window, img)
-cv.waitKey()
-'''
 
 # 3. Passage de l'image en binaire
 img = cv.threshold(img, 200, 1, 0)
@@ -239,8 +237,8 @@ plt.connect('button_press_event', on_click)
 plt.show()
 start_node_x = round(coord.x)
 start_node_y = round(coord.y)
-print("start x = " + str(coord.x))
-print("start y = " + str(coord.y))
+#print("start x = " + str(coord.x))
+#print("start y = " + str(coord.y))
 coord = Coord()
 binding_id = plt.connect('motion_notify_event', on_move)
 plt.connect('button_press_event', on_click)
@@ -249,8 +247,8 @@ carte.plot(1)
 plt.show()
 goal_node_x = round(coord.x)
 goal_node_y = round(coord.y)
-print("goal x = " + str(coord.x))
-print("goal y = " + str(coord.y))
+#print("goal x = " + str(coord.x))
+#print("goal y = " + str(coord.y))
 
 
 # 6. Génération du path en fonction des noeuds de départ et d'arrivée
@@ -280,10 +278,31 @@ for i in range(len(path)):
 
 # TODO : récupérer WPlist dans un fichier de sauvegarde
 
-
+'''
 
 # 9. Obtenir les coordonnées du robot grâce au script python de localisation
-robotX, robotY = calc_coord()
+success, frame = cap.read()
+# currentframe = 0
+if not success :
+    print("cap read not successed")   
+gray_image = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+gray_image = cv.blur(gray_image, (5,3))
+success,thresh = cv.threshold(gray_image,127,255,0)
+if not success :
+    print("threshold not successed")
+# find contours in the binary image
+contours, hierarchy = cv.findContours(thresh,cv.RETR_TREE,cv.CHAIN_APPROX_TC89_KCOS)
+for c in contours:
+    # calculate moments for each contour
+    M = cv.moments(c)
+    # calculate x,y coordinate of center 
+    robotX = 0
+    robotY = 0       
+    if (M["m00"] != 0) :
+        robotX = int(M["m10"] / M["m00"])    
+        robotY = int(M["m01"] / M["m00"])
+
+
 print("robotX = " + str(robotX))
 print("robotY = " + str(robotY))
 
@@ -428,6 +447,14 @@ plt.show()
 
 ### COMMENTAIRES UTILES OU OBSOLETES ###
 
+
+
+'''
+source_window = 'resize'
+cv.namedWindow(source_window)
+cv.imshow(source_window, img)
+cv.waitKey()
+'''
 
 #print(dimX)    # 1280
 #print(dimY)    # 720
