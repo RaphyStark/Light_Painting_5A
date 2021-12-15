@@ -20,6 +20,24 @@ Taper nrf24L01 dans le champ de recherche et sélectionner RF24.
 
 ## Environnement RaspberryPi avec NRF24L01
 
+Suivre :: https://github.com/nRF24/RF24/issues/615
+mkdir ~/rf24libs
+cd ~/rf24libs
+git clone https://github.com/TMRh20/RF24
+cd ~/rf24libs/RF24
+./configure
+sudo make install
+sudo apt-get install python3-dev libboost-python-dev
+sudo ln -s $(ls /usr/lib/arm-linux-gnueabihf/libboost_python3-py3*.so | tail -1) /usr/lib/arm-linux-gnueabihf/libboost_python3.so    /!/
+sudo apt-get install python3-setuptools
+cd pyRF24/
+python3 setup.py build
+sudo python3 setup.py install
+sudo apt-get install python3-dev python3-rpi.gpio
+
+Si il y a une erreur à la commande ln, aller chercher le nom du fichier dans /usr/lib/arm-linux-gnu.... et remplacer dans la commande "libboost_python3-py3*.so" par le vrai nom du fichier
+
+
 
 Connexion à la RPI
 
