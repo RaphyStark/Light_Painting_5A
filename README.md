@@ -1,3 +1,6 @@
+https://www.openhardware.io/view/636/Raspberry-PI-Hat
+https://www.openhardware.io/view/694/Arduino-UNO-NRF24L01-Shield
+
 ## Environnement Arduino avec NRF24L01
 
 
