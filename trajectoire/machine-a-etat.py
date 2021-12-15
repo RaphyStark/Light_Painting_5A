@@ -163,14 +163,24 @@ if not cap.isOpened():
 # 1080,1920
 
 
-# LOGITECH_HEIGHT = 90
-# LOGITECH_WIDTH = 160
 
-# WEBCAM_HEIGHT = 288
-# WEBCAM_WIDTH = 352
+# MACBOOK_CAM_ORIGINAL_HEIGHT = 720
+# MACBOOK_CAM_ORIGINAL_WIDTH = 1280
+
+# LOGITECH_CAM_ORIGINAL_HEIGHT = 1080
+# LOGITECH_CAM_ORIGINAL_WIDTH = 1920
+
+# LOGITECH_RESIZE_HEIGHT = 90
+# LOGITECH_RESIZE_WIDTH = 160
+
+# MACBOOK_CAM_RESIZE_HEIGHT = 288
+# MACBOOK_CAM_RESIZE_WIDTH = 352
 
 #cap.set(cv.CAP_PROP_FRAME_WIDTH, 100)
 #cap.set(cv.CAP_PROP_FRAME_HEIGHT, 100)
+
+# frame.shape[0] # HEIGHT
+# frame.shape[1] # WIDTH
 
 success, frame = cap.read()
 
@@ -178,17 +188,14 @@ capX = 0
 capY = 0
 
 if success is True :
-    #print(int(frame.shape[0])) # HEIGHT
-    #print(int(frame.shape[1]))
     capY = int(frame.shape[0])
     capX = int(frame.shape[1])
 
 else :
-    print("Nop ! Can't open cam!")
+    print("Problem capturing a frame")
     exit()
 
-# 1280 720
-'''
+
 # 2. Redimmensionner l'image en fonction de la dimension de la caméra
 img = cv.imread(name)
 img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -278,7 +285,7 @@ for i in range(len(path)):
 
 # TODO : récupérer WPlist dans un fichier de sauvegarde
 
-'''
+
 
 # 9. Obtenir les coordonnées du robot grâce au script python de localisation
 success, frame = cap.read()
@@ -307,17 +314,27 @@ print("robotX = " + str(robotX))
 print("robotY = " + str(robotY))
 
 
+robotNodeNo = (capX * robotY) + robotX
 
-'''
+
 
 # initialisation d'un objet robot : pose (x,y,theta)
 # theta0 en réel
 #(x0, y0) = calc_coord()
 
 theta0 = 0.0
-x0 = carte.graph.listOfNodes[start_node_no].x
-y0 = carte.graph.listOfNodes[start_node_no].y
-robot = rob.Robot(x0, y0, theta0)
+x0 = carte.graph.listOfNodes[robotNodeNo].x
+y0 = carte.graph.listOfNodes[robotNodeNo].y
+
+
+print("x0 = " + str(x0))
+print("y0 = " + str(y0))
+
+
+
+
+'''
+#robot = rob.Robot(x0, y0, theta0)
 
 
 # position control loop timer
@@ -426,16 +443,10 @@ plt.show()
 
 
 
-# When everything done, release the capture
-#cap.release()
-
-
 '''
 
-
-
-
-
+# When everything done, release the capture
+cap.release()
 
 
 
@@ -446,18 +457,17 @@ plt.show()
 
 
 ### COMMENTAIRES UTILES OU OBSOLETES ###
+#source_window = 'resize'
+#cv.namedWindow(source_window)
+#cv.imshow(source_window, img)
+#cv.waitKey()
 
-
-
-'''
-source_window = 'resize'
-cv.namedWindow(source_window)
-cv.imshow(source_window, img)
-cv.waitKey()
-'''
 
 #print(dimX)    # 1280
 #print(dimY)    # 720
+
+
+
 
 # nombre de colonnes du tableau img
 #dimY = len(img[0])

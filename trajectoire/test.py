@@ -12,7 +12,11 @@ while True :
     success, frame = cap.read()
     # currentframe = 0
     if not success :
-        print("cap read not successed")   
+        print("cap read not successed")
+        break
+        
+    cv.imshow('frame', frame)
+    cv.waitKey(20)
 
     gray_image = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     gray_image = cv.blur(gray_image, (5,3))
