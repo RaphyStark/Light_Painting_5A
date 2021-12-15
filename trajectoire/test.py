@@ -1,6 +1,12 @@
 import cv2 as cv
 
 
+# TODO
+# 3. Faire correspondre les dimensions de la carte avec celles de la caméra
+
+# DOING
+# convertir coordonnées pixel en noeud (à un facteur d'échelle près)    
+
 
 cap = cv.VideoCapture(0)
 if not cap.isOpened():

@@ -1,191 +1,54 @@
 import cv2 as cv
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.backend_bases import MouseButton
-
+from functions import *
 import AStar
-#import Robot as rob
-#import Timer as tmr
-#import matplotlib.patches as patches
-#from numpy.lib.type_check import imag
-#import math
 
+
+
+
+
+
+# VARIABLES GLOABLES
+
+LOGITECH_RESIZE_HEIGHT = 90
+LOGITECH_RESIZE_WIDTH = 160
+
+MACBOOK_CAM_RESIZE_HEIGHT = 288
+MACBOOK_CAM_RESIZE_WIDTH = 352
 
 
 name = "spirale.jpg"
 
 
-# explications sur certaines parties du code
-# dimX = 27
-# dimY = 25
-# size = dimX*dimY
-# lastNodeNo = size - 1
-# anyNodeNo = (dimX * anyNode.y)  + anyNode.x
-
-
-# eps = 1 : A* calssique
-# eps = 0 : dijskra
-# eps compris entre 0 et 1 : A* pondéré en proba
-# eps > 1 : chemin de plus en plus court
-
-
-# trajecto 9
-# appeler le code de Faly (fonction calc_coord())
-# convertir les coordonnées du pixel lumineux en noeud (à un facteur d'échelle près)
-# 3. Faire correspondre les dimensions de la carte avec celles de la caméra
-
-
-
-class Coord():
-    def __init__(self):
-        self.x = 0
-        self.y = 0
-
-def onclick(event):
-    c_x = event.x
-    c_y = event.y
-    print(c_x)
-    print(c_y)
-    return c_x,c_y
-
-def change_res(cap, width, height):
-    cap.set(3, width)
-    cap.set(4, height)
-    return cap
-
-def setup(img_X, img_Y) :
-    cap = cv.VideoCapture(0)
-    if not cap.isOpened():
-        print("Cannot open camera")
-        exit()
-
-    #dimX = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
-    #dimY = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
-
-    print(img_X)
-    print(img_Y)
-
-    print(int(cap.get(cv.CAP_PROP_FRAME_WIDTH)))
-    print(int(cap.get(cv.CAP_PROP_FRAME_HEIGHT)))
-
-    #if (dimX >= img_X and dimY >= img_Y):
-    #cap = change_res(cap, img_X, img_Y)
-    cap.set(3, img_X)
-    cap.set(4, img_Y)
-
-    print(int(cap.get(cv.CAP_PROP_FRAME_WIDTH)))
-    print(int(cap.get(cv.CAP_PROP_FRAME_HEIGHT)))
-
-
-    dimX = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
-    dimY = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
-
-    return cap, dimX, dimY
-
-def read_img():
-    success, frame = cap.read()
-    if not success :
-        print("Can't receive frame (stream end?). Exiting ...")
-    return frame
-
-def calc_coord() :
-    success, frame = cap.read()
-    # currentframe = 0
-    if not success :
-        print("cap read not successed")   
-    gray_image = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    gray_image = cv.blur(gray_image, (5,3))
-    success,thresh = cv.threshold(gray_image,127,255,0)
-    if not success :
-        print("threshold not successed")
-    # find contours in the binary image
-    contours, hierarchy = cv.findContours(thresh,cv.RETR_TREE,cv.CHAIN_APPROX_TC89_KCOS)
-    for c in contours:
-        # calculate moments for each contour
-        M = cv.moments(c)
-        # calculate x,y coordinate of center        
-        if (M["m00"] != 0) :
-            X = int(M["m10"] / M["m00"])    
-            Y = int(M["m01"] / M["m00"])
-        return X, Y
-'''
-def find_no_from_coord(dimX, dimY) :
-    current_node = 0
-    last_node = dimX*dimY - 1
-
-    while (current_node != last_node) :
-        if carte.graph.listOfNodes[current_node].x == start_node_x :
-            #print("x ok")
-
-            #print(current_node)
-            if carte.graph.listOfNodes[current_node].y == start_node_y :
-                #print("y ok")
-                start_node = current_node
-                break
-            else : 
-                current_node = current_node + 1
-        else : 
-            #print(current_node)
-            current_node = current_node + 1
-    
-    #print("start node x = " +str(carte.graph.listOfNodes[start_node].x))
-    #print("start node y = " +str(carte.graph.listOfNodes[start_node].y))
-
-
-    return current_node
-'''
-def on_move(event):
-    # get the x and y pixel coords
-    x, y = event.x, event.y
-    if event.inaxes:
-        ax = event.inaxes  # the axes instance
-
-def on_click(event):
-    if event.button is MouseButton.LEFT:
-        coord.x = event.xdata
-        coord.y = event.ydata
-        plt.disconnect(binding_id)
-        plt.close()
-
-
 # 1. Récupérer la dimension du champ de vision de la caméra
+capX = 0
+capY = 0
+
 cap = cv.VideoCapture(0)
+
+
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
 
-# LOGITECH
-# 90,160
-# 288, 352
-# 480, 640
-# 600, 800
-# 896, 1600
-# 1080,1920
+
+capX = cap.get(cv.CAP_PROP_FRAME_WIDTH)
+capY = cap.get(cv.CAP_PROP_FRAME_HEIGHT)
+
+print("capX = " + str(capX))
+print("capY = " + str(capY))
+
+cap.set(cv.CAP_PROP_FRAME_WIDTH, MACBOOK_CAM_RESIZE_HEIGHT)
+cap.set(cv.CAP_PROP_FRAME_HEIGHT, MACBOOK_CAM_RESIZE_WIDTH)
 
 
-
-# MACBOOK_CAM_ORIGINAL_HEIGHT = 720
-# MACBOOK_CAM_ORIGINAL_WIDTH = 1280
-
-# LOGITECH_CAM_ORIGINAL_HEIGHT = 1080
-# LOGITECH_CAM_ORIGINAL_WIDTH = 1920
-
-# LOGITECH_RESIZE_HEIGHT = 90
-# LOGITECH_RESIZE_WIDTH = 160
-
-# MACBOOK_CAM_RESIZE_HEIGHT = 288
-# MACBOOK_CAM_RESIZE_WIDTH = 352
-
-#cap.set(cv.CAP_PROP_FRAME_WIDTH, 100)
-#cap.set(cv.CAP_PROP_FRAME_HEIGHT, 100)
-
-# frame.shape[0] # HEIGHT
-# frame.shape[1] # WIDTH
+print("capX = " + str(capX))
+print("capY = " + str(capY))
 
 success, frame = cap.read()
 
-capX = 0
-capY = 0
+
 
 if success is True :
     capY = int(frame.shape[0])
@@ -521,4 +384,38 @@ cap.release()
 
 #imgY = int(img.shape[0])#/10)
 #imgX = int(img.shape[1])#/10)
+
+
+
+
+'''
+def find_no_from_coord(dimX, dimY) :
+    current_node = 0
+    last_node = dimX*dimY - 1
+
+    while (current_node != last_node) :
+        if carte.graph.listOfNodes[current_node].x == start_node_x :
+            #print("x ok")
+
+            #print(current_node)
+            if carte.graph.listOfNodes[current_node].y == start_node_y :
+                #print("y ok")
+                start_node = current_node
+                break
+            else : 
+                current_node = current_node + 1
+        else : 
+            #print(current_node)
+            current_node = current_node + 1
+    
+    #print("start node x = " +str(carte.graph.listOfNodes[start_node].x))
+    #print("start node y = " +str(carte.graph.listOfNodes[start_node].y))
+
+
+    return current_node
+'''
+
+
+
+
 ###################################################
