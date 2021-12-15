@@ -259,6 +259,9 @@ for c in contours:
     if (M["m00"] != 0) :
         robotX = int(M["m10"] / M["m00"])    
         robotY = int(M["m01"] / M["m00"])
+        # Conversion dans le format de l'image
+        robotX = int(robotX)
+        robotY = int(robotY)
 
 print("robotX = " + str(robotX))
 print("robotY = " + str(robotY))
@@ -333,7 +336,29 @@ for t in simu.t:
         omegar = k2 * (thetar - robot.theta)
 
     # apply control inputs to robot
-    # TODO : envoyer V et Omega à l'Arduino 
+    
+    wD = 0
+    wG = 0
+    r = 3.5     # rayon des roues en cm
+    d = 13.5    # distance entre les roue en cm
+
+    VecCommand = [[Vr], [omegar]]       # 1,2
+    VecA = [[r/2, r/2], [r/d, -r/d]]    # 2,2
+    VecMot = [wD, wG]                   # 1,2
+
+    # 1,2   =   1,2     *       2,2
+
+    #                                               [r/2         r/2]
+    #   [wD   wG]    =      [Vr     OmegaR]     *                        
+    #                                               [r/d        -r/d]
+
+
+    VecMot = (VecCommand * VecA.reverse()).reverse()
+
+    print("Vec Mot = " + str(VecMot))
+
+    # 12. TODO : Calculer tension moteurs d'après V et Omega
+    # 13. TODO : Envoyer les tensions moteurs au robot
     robot.setV(Vr)
     robot.setOmega(omegar)
     
@@ -353,7 +378,7 @@ plt.close("all")
 simu.plotXY(1, -1, capX, -1, capY)
 simu.plotXYTheta(2)
 simu.plotVOmega(3)
-#carte.plotPathOnMap(path, 4)
+carte.plotPathOnMap(path, 4)
 plt.show()
 
 # When everything done, release the capture

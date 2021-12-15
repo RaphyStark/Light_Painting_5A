@@ -49,7 +49,10 @@ def calcul_coord(src):
 if __name__=='__main__':
     pixel_coord =[]
 
-    cap = cv.VideoCapture(0)
+    cap = cv.VideoCapture("../E.mp4")
+    if not cap.isOpened():
+        print("Cannot open camera")
+        exit()
     success, frame = cap.read()
 
     currentframe = 0
@@ -61,16 +64,9 @@ if __name__=='__main__':
     dimX = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
     dimY = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
 
-
-    frameSize = (dimX, dimY)
-    
-
-    
+    frameSize = (dimX, dimY)    
 
     while (success and currentframe != 120) :
-
-        # Capture frame-by-frame
-        success, frame = cap.read()
 
         # Quitter s'il n'y a plus de frame dans la vidéo
         if not success:
@@ -80,16 +76,19 @@ if __name__=='__main__':
         cv.imwrite('frames/'+str(currentframe)+ '.jpg', frame)  # save frame as JPEG file
 
         # calcul des coordonnées
-        calcul_coord(frame)
+        #calcul_coord(frame)
 
         currentframe += 1
 
         print ("Frame number: ", currentframe)
 
+
+        # Capture frame-by-frame
+        success, frame = cap.read()
+
     # When everything done, release the capture
     cap.release()
 
-    
     #out = cv.VideoWriter('output_video.avi',cv.VideoWriter_fourcc(*'DIVX'), 60, frameSize)
     out = cv.VideoWriter('out.avi', cv.VideoWriter_fourcc(*'DIVX'), 60, frameSize)
     

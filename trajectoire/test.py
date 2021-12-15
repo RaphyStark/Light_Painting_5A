@@ -10,7 +10,7 @@ import cv2 as cv
 # convertir coordonnées pixel en noeud (à un facteur d'échelle près)    
 
 
-cap = cv.VideoCapture(0)
+cap = cv.VideoCapture("../E.mp4")
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
