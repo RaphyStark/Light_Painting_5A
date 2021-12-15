@@ -60,9 +60,8 @@ else :
     exit()
 
 
-while True :
+while success is True :
     success, frame = cap.read()
-    # currentframe = 0
     if not success :
         print("cap read not successed")
         break    
@@ -70,12 +69,10 @@ while True :
     cv.namedWindow(windowName)
     cv.imshow(windowName, frame)
     k = cv.waitKey(1) & 0xff
-    if k == 27 : 
-    	cv.destroyWindow(windowName)
-    	break
+    if (k == 27) : 
+        success = False
 
-
-
+cv.destroyWindow(windowName)
 
 
 # 3. Set draw img at VideoCapture new dimensions
