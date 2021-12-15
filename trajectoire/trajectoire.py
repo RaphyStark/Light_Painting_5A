@@ -11,8 +11,6 @@ from functions import *
 import Robot as rob
 import Timer as tmr
 import AStar
-from distutils.core import setup, Extension
-
 
 
 class Coord():
@@ -37,21 +35,13 @@ def on_click(event):
 
 
 # VARIABLES GLOABLES
-
 LOGITECH_RESIZE_HEIGHT = 90
 LOGITECH_RESIZE_WIDTH = 160
-
 MACBOOK_CAM_RESIZE_HEIGHT = 288
 MACBOOK_CAM_RESIZE_WIDTH = 352
-
 capX = 0
 capY = 0
-
 name = "spirale.jpg"
-
-
-# 
-
 
 
 # 1. Get VideoCapture dimensions
