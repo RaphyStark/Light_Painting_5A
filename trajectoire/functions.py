@@ -2,27 +2,6 @@ import matplotlib.pyplot as plt
 from matplotlib.backend_bases import MouseButton
 import cv2 as cv
 
-class Coord():
-    def __init__(self):
-        self.x = 0
-        self.y = 0
-
-
-def on_move(event):
-    # get the x and y pixel coords
-    x, y = event.x, event.y
-    if event.inaxes:
-        ax = event.inaxes  # the axes instance
-
-def on_click(event, coord):
-    if event.button is MouseButton.LEFT:
-        coord.x = event.xdata
-        coord.y = event.ydata
-        plt.disconnect(binding_id)
-        plt.close()
-
-
-
 
 
 
