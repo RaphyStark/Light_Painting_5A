@@ -21,7 +21,7 @@ MACBOOK_CAM_RESIZE_WIDTH = 352
 name = "spirale.jpg"
 
 
-# 1. Récupérer la dimension du champ de vision de la caméra
+# 1. Get VideoCapture dimensions
 capX = 0
 capY = 0
 
@@ -36,50 +36,79 @@ if not cap.isOpened():
 capX = cap.get(cv.CAP_PROP_FRAME_WIDTH)
 capY = cap.get(cv.CAP_PROP_FRAME_HEIGHT)
 
+
+# 2. Set VideoCapture dimensions to (capX = 160, capY = 90)
 print("capX = " + str(capX))
 print("capY = " + str(capY))
 
-cap.set(cv.CAP_PROP_FRAME_WIDTH, MACBOOK_CAM_RESIZE_HEIGHT)
-cap.set(cv.CAP_PROP_FRAME_HEIGHT, MACBOOK_CAM_RESIZE_WIDTH)
+cap.set(cv.CAP_PROP_FRAME_WIDTH, LOGITECH_RESIZE_WIDTH)
+cap.set(cv.CAP_PROP_FRAME_HEIGHT, LOGITECH_RESIZE_HEIGHT)
 
+capX = cap.get(cv.CAP_PROP_FRAME_WIDTH)	#160
+capY = cap.get(cv.CAP_PROP_FRAME_HEIGHT) #90
 
 print("capX = " + str(capX))
 print("capY = " + str(capY))
 
 success, frame = cap.read()
 
-
-
 if success is True :
     capY = int(frame.shape[0])
     capX = int(frame.shape[1])
-
 else :
     print("Problem capturing a frame")
     exit()
 
 
-# 2. Redimmensionner l'image en fonction de la dimension de la caméra
+while True :
+    success, frame = cap.read()
+    # currentframe = 0
+    if not success :
+        print("cap read not successed")
+        break    
+    windowName = "frame by frame"
+    cv.namedWindow(windowName)
+    cv.imshow(windowName, frame)
+    k = cv.waitKey(1) & 0xff
+    if k == 27 : 
+    	cv.destroyWindow(windowName)
+    	break
+
+
+
+
+
+# 3. Set draw img at VideoCapture new dimensions
+# 3.1. Import image
 img = cv.imread(name)
+# 3.2. Resize image at VideoCapture dimensions / 10
+capX = round(capX/10)
+capY = round(capY/10)
+print("capX = " + str(capX))
+print("capY = " + str(capY))
+img = cv.resize(img, (capX, capY))
+print("img dim X = " + str(img.shape[1]))
+print("img dim Y = " + str(img.shape[0]))
+
+
+
+
+
+# 4. Générer une grille d'occupation à partir de l'image
+
+# 4.1. Passage en nuances de gris
 img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-capX = int(capX/10)
-capY = int(capY/10)
-#img = cv.resize(img, (capX, capY))
-
-
-# 3. Passage de l'image en binaire
+# 4.2. Passage en binaire
 img = cv.threshold(img, 200, 1, 0)
 img = img[1]
-
-# Inversion des obstacles en cases
+# 4.3. Inversion des obstacles et des cases libres
 for i in range(len(img)):
     for j in range (len(img[0])) :
         if img[i][j] == 0:
             img[i][j] = 1
         else :
             img[i][j] = 0
-
-# 4. Générer une grille d'occupation à partir d'un tableau binaire de l'image
+# 4.4. Chargement du tableau occupancyGrid
 wait=[]
 list=[]
 for y in range(0, capX):
@@ -89,6 +118,10 @@ for y in range(0, capX):
     wait=[]
 list = np.array(list)
 occupancyGrid = list
+
+
+
+
 
 # 5. Création de la carte
 adjacency = 4

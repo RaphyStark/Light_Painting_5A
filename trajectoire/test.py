@@ -22,7 +22,8 @@ while True :
         break
         
     cv.imshow('frame', frame)
-    cv.waitKey(20)
+    if cv.waitKey(1) == ord('q')
+    	break
 
     gray_image = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     gray_image = cv.blur(gray_image, (5,3))
