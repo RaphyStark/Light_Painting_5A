@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # library imports
 import cv2 as cv
 import matplotlib.pyplot as plt
@@ -9,6 +11,7 @@ from functions import *
 import Robot as rob
 import Timer as tmr
 import AStar
+from distutils.core import setup, Extension
 
 
 
@@ -47,12 +50,13 @@ capY = 0
 name = "spirale.jpg"
 
 
+# 
 
 
 
 # 1. Get VideoCapture dimensions
 
-# 1.1. Ouvrir le flux vidéo
+# 1.1. Ouvrir le flux video
 cap = cv.VideoCapture(0)
 if not cap.isOpened():
     print("Cannot open camera")
