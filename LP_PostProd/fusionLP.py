@@ -2,6 +2,7 @@ from PIL import Image
 import cv2 as cv
 import glob
 import os 
+
 def rm_Background(img):
     img = Image.open(img)
 
@@ -25,9 +26,6 @@ def rm_Background(img):
     print("successful")
     return img
     
-#add_Background()
-
-
 fusion = Image.open("0.jpg")
 fusion.save("./fusion.png")
 currentFusion = 0
@@ -36,8 +34,9 @@ i = 0
 while (i < 1312) :
 #for i in range (0,1312):
     filename= str(str(i) + ".jpg")
-    img=rm_Background(filename)
+    img =rm_Background(filename)
     
+    # Sauvegarde des images 
     fusion.paste(img,(0,0), mask = img)
     fusion.save(str("currentfusion"+str(i)+".png"))
     i = i + 100
@@ -45,10 +44,13 @@ while (i < 1312) :
 
 fusion.save("./fusion.png")    
 fusion.show()
+
+# Vidéo Light Painting
 img = cv.imread("currentfusion0.png")
 dimX = img.shape[1]
 dimY = img.shape[0]
 frameSize = (dimX, dimY)
+
 #out = cv.VideoWriter('output_video.avi',cv.VideoWriter_fourcc(*'DIVX'), 60, frameSize)
 out = cv.VideoWriter('out.avi', cv.VideoWriter_fourcc(*'DIVX'), 1, frameSize)
    
