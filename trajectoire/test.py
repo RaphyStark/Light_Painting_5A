@@ -16,10 +16,6 @@ if not cap.isOpened():
     print("Cannot open camera")
     exit()
 
-
-#cap.set(cv.CAP_PROP_FRAME_WIDTH, round(cv.CAP_PROP_FRAME_WIDTH/100))
-#cap.set(cv.CAP_PROP_FRAME_HEIGHT, round(cv.CAP_PROP_FRAME_HEIGHT/100))
-
 robotX = 0
 robotY = 0
 robotX_precedent = 0
@@ -36,15 +32,14 @@ while OK is True :
     if not success :
         print("cap read not successed")
         OK = False
-        #exit()
+        exit()
 
-    #(capX, capY) = (round(cv.CAP_PROP_FRAME_WIDTH/100), round(cv.CAP_PROP_FRAME_HEIGHT/100))
-    #dim = (capX, capY)
-
-    else :         	
-        frame = cv.resize(frame, (100, 100))
-        print("frame X = " + str(frame.shape[1]))
-        print("frame Y = " + str(frame.shape[0]))
+    capX = round(cv.CAP_PROP_FRAME_WIDTH/100)
+    capY = round(cv.CAP_PROP_FRAME_HEIGHT/100)
+   	
+    frame = cv.resize(frame, (capX, capY))
+    print("frame X = " + str(frame.shape[1]))
+    print("frame Y = " + str(frame.shape[0]))
 
 
 
