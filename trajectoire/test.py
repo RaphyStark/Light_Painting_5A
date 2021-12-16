@@ -18,11 +18,13 @@ if not cap.isOpened():
 
 robotX = 0
 robotY = 0
-robotX_precedent = 0
-robotY_precedent = 0
+ProbotX = 0
+ProbotY = 0
 robotOmega = 0
 robotOmega_precedent = 0
 robotTheta = 0
+mesure = 0
+
 
 OK = True
 while OK is True :
@@ -34,12 +36,18 @@ while OK is True :
         OK = False
         exit()
 
-    capX = round(cv.CAP_PROP_FRAME_WIDTH/100)
-    capY = round(cv.CAP_PROP_FRAME_HEIGHT/100)
-   	
-    frame = cv.resize(frame, (capX, capY))
-    print("frame X = " + str(frame.shape[1]))
-    print("frame Y = " + str(frame.shape[0]))
+    #capX = int(cv.CAP_PROP_FRAME_WIDTH/10)
+    #capY = int(cv.CAP_PROP_FRAME_HEIGHT/10)
+
+    # 640
+    # 480
+    
+    capX = 300
+    capY = 300
+
+    frame = cv.resize(frame, (capX,capY))#, fx=0.15625, fy=0.20833)
+    #print("frame X = " + str(frame.shape[1]))
+    #print("frame Y = " + str(frame.shape[0]))
 
 
 
@@ -56,33 +64,49 @@ while OK is True :
     if cv.waitKey(1) == ord('q') :
         OK = False
 
-'''
+    #X_objectif = round(capX / 2)
+    #Y_objectif = round(capY / 2)
+    #theta_objectif = 0
+
+    #'''
     # find contours in the binary image
     contours, hierarchy = cv.findContours(thresh,cv.RETR_TREE,cv.CHAIN_APPROX_TC89_KCOS)
     for c in contours:
         # calculate moments for each contour
         M = cv.moments(c)
-        # calculate x,y coordinate of center           
+        # calculate x,y coordinate of center
+
         if (M["m00"] != 0) :
-        robotX_precedent = robotX
-        robotY_precedent = robotY
-        robotX = int(M["m10"] / M["m00"])    
-        robotY = int(M["m01"] / M["m00"])
-        robotOmega_precedent = robotOmega_precedent + robotOmega
-        robotOmega = np.arctan2(robotY_precedent - robotY, robotX_precedent - robotX)
-        robotTheta = robotOmega_precedent + robotOmega
-        robotTheta = (robotTheta * 180 / math.pi) % 360
+            mesure = mesure + 1
+            ProbotX = robotX
+            ProbotY = robotY
+            robotX = int(M["m10"] / M["m00"])    
+            robotY = int(M["m01"] / M["m00"])
+            
+            #robotOmega_precedent = robotOmega_precedent + robotOmega
+            ProbotTheta = robotTheta
+            #if (robotX)
+            robotTheta = np.arctan2(robotY - ProbotY, robotX - ProbotX) # [-Pi, Pi]
+            robotTheta = (robotTheta * 180 / np.pi)                    # [-180, 180]
+            #if math.fabs(ProbotTheta - robotTheta) > math.pi:
+                
+            #theta_objectif = np.arctan2(Y_objectif - robotY, X_objectif - robotX) 
+            
+            #robotTheta = robotOmega_precedent + robotOmega
+            
+            # passage en degré
+             # % 360
+            
+            print("#### MESURE " + str(mesure) + " ###")
+            print("ProbotX = " + str(ProbotX))
+            print("ProbotY = " + str(ProbotY))
+            print("robotX = " + str(robotX))
+            print("robotY = " + str(robotY))
+            print("robot theta = " + str(robotTheta))
+            print()
+            print()
 
-    for i in range (0, 1000) :
-    a = 100 + 100
-
-
-    print("robotX = " + str(robotX))
-    print("robotY = " + str(robotY))
-    print("robotXprecedent = " + str(robotX_precedent))
-    print("robotYprecedent = " + str(robotY_precedent))
-    print("robot theta = " + str(robotTheta))
-'''
+    #'''
 
 
 
