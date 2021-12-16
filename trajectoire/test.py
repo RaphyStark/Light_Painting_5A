@@ -1,5 +1,5 @@
 import cv2 as cv
-
+import numpy as np
 
 # TEST FILE : GET LUMPOINT COORD
 
@@ -10,10 +10,17 @@ import cv2 as cv
 # convertir coordonnées pixel en noeud (à un facteur d'échelle près)    
 
 
-cap = cv.VideoCapture("../E.mp4")
+cap = cv.VideoCapture(0)
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
+
+
+robotX = 0
+robotY = 0
+robotX_precedent = 0
+robotY_precedent = 0
+robotTheta = 0
 
 OK = True
 while OK is True :
@@ -33,9 +40,6 @@ while OK is True :
     if not success :
         print("threshold not successed")
 
-    robotX = 0
-    robotY = 0    
-
     # find contours in the binary image
     contours, hierarchy = cv.findContours(thresh,cv.RETR_TREE,cv.CHAIN_APPROX_TC89_KCOS)
     for c in contours:
@@ -43,11 +47,21 @@ while OK is True :
         M = cv.moments(c)
         # calculate x,y coordinate of center           
         if (M["m00"] != 0) :
+            robotX_precedent = robotX
+            robotY_precedent = robotY
             robotX = int(M["m10"] / M["m00"])    
             robotY = int(M["m01"] / M["m00"])
+            robotTheta = np.arctan2(robotY_precedent - robotY, robotX_precedent - robotX)
 
+    
     print("robotX = " + str(robotX))
     print("robotY = " + str(robotY))
+    print("robotXprecedent = " + str(robotX_precedent))
+    print("robotYprecedent = " + str(robotY_precedent))
+    print("robot theta = " + str(robotTheta))
+
+    
+
 
 
 # COMMENTAIRES

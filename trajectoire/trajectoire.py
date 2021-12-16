@@ -267,7 +267,7 @@ print("robotY = " + str(robotY))
 
 # 10. Obtenir l'orientation theta du robot
 robotTheta = 0 # TODO
-
+# odométrie et position précédente / courante
 
 
 
@@ -318,7 +318,7 @@ for t in simu.t:
         Vr = k1 * np.sqrt((WPManager.xr - robot.x)**2 + (WPManager.yr - robot.y)**2)
 
         # calcul de thetar (reference orientation)
-        thetar = np.arctan2(WPManager.yr - robot.y,WPManager.xr - robot.x)
+        thetar = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
 
         if math.fabs(robot.theta-thetar)>math.pi:
             thetar = thetar + math.copysign(2*math.pi,robot.theta)        
@@ -331,10 +331,12 @@ for t in simu.t:
 
     # apply control inputs to robot
     
+    ''''
     wD = 0
     wG = 0
     r = 3.5     # rayon des roues en cm
     d = 13.5    # distance entre les roue en cm
+
 
     VecCommand = [[Vr], [omegar]]       # 1,2
     VecA = [[r/2, r/2], [r/d, -r/d]]    # 2,2
@@ -351,6 +353,7 @@ for t in simu.t:
 
     print("Vec Mot = " + str(VecMot))
 
+    '''
     # 12. TODO : Calculer tension moteurs d'après V et Omega
     # 13. TODO : Envoyer les tensions moteurs au robot
     robot.setV(Vr)
