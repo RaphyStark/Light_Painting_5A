@@ -20,6 +20,8 @@ robotX = 0
 robotY = 0
 robotX_precedent = 0
 robotY_precedent = 0
+robotOmega = 0
+robotOmega_precedent = 0
 robotTheta = 0
 
 OK = True
@@ -51,9 +53,11 @@ while OK is True :
             robotY_precedent = robotY
             robotX = int(M["m10"] / M["m00"])    
             robotY = int(M["m01"] / M["m00"])
-            robotTheta = np.arctan2(robotY_precedent - robotY, robotX_precedent - robotX)
+            robotOmega_precedent = robotOmega
+            robotOmega = np.arctan2(robotY_precedent - robotY, robotX_precedent - robotX)
+            robotTheta = robotOmega_precedent + robotOmega
 
-    
+
     print("robotX = " + str(robotX))
     print("robotY = " + str(robotY))
     print("robotXprecedent = " + str(robotX_precedent))
@@ -63,6 +67,12 @@ while OK is True :
     
 
 
+
+# orientation initiale theta = 0
+# rotation de 90°
+# nouvelle orientation = 90° (0+90)
+# rotation de -45°
+# nouvelle orientation = 45° (0+90-45)
 
 # COMMENTAIRES
 
