@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+import math
 
 # TEST FILE : GET LUMPOINT COORD
 
@@ -16,6 +17,9 @@ if not cap.isOpened():
     exit()
 
 
+#cap.set(cv.CAP_PROP_FRAME_WIDTH, round(cv.CAP_PROP_FRAME_WIDTH/100))
+#cap.set(cv.CAP_PROP_FRAME_HEIGHT, round(cv.CAP_PROP_FRAME_HEIGHT/100))
+
 robotX = 0
 robotY = 0
 robotX_precedent = 0
@@ -27,21 +31,36 @@ robotTheta = 0
 OK = True
 while OK is True :
     success, frame = cap.read()
-    # currentframe = 0
-    if not success :
+    
+  # currentframe = 0
+	if not success :
         print("cap read not successed")
         OK = False
-        
-    cv.imshow('frame', frame)
-    if cv.waitKey(1) == ord('q') :
-        OK = False
+        exit()
+    
+	else :         	
+		frame = cv.resize(frame, (round(cv.CAP_PROP_FRAME_WIDTH/100), round(cv.CAP_PROP_FRAME_HEIGHT/100)))   
+
+
+    print("frame X = " + str(frame.shape[1]))
+    print("frame Y = " + str(frame.shape[0]))
+    
+   
+
 
     gray_image = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     gray_image = cv.blur(gray_image, (5,3))
     success,thresh = cv.threshold(gray_image,127,255,0)
+    
     if not success :
-        print("threshold not successed")
-
+    	print("threshold not successed")
+    	exit()
+	
+    cv.imshow('frame', frame)
+    if cv.waitKey(1) == ord('q') :
+        OK = False
+        
+    '''
     # find contours in the binary image
     contours, hierarchy = cv.findContours(thresh,cv.RETR_TREE,cv.CHAIN_APPROX_TC89_KCOS)
     for c in contours:
@@ -53,9 +72,13 @@ while OK is True :
             robotY_precedent = robotY
             robotX = int(M["m10"] / M["m00"])    
             robotY = int(M["m01"] / M["m00"])
-            robotOmega_precedent = robotOmega
+            robotOmega_precedent = robotOmega_precedent + robotOmega
             robotOmega = np.arctan2(robotY_precedent - robotY, robotX_precedent - robotX)
             robotTheta = robotOmega_precedent + robotOmega
+            robotTheta = (robotTheta * 180 / math.pi) % 360
+            
+            for i in range (0, 1000) :
+            	a = 100 + 100
 
 
     print("robotX = " + str(robotX))
@@ -63,7 +86,8 @@ while OK is True :
     print("robotXprecedent = " + str(robotX_precedent))
     print("robotYprecedent = " + str(robotY_precedent))
     print("robot theta = " + str(robotTheta))
-
+'''
+	
     
 
 
