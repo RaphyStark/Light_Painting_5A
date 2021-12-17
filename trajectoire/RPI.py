@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 
+# RF24 imports
+import sys
+import argparse
+import time
+import struct
+from RF24 import RF24, RF24_PA_LOW
 # library imports
+from typing import Mapping
 import cv2 as cv
 import matplotlib.pyplot as plt
 import numpy as np
@@ -18,6 +25,8 @@ class Coord():
         self.x = 0
         self.y = 0
 
+def map(x, in_min, in_max, out_min, out_max):
+    return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
 def on_move(event):
     # get the x and y pixel coords
@@ -32,6 +41,46 @@ def on_click(event):
         plt.disconnect(binding_id)
         plt.close()
 
+
+def send_buffer(buffer, payload, SENT):
+        start_timer = time.monotonic_ns()  # start timer
+        result = radio.write(buffer)
+        end_timer = time.monotonic_ns()  # end timer
+        if not result:
+            print("Transmission failed or timed out")
+            failures += 1
+        else:
+            print(
+                "Transmission successful! Time to Transmit: "
+                "{} us. Sent: {}".format(
+                    (end_timer - start_timer) / 1000,
+                    payload
+                )
+            )
+            SENT = True
+
+
+def master(payload1, payload2):
+    """Transmits an incrementing float every second"""
+    radio.stopListening()  # put radio in TX mode
+    failures = 0
+    SENT = False
+    SENT1 = False
+    SENT2 = False
+    while (SENT == False or failures < 6) :
+        # use struct.pack() to packet your data into the payload
+        # "<f" means a single little endian (4 byte) float value.
+        buffer = struct.pack("<f", payload1)
+        send_buffer(buffer, payload1, failures, SENT1)
+        buffer = struct.pack("<f", payload2)
+        send_buffer(buffer, payload2, failures, SENT2)
+        time.sleep(1)
+        if (SENT1 == True and SENT2 == True) :
+            SENT = True
+    else : 
+        if failures >= 6 :
+            print(failures, "failures detected. Leaving TX role.")
+            exit()
 
 
 # VARIABLES GLOABLES
@@ -230,7 +279,6 @@ for i in range(len(path)):
 
 
 
-
 # 9. Obtenir les coordonnées (x,y) du robot par la caméra
 #while True :
 success, frame = cap.read()
@@ -256,127 +304,137 @@ for c in contours:
         # Conversion dans le format de l'image
         robotX = int(robotX)
         robotY = int(robotY)
+        robotTheta0 = 0
+        # TODO : calcul de robotTheta0 
+        #   soit en mettant une LED à l'avant et à l'arrière du robot et en calculant l'angle entre les deux
+        #   soit en placant le robot à un angle donné au départ (moins recommandé car problème d'écart d'angle sur le long terme...)
+        #   soit une centrale inertielle
 
-print("robotX = " + str(robotX))
-print("robotY = " + str(robotY))
+
+# print("robotX = " + str(robotX))
+# print("robotY = " + str(robotY))
 # robotNodeNo = (capX * robotY) + robotX
 
 
 
+# 10. Définir un objet robot avec la pose initiale
+# TODO : vérifier les dimensions
+# unité S.I. -> mètres
+d = 0.135    # en m
+r = 0.035     # en m
+# TODO : mesurer la vitesse de rotation maximale du moteur (en m / s)
+w_max = 200
+
+robot = rob.Robot(robotX, robotY, robotTheta0, d, r, - w_max, w_max)
 
 
-# 10. Obtenir l'orientation theta du robot
-robotTheta = 0 # TODO
-# odométrie et position précédente / courante
 
 
+# définir un objet radio pour la communication
+radio = RF24(22,0)
+# initialize the nRF24L01 on the spi bus
+if not radio.begin():
+    raise RuntimeError("radio hardware is not responding")
+# For this example, we will use different addresses
+# An address need to be a buffer protocol object (bytearray)
+address = [b"1Node", b"2Node"]
+# It is very helpful to think of an address as a path instead of as
+# an identifying device destination
+print(sys.argv[0])  # print example name
+# to use different addresses on a pair of radios, we need a variable to
+# uniquely identify which address this radio will use to transmit
+# 0 uses address[0] to transmit, 1 uses address[1] to transmit
+radio_number = 1  # force master
 
 
 # 11. Calculer V et Omega en fonction de la pose et du noeud suivant
-# 11.0. Création des objets et des variables
-robot = rob.Robot(robotX, robotY, robotTheta)
 
-# 11.1. position control loop timer
+
+
+###### Mise en place de la boucle de contrôle ######
+
+# position control loop timer
 positionCtrlPeriod = 0.2
 timerPositionCtrl = tmr.Timer(positionCtrlPeriod)
 
-# 11.2. orientation control loop timer
+# orientation control loop timer
 orientationCtrlPeriod = 0.05
 timerOrientationCtrl = tmr.Timer(orientationCtrlPeriod)
 
-# 11.3. threshold for change to next WP
+# threshold for change to next WP
 epsilonWP = 0.01
 
-# 11.4. init WPManager
+# init WPManager
 WPManager = rob.WPManager(WPlist, epsilonWP)
 
-# 11.5. duration of scenario and time step for numerical integration
+# duration of scenario and time step for numerical integration
 t0 = 0.0
 tf = 5000.0
 dt = 0.01
 simu = rob.RobotSimulation(robot, t0, tf, dt)
 
-# initialize control inputs
-Vr = 0.0
-thetar = 0.0
-omegar = 0.0
+# gains des correcteurs
+kp_v = 0.2    # pour la vitesse de référence
+kp_theta = 1.0    # pour l'angle de référence
 
+# initialisation des variables de calcul
+vConsign = 0.0
+thetaRef = 0.0
+#omegaRef = 0.0 # apparemment pas utile ici
+###### Fin de la mise en place ######
+
+
+
+###### Début de la boucle de contrôle ######
 # loop on simulation time
 for t in simu.t: 
 
-    # WP navigation: switching condition to next WP of the list
-    if WPManager.distanceToCurrentWP(robot.x, robot.y) <= epsilonWP :
-        WPManager.switchToNextWP()
 
-    k1 = 0.2
-    k2 = 1.0
+    # on vérifie qu'on a pas déjà atteint le noeud de référence courant
+    #if WPManager.distanceToCurrentWP(robot.x, robot.y) <= epsilonWP :
+    #    WPManager.switchToNextWP()
 
-    # position control loop
-    if timerPositionCtrl.isEllapsed(t):
+        # 10. calcul de thetaRobot
+        robot.theta = np.arctan2(robot.y - robot.py, robot.x - robot.px)
 
-        # calcul de Vr (reference vitesse)
-        Vr = k1 * np.sqrt((WPManager.xr - robot.x)**2 + (WPManager.yr - robot.y)**2)
+        # calcul de thetaRef (reference en orientation)
+        thetaRef = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
+        if math.fabs(robot.theta-thetaRef)>math.pi:
+            thetaRef = thetaRef + math.copysign(2*math.pi,robot.theta)        
 
-        # calcul de thetar (reference orientation)
-        thetar = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
+        # calcul de l'angle de consigne thetaConsign
+        #if timerOrientationCtrl.isEllapsed(t):
+        thetaConsign = kp_theta * (thetaRef - robot.theta)
 
-        if math.fabs(robot.theta-thetar)>math.pi:
-            thetar = thetar + math.copysign(2*math.pi,robot.theta)        
-
-
-    # orientation control loop
-    if timerOrientationCtrl.isEllapsed(t):
-        # angular velocity control input        
-        omegar = k2 * (thetar - robot.theta)
-
-    # apply control inputs to robot
-    
-    ''''
-    wD = 0
-    wG = 0
-    r = 3.5     # rayon des roues en cm
-    d = 13.5    # distance entre les roue en cm
+        # calcul de vConsign (reference en vitesse)
+        vConsign = kp_v * np.sqrt((WPManager.xr - robot.x)**2 + (WPManager.yr - robot.y)**2)
 
 
-    VecCommand = [[Vr], [omegar]]       # 1,2
-    VecA = [[r/2, r/2], [r/d, -r/d]]    # 2,2
-    VecMot = [wD, wG]                   # 1,2
+        # 12. Calculer wD et wG en fonction de vRef et thetaRef
+        robot.wD = (2 * vConsign) - (thetaRef * d) / (2 * r)
+        robot.wG = (2 * vConsign) + (thetaRef * d) / (2 * r)
 
-    # 1,2   =   1,2     *       2,2
+        # 13. Calculer uD et uL en fonction de wD et wD
+        uD = map(robot.wD, robot.w_min, robot.w_max, -200, 200)
+        uG = map(robot.wG, robot.w_min, robot.w_max, -200, 200)
 
-    #                                               [r/2         r/2]
-    #   [wD   wG]    =      [Vr     OmegaR]     *                        
-    #                                               [r/d        -r/d]
+        # 14. Envoyer uD et uG au robot
+        radio.master(uG, uD)
 
 
-    VecMot = (VecCommand * VecA.reverse()).reverse()
+        # fonction de mise à jour de la pose du robot (robot.x, robot.y, robot.theta)
+        # TODO : updatePose()
 
-    print("Vec Mot = " + str(VecMot))
+        # close all figures
+        plt.close("all")
 
-    '''
-    # 12. TODO : Calculer tension moteurs d'après V et Omega
-    # 13. TODO : Envoyer les tensions moteurs au robot
-    robot.setV(Vr)
-    robot.setOmega(omegar)
-    
-    # integrate motion
-    # TODO : attendre un peu et mettre à jour robotX et robotY par la caméra
-    robot.integrateMotion(dt)
+        # generate plots
+        simu.plotXY(1, -1, capX, -1, capY)
+        simu.plotXYTheta(2)
+        simu.plotVOmega(3)
+        carte.plotPathOnMap(path, 4)
+        plt.show()
 
-    # store data to be plotted   
-    simu.addData(robot, WPManager, Vr, thetar, omegar)
-    
-# end of loop on simulation time
+    ###### Fin de la boucle de contrôle ######
 
-# close all figures
-plt.close("all")
-
-# generate plots
-simu.plotXY(1, -1, capX, -1, capY)
-simu.plotXYTheta(2)
-simu.plotVOmega(3)
-carte.plotPathOnMap(path, 4)
-plt.show()
-
-# When everything done, release the capture
-cap.release()
+# radio.powerDown()
