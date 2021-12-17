@@ -189,11 +189,34 @@ if not radio.begin():
 address = [b"1Node", b"2Node"]
 # It is very helpful to think of an address as a path instead of as
 # an identifying device destination
-print(sys.argv[0])  # print example name
+#print(sys.argv[0])  # print example name
 # to use different addresses on a pair of radios, we need a variable to
 # uniquely identify which address this radio will use to transmit
 # 0 uses address[0] to transmit, 1 uses address[1] to transmit
 radio_number = 1  # force master
+
+
+# set the Power Amplifier level to -12 dBm since this test example is
+# usually run with nRF24L01 transceivers in close proximity of each other
+radio.setPALevel(RF24_PA_LOW)  # RF24_PA_MAX is default
+
+# set the TX address of the RX node into the TX pipe
+radio.openWritingPipe(address[radio_number])  # always uses pipe 0
+
+# set the RX address of the TX node into a RX pipe
+radio.openReadingPipe(1, address[not radio_number])  # using pipe 1
+
+# To save time during transmission, we'll set the payload size to be only
+# what we need. A float value occupies 4 bytes in memory using
+# struct.pack(); "<f" means a little endian unsigned float
+payload = 0.0
+radio.payloadSize = len(struct.pack("<f", payload))
+
+# for debugging, we have 2 options that print a large block of details
+# (smaller) function that prints raw register values
+# radio.printDetails()
+# (larger) function that prints human readable data
+# radio.printPrettyDetails()
 
 
 
