@@ -23,7 +23,38 @@ import AStar
 def map(x, in_min, in_max, out_min, out_max):
     return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
+def send_buffer(buffer, payload):
+        failures = 0
+        while (failures < 6) :
+            start_timer = time.monotonic_ns()  # start timer
+            result = radio.write(buffer)
+            end_timer = time.monotonic_ns()  # end timer
+            if not result:
+                print("Transmission failed or timed out")
+                failures += 1
+            else:
+                print(
+                    "Transmission successful! Time to Transmit: "
+                    "{} us. Sent: {}".format(
+                        (end_timer - start_timer) / 1000,
+                        payload))
+                break
+        if failures >= 6 :
+            print(failures, "failures detected")
+            #exit()
 
+
+
+def master(payload1, payload2):
+    """Transmits an incrementing float every second"""
+    radio.stopListening()  # put radio in TX mode
+    # use struct.pack() to packet your data into the payload
+    # "<f" means a single little endian (4 byte) float value.
+    buffer = struct.pack("<f", payload1)
+    send_buffer(buffer, payload1)
+    buffer = struct.pack("<f", payload2)
+    send_buffer(buffer, payload2)
+    time.sleep(1)
 
 
 
@@ -233,8 +264,10 @@ for t in simu.t:
         uD = map(robot.wD, robot.w_min, robot.w_max, -200, 200)
         uG = map(robot.wG, robot.w_min, robot.w_max, -200, 200)
 
+        print("uD = " + str(uD) + " et uG = " + str(uG))
+
         # 14. Envoyer uD et uG au robot
-        radio.master(uG, uD)
+        master(uG, uD)
 
 
         # fonction de mise à jour de la pose du robot (robot.x, robot.y, robot.theta)
