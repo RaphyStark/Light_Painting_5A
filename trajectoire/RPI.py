@@ -6,14 +6,17 @@ import argparse
 import time
 import struct
 from RF24 import RF24, RF24_PA_LOW
+
 # library imports
 from typing import Mapping
 import cv2 as cv
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+
 # personal functions import
 from functions import *
+
 # robotic libraries import
 import Robot as rob
 import Timer as tmr
@@ -42,7 +45,7 @@ def on_click(event):
         plt.close()
 
 
-def send_buffer(buffer, payload, SENT):
+def send_buffer(buffer, payload, failures, SENT):
         start_timer = time.monotonic_ns()  # start timer
         result = radio.write(buffer)
         end_timer = time.monotonic_ns()  # end timer
