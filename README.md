@@ -216,7 +216,11 @@ https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generati
 Une fois la clé ssh de son pc ajoutée sur git, taper la commande pour cloner le repo en local :
         $ git clone git@github.com:RaphyStark/Light_Painting_5A.git
 
-Si la clé est demandée après chaque commande git pour accéder au server (fetch, pull, push...), suivre :
+Si la clé est demandée après chaque commande git pour accéder au server (fetch, pull, push...) :
+        
+        $ ssh-add ~/.ssh/id_ed2551
+
+Réponse trouvée sur ce topic :
 https://superuser.com/questions/988185/how-to-avoid-being-asked-enter-passphrase-for-key-when-im-doing-ssh-operatio
 
 
