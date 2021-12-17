@@ -20,7 +20,57 @@ import Robot as rob
 import Timer as tmr
 import AStar
 
-def map(x, in_min, in_max, out_min, out_max):
+
+
+
+
+
+
+
+
+# 9. Obtenir les coordonnées (x,y) du robot par la caméra
+#while True :
+def update_xy() :
+    success, frame = cap.read()
+    # currentframe = 0
+    if not success :
+        print("cap read not successed")   
+    gray_image = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    gray_image = cv.blur(gray_image, (5,3))
+    success,thresh = cv.threshold(gray_image,127,255,0)
+    if not success :
+        print("threshold not successed")
+    # find contours in the binary image
+    contours, hierarchy = cv.findContours(thresh,cv.RETR_TREE,cv.CHAIN_APPROX_TC89_KCOS)
+    for c in contours:
+        # calculate moments for each contour
+        M = cv.moments(c)
+        # calculate x,y coordinate of center 
+        robotX = 0
+        robotY = 0       
+        if (M["m00"] != 0) :
+            robotX = int(M["m10"] / M["m00"])    
+            robotY = int(M["m01"] / M["m00"])
+            # Conversion dans le format de l'image
+            robotX = int(robotX)
+            robotY = int(robotY)
+            
+    return robotX, robotY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def _map(x, in_min, in_max, out_min, out_max):
     return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
 def send_buffer(buffer, payload):
@@ -62,6 +112,8 @@ def master(payload1, payload2):
 
 # TD1 Génération de trajectoire
 
+
+
 # dimensions of the map
 dimX = 20
 dimY = 10
@@ -101,8 +153,8 @@ closedList, successFlag = carte.AStarFindPath(startNodeNo,goalNodeNo, epsilon=1.
 
 if (successFlag==True):
     path, lenpath = carte.builtPath(closedList)
-    carte.plotPathOnMap(path, 2)
-    carte.plotExploredTree(closedList, 3)
+    #carte.plotPathOnMap(path, 2)
+    #carte.plotExploredTree(closedList, 3)
     # print("trajectoire : " + str(path))
 
 
@@ -128,6 +180,15 @@ cap = cv.VideoCapture(0)
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
+
+success, frame = cap.read()
+if success is True :
+    capY = int(frame.shape[0])
+    capX = int(frame.shape[1])
+else :
+    print("Problem capturing a frame")
+    exit()
+
 
 
 robotX = 0
@@ -176,7 +237,7 @@ w_max = 200
 
 robot = rob.Robot(robotX, robotY, robotTheta0, d, r, - w_max, w_max)
 
-
+print("robot defined")
 
 
 # 11. définir un objet radio pour la communication
@@ -218,6 +279,7 @@ radio.payloadSize = len(struct.pack("<f", payload))
 # (larger) function that prints human readable data
 # radio.printPrettyDetails()
 
+print("radio defined")
 
 
 ###### Mise en place de la boucle de contrôle ######
@@ -238,7 +300,7 @@ WPManager = rob.WPManager(WPlist, epsilonWP)
 
 # duration of scenario and time step for numerical integration
 t0 = 0.0
-tf = 5000.0
+tf = 50000.0
 dt = 0.01
 simu = rob.RobotSimulation(robot, t0, tf, dt)
 
@@ -252,61 +314,68 @@ thetaRef = 0.0
 #omegaRef = 0.0 # apparemment pas utile ici
 ###### Fin de la mise en place ######
 
+#carte.plotPathOnMap(path, 4)
+#plt.show()
 
-
+i = 0
+print("let's loop")
 ###### Début de la boucle de contrôle ######
 # loop on simulation time
 for t in simu.t: 
 
-
+    print("t = " + str(t))
     # on vérifie qu'on a pas déjà atteint le noeud de référence courant
-    #if WPManager.distanceToCurrentWP(robot.x, robot.y) <= epsilonWP :
-    #    WPManager.switchToNextWP()
+    if WPManager.distanceToCurrentWP(robot.x, robot.y) <= epsilonWP :
+        WPManager.switchToNextWP()
 
-        # 10. calcul de thetaRobot
-        robot.theta = np.arctan2(robot.y - robot.py, robot.x - robot.px)
+    # 10. calcul de thetaRobot
+    robot.theta = np.arctan2(robot.y - robot.py, robot.x - robot.px)
 
-        # calcul de thetaRef (reference en orientation)
-        thetaRef = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
-        if math.fabs(robot.theta-thetaRef)>math.pi:
-            thetaRef = thetaRef + math.copysign(2*math.pi,robot.theta)        
+    # calcul de thetaRef (reference en orientation)
+    thetaRef = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
+    if math.fabs(robot.theta-thetaRef)>math.pi:
+        thetaRef = thetaRef + math.copysign(2*math.pi,robot.theta)        
 
-        # calcul de l'angle de consigne thetaConsign
-        #if timerOrientationCtrl.isEllapsed(t):
-        thetaConsign = kp_theta * (thetaRef - robot.theta)
+    # calcul de l'angle de consigne thetaConsign
+    #if timerOrientationCtrl.isEllapsed(t):
+    thetaConsign = kp_theta * (thetaRef - robot.theta)
 
-        # calcul de vConsign (reference en vitesse)
-        vConsign = kp_v * np.sqrt((WPManager.xr - robot.x)**2 + (WPManager.yr - robot.y)**2)
-
-
-        # 12. Calculer wD et wG en fonction de vRef et thetaRef
-        robot.wD = (2 * vConsign) - (thetaRef * d) / (2 * r)
-        robot.wG = (2 * vConsign) + (thetaRef * d) / (2 * r)
-
-        # 13. Calculer uD et uL en fonction de wD et wD
-        uD = map(robot.wD, robot.w_min, robot.w_max, -200, 200)
-        uG = map(robot.wG, robot.w_min, robot.w_max, -200, 200)
-
-        print("uD = " + str(uD) + " et uG = " + str(uG))
-
-        # 14. Envoyer uD et uG au robot
-        master(uG, uD)
+    # calcul de vConsign (reference en vitesse)
+    vConsign = kp_v * np.sqrt((WPManager.xr - robot.x)**2 + (WPManager.yr - robot.y)**2)
 
 
-        # fonction de mise à jour de la pose du robot (robot.x, robot.y, robot.theta)
-        robot.px = robot.x
-        robot.py = robot.y 
-        # TODO : updatePose()
+    # 12. Calculer wD et wG en fonction de vRef et thetaRef
+    robot.wD = (2 * vConsign) - (thetaRef * d) / (2 * r)
+    robot.wG = (2 * vConsign) + (thetaRef * d) / (2 * r)
 
-        # close all figures
-        plt.close("all")
+    # 13. Calculer uD et uL en fonction de wD et wD
+    uD = _map(robot.wD, robot.w_min, robot.w_max, -200, 200)
+    uG = _map(robot.wG, robot.w_min, robot.w_max, -200, 200)
 
-        # generate plots
-        simu.plotXY(1, -1, capX, -1, capY)
-        simu.plotXYTheta(2)
-        simu.plotVOmega(3)
-        carte.plotPathOnMap(path, 4)
-        plt.show()
+    print("robot = " + str(robot))
+    print("uD = " + str(uD) + " et uG = " + str(uG))
+
+    # 14. Envoyer uD et uG au robot
+    master(uG, uD)
+
+
+    # fonction de mise à jour de la pose du robot (robot.x, robot.y, robot.theta)
+    robot.px = robot.x
+    robot.py = robot.y
+    print("loop " + str(i))
+    i = i + 1
+    
+    robot.x, robot.y = update_xy()
+
+    # close all figures
+    #plt.close("all")
+
+    # generate plots
+    #simu.plotXY(1, -1, dimX, -1, dimY)
+    #simu.plotXYTheta(2)
+    #simu.plotVOmega(3)
+    #plt.show()
+cap.release()
 
     ###### Fin de la boucle de contrôle ######
 
