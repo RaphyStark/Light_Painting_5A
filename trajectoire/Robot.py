@@ -22,10 +22,11 @@ class Robot:
         self.r = r
         self.w_min = w_min
         self.w_max = w_max
+        self.px = 0
+        self.py = 0
         #self.V = 0.0  # module of linear speed in m/s (>=0)
         #self.omega = 0.0  # angular speed in rad/s
-    
-    
+     
     # integrate robot motion over one sampling period (Euler discretization)
     def integrateMotion(self, Te):        
         self.x = self.x + Te * self.V * math.cos(self.theta)    

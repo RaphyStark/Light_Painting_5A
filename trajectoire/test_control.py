@@ -238,6 +238,8 @@ for t in simu.t:
 
 
         # fonction de mise à jour de la pose du robot (robot.x, robot.y, robot.theta)
+        robot.px = robot.x
+        robot.py = robot.y 
         # TODO : updatePose()
 
         # close all figures
