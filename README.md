@@ -1,6 +1,16 @@
 https://www.openhardware.io/view/636/Raspberry-PI-Hat
 https://www.openhardware.io/view/694/Arduino-UNO-NRF24L01-Shield
 
+
+Recommande d'utiliser virtualenv quand python demande de passer en sudo (problème d'installation de librairies :
+ 
+https://askubuntu.com/questions/1268870/python-module-not-found-in-sudo-mode-ubuntu-20-04
+
+Equations V et omega du robot fonction de la position etc
+https://lucidar.me/fr/mechanics/geometric-model-for-differential-wheeled-mobile-robot/
+
+Peut être déjà écrit mais ou ? ssh-add ~/.ssh/id_rsa
+
 ## Environnement Arduino avec NRF24L01
 
 
