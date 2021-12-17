@@ -87,7 +87,7 @@ while OK is True :
             ProbotTheta = robotTheta
             #if (robotX)
             robotTheta = np.arctan2(robotY - ProbotY, robotX - ProbotX) # [-Pi, Pi]
-            robotTheta = (robotTheta * 180 / np.pi)                    # [-180, 180]
+            robotTheta = (robotTheta * 180 / np.pi)                     # [-180, 180]
             #if math.fabs(ProbotTheta - robotTheta) > math.pi:
                 
             #theta_objectif = np.arctan2(Y_objectif - robotY, X_objectif - robotX) 
