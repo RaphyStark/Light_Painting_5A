@@ -99,7 +99,9 @@ if not cap.isOpened():
     exit()
 
 
-
+robotX = 0
+robotY = 0    
+robotTheta0 = 0
 
 # 9. Obtenir les coordonnées (x,y) du robot par la caméra
 #while True :
@@ -117,16 +119,14 @@ contours, hierarchy = cv.findContours(thresh,cv.RETR_TREE,cv.CHAIN_APPROX_TC89_K
 for c in contours:
     # calculate moments for each contour
     M = cv.moments(c)
-    # calculate x,y coordinate of center 
-    robotX = 0
-    robotY = 0       
+    # calculate x,y coordinate of center    
     if (M["m00"] != 0) :
         robotX = int(M["m10"] / M["m00"])    
         robotY = int(M["m01"] / M["m00"])
         # Conversion dans le format de l'image
         robotX = int(robotX)
         robotY = int(robotY)
-        robotTheta0 = 0
+
         # TODO : calcul de robotTheta0 
         #   soit en mettant une LED à l'avant et à l'arrière du robot et en calculant l'angle entre les deux
         #   soit en placant le robot à un angle donné au départ (moins recommandé car problème d'écart d'angle sur le long terme...)
