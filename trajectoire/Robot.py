@@ -12,16 +12,18 @@ import matplotlib.animation as animation
 
 class Robot:
     
-    def __init__(self, x0, y0, theta0, id=0):
+    def __init__(self, x0, y0, theta0, d, r, w_min, w_max, id=0):
         self.id = id        
         # state
         self.x = x0  # x position coordinate in meters
         self.y = y0  # y position coordinate in meters
         self.theta = theta0  # orientation angle in rad
-
-        #input
-        self.V = 0.0  # module of linear speed in m/s (>=0)
-        self.omega = 0.0  # angular speed in rad/s
+        self.d = d
+        self.r = r
+        self.w_min = w_min
+        self.w_max = w_max
+        #self.V = 0.0  # module of linear speed in m/s (>=0)
+        #self.omega = 0.0  # angular speed in rad/s
     
     
     # integrate robot motion over one sampling period (Euler discretization)

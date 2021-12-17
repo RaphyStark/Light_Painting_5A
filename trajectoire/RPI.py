@@ -333,7 +333,7 @@ robot = rob.Robot(robotX, robotY, robotTheta0, d, r, - w_max, w_max)
 
 
 
-# définir un objet radio pour la communication
+# 11. définir un objet radio pour la communication
 radio = RF24(22,0)
 # initialize the nRF24L01 on the spi bus
 if not radio.begin():
