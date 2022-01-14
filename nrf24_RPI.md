@@ -28,8 +28,8 @@ INFOS SUR INTERNET
 https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
 Cette page explique le fonctionnement du module nrf24l01.
 Il compare également les deux versions de module nrf24l01 :
-- nrf24l01 + wireless module (la version compacte que nous avons avec une antenne intégrée)
-- nrf24l01 + PA/LNA module (version avec antenne externe et une chip pour gérer le PA/LNA & transmission-reception)
+-> nrf24l01 + wireless module (la version compacte que nous avons avec une antenne intégrée)
+-> nrf24l01 + PA/LNA module (version avec antenne externe et une chip pour gérer le PA/LNA & transmission-reception)
 La différence est que cette dernière version permet une transmission sur 1000m (pas utile pour notre projet).
 Il explique également comment se fait la transaction avec accusé de reception et interruption (IRQ) :
 Transaction with acknowledgement and interrupt :
