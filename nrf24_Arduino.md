@@ -17,3 +17,10 @@ Programmateur : AVRISP null
 3/ Installer la librairie nécessaire depuis l'onglet Croquis :
 Cliquer sur "Importer bibliothèque", "Ajouter librairie".
 Taper nrf24L01 dans le champ de recherche et sélectionner RF24.
+
+
+
+
+Attention :
+Les Arduino disposent d'un régulateur de tension (SPX1117M3-L-5 Regulator) qui se chargent de stabiliser l'alimentation électrique.
+En revanche, si le module est connecté directement à une chip ATmega328, il faut ajouter un condensateur.
