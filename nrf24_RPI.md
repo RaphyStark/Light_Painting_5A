@@ -25,25 +25,25 @@ sources : https://github.com/nRF24/RF24/issues/615
 
 INFOS SUR INTERNET
 
-https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
-Cette page explique le fonctionnement du module nrf24l01.
-Il compare également les deux versions de module nrf24l01 :
--> nrf24l01 + wireless module (la version compacte que nous avons avec une antenne intégrée)
--> nrf24l01 + PA/LNA module (version avec antenne externe et une chip pour gérer le PA/LNA & transmission-reception)
-La différence est que cette dernière version permet une transmission sur 1000m (pas utile pour notre projet).
-Il explique également comment se fait la transaction avec accusé de reception et interruption (IRQ) :
-Transaction with acknowledgement and interrupt :
-The transmitter starts a communication by sending a data packet to the receiver. 
-Once the whole packet is transmitted, it waits (around 130 µs) for the acknowledgement packet (ACK packet) to receive. 
-When the receiver receives the packet, it sends ACK packet to the transmitter. 
-On receiving the ACK packet the transmitter asserts interrupt (IRQ) signal to indicate the new data is available.
-Il y a également un paragraphe pour les branchements :
-CTRL-F : "Wiring – Connecting nRF24L01+ transceiver module to Arduino UNO"
-Ainsi qu'un autre paragraphe pour la mise en place de l'environnement :
-CTRL-F : "RF24 Arduino Library for nRF24L01+ Module"
-Enfin, il fournit les codes pour la communication entre deux Arduinos (un transmitter et un receiver)
-CTRL-F : "Arduino Code – For Transmitter"
-CTRL-F : "Arduino Code – For Receiver"
+https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/ \
+Cette page explique le fonctionnement du module nrf24l01. \
+Il compare également les deux versions de module nrf24l01 : \
+-> nrf24l01 + wireless module (la version compacte que nous avons avec une antenne intégrée)\
+-> nrf24l01 + PA/LNA module (version avec antenne externe et une chip pour gérer le PA/LNA & transmission-reception)\
+La différence est que cette dernière version permet une transmission sur 1000m (pas utile pour notre projet).\
+Il explique également comment se fait la transaction avec accusé de reception et interruption (IRQ) : \
+Transaction with acknowledgement and interrupt : \
+The transmitter starts a communication by sending a data packet to the receiver. \
+Once the whole packet is transmitted, it waits (around 130 µs) for the acknowledgement packet (ACK packet) to receive. \
+When the receiver receives the packet, it sends ACK packet to the transmitter. \
+On receiving the ACK packet the transmitter asserts interrupt (IRQ) signal to indicate the new data is available. \
+Il y a également un paragraphe pour les branchements : \
+CTRL-F : "Wiring – Connecting nRF24L01+ transceiver module to Arduino UNO" \
+Ainsi qu'un autre paragraphe pour la mise en place de l'environnement : \
+CTRL-F : "RF24 Arduino Library for nRF24L01+ Module" \
+Enfin, il fournit les codes pour la communication entre deux Arduinos (un transmitter et un receiver) \
+CTRL-F : "Arduino Code – For Transmitter" \
+CTRL-F : "Arduino Code – For Receiver" \
 La dernière partie du tutoriel fournit des indications pour améliorer le dispositif si des problèmes survenaient.
 https://tlfong01.blog/2020/01/24/raspberry-pi-3-tutorial-14-wireless-pi-to-arduino-communication-with-nrf24l01/
 https://nrf24.github.io/RF24/md_docs_linux_install.html
