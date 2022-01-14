@@ -1,18 +1,31 @@
 ## Environnement RaspberryPi avec NRF24L01
     $ mkdir ~/rf24libs
+
     $ cd ~/rf24libs
+
     $ git clone https://github.com/TMRh20/RF24
+
     $ cd ~/rf24libs/RF24
+
     $ ./configure
+
     $ sudo make install
+
     $ sudo apt-get install python3-dev libboost-python-dev
+
     $ sudo ln -s $(ls /usr/lib/arm-linux-gnueabihf/libboost_python3-py3*.so | tail -1) /usr/lib/arm-linux-gnueabihf/libboost_python3.so    /!/
+
     $ sudo apt-get install python3-setuptools
+
     $ cd pyRF24/
+
     $ python3 setup.py build
+
     $ sudo python3 setup.py install
+
     $ sudo apt-get install python3-dev python3-rpi.gpio
-Si une erreur apparait à la 8e commande (sudo ln -s), remplacer "libboost_python3-py3*.so" par le nom correct du fichier dans /usr/lib/arm-linux-gnu... 
+
+Si une erreur apparait à la 8e commande (sudo ln -s), remplacer "libboost_python3-py3*.so" par le nom correct du fichier dans /usr/lib/arm-linux-gnu...  \
 sources : https://github.com/nRF24/RF24/issues/615
 
 
@@ -23,8 +36,7 @@ sources : https://github.com/nRF24/RF24/issues/615
 
 
 
-INFOS SUR INTERNET
-
+INFOS SUR INTERNET \
 https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/ \
 Cette page explique le fonctionnement du module nrf24l01. \
 Il compare également les deux versions de module nrf24l01 : \
@@ -44,12 +56,12 @@ CTRL-F : "RF24 Arduino Library for nRF24L01+ Module" \
 Enfin, il fournit les codes pour la communication entre deux Arduinos (un transmitter et un receiver) \
 CTRL-F : "Arduino Code – For Transmitter" \
 CTRL-F : "Arduino Code – For Receiver" \
-La dernière partie du tutoriel fournit des indications pour améliorer le dispositif si des problèmes survenaient.
-https://tlfong01.blog/2020/01/24/raspberry-pi-3-tutorial-14-wireless-pi-to-arduino-communication-with-nrf24l01/
-https://nrf24.github.io/RF24/md_docs_linux_install.html
-http://electroniqueamateur.blogspot.com/2017/02/communication-entre-raspberry-pi-et.html
-Utiliser les codes de ce site.
-Un commentaire fourni également une bonne info :
-Pour vérifier la communication j'ai ajouté coté Arduino et coté Raspberry PI la commande radio.printDetails(). 
-Bien vérifier les adresses RX_ADDR_P0-1 coté Arduino et TXADDR coté Raspberry PI sont le mêmes. 
-Vérifier également la vitesse Data rate.
+La dernière partie du tutoriel fournit des indications pour améliorer le dispositif si des problèmes survenaient. \
+https://tlfong01.blog/2020/01/24/raspberry-pi-3-tutorial-14-wireless-pi-to-arduino-communication-with-nrf24l01/ \
+https://nrf24.github.io/RF24/md_docs_linux_install.html \
+http://electroniqueamateur.blogspot.com/2017/02/communication-entre-raspberry-pi-et.html \
+Utiliser les codes de ce site. \
+Un commentaire fourni également une bonne info : \
+Pour vérifier la communication j'ai ajouté coté Arduino et coté Raspberry PI la commande radio.printDetails().  \
+Bien vérifier les adresses RX_ADDR_P0-1 coté Arduino et TXADDR coté Raspberry PI sont le mêmes.  \
+Vérifier également la vitesse Data rate.\
