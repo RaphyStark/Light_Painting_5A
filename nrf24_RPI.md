@@ -26,6 +26,7 @@
     $ sudo apt-get install python3-dev python3-rpi.gpio
 
 Si une erreur apparait à la 8e commande (sudo ln -s), remplacer "libboost_python3-py3*.so" par le nom correct du fichier dans /usr/lib/arm-linux-gnu...  \
+Probablement : libboost_python39.so \
 sources : https://github.com/nRF24/RF24/issues/615
 
 
