@@ -1,4 +1,5 @@
 ## Environnement RaspberryPi avec NRF24L01
+
     $ mkdir ~/rf24libs
 
     $ cd ~/rf24libs
@@ -15,10 +16,11 @@
 
     $ sudo ln -s $(ls /usr/lib/arm-linux-gnueabihf/libboost_python3-py3*.so | tail -1) /usr/lib/arm-linux-gnueabihf/libboost_python3.so
     
-    Nous avons trouvé une erreur à cette commande /
-    Il faut aller trouver le bon fichier dans /usr/lib/arm-linux-gnueabihf/ /
-    Pour nous le fichier s'appelle libboost_python39.so /
-    La commande est donc pour nous :/
+Nous avons trouvé une erreur à cette commande /
+Il faut aller trouver le bon fichier dans /usr/lib/arm-linux-gnueabihf/ /
+Pour nous le fichier s'appelle libboost_python39.so /
+La commande est donc pour nous :/
+    
     $ sudo ln -s $(ls /usr/lib/arm-linux-gnueabihf/libboost_python39.so | tail -1) /usr/lib/arm-linux-gnueabihf/libboost_python3.so
 
     $ sudo apt-get install python3-setuptools
