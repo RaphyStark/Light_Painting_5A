@@ -19,7 +19,7 @@ Cliquer sur "Importer bibliothèque", "Ajouter librairie".
 Taper nrf24L01 dans le champ de recherche et sélectionner RF24.
 
 
-
+ 
 
 Attention :
 Les Arduino disposent d'un régulateur de tension (SPX1117M3-L-5 Regulator) qui se chargent de stabiliser l'alimentation électrique.
