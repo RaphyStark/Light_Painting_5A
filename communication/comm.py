@@ -3,7 +3,7 @@ A simple example of sending data from 1 nRF24L01 transceiver to another.
 This example was written to be used on 2 devices acting as 'nodes'.
 """
 import sys
-#import time
+import time
 import struct
 from RF24 import RF24, RF24_PA_LOW
 
