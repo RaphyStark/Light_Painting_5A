@@ -60,7 +60,7 @@ if __name__ == "__main__":
     # To save time during transmission, we'll set the payload size to be only
     # what we need. A float value occupies 4 bytes in memory using
     # struct.pack(); "<f" means a little endian unsigned float
-    radio.payloadSize = len(struct.pack("<f", payload))
+    radio.payloadSize = len(struct.pack("c", uL, uR))
 
     # for debugging, we have 2 options that print a large block of details
     # (smaller) function that prints raw register values
