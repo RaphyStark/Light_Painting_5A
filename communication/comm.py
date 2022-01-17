@@ -28,6 +28,8 @@ radio = RF24(22, 0)
 uL = 100
 uR = 200
 
+values = uL, uR
+
 success = False
 
 if __name__ == "__main__":
@@ -73,7 +75,7 @@ if __name__ == "__main__":
     while (success == False) :
         # use struct.pack() to packet your data into the payload
         # "<f" means a single little endian (4 byte) float value.
-        buffer = struct.pack("c", uL, uR)
+        buffer = struct.pack("c",*values)
         #start_timer = time.monotonic_ns()  # start timer
         result = radio.write(buffer)
         #end_timer = time.monotonic_ns()  # end timer
