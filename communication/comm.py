@@ -70,7 +70,7 @@ if __name__ == "__main__":
 
     radio.stopListening()  # put radio in TX mode
 
-    while !success :
+    while (!success) :
         # use struct.pack() to packet your data into the payload
         # "<f" means a single little endian (4 byte) float value.
         buffer = struct.pack("c", uL, uR)
