@@ -28,7 +28,7 @@ radio = RF24(22, 0)
 uL = 100
 uR = 200
 
-bool success
+success = False
 
 if __name__ == "__main__":
 
