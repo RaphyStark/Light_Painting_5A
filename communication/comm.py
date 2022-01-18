@@ -64,10 +64,10 @@ if __name__ == "__main__":
     ##########################
     #radio.payloadSize = len(struct.pack("qq", uL, uR))
     radio.payloadSize = len(struct.pack("i", uL))
-    print(radio.payloadSize)
+    #print(radio.payloadSize)
     # for debugging, we have 2 options that print a large block of details
     # (smaller) function that prints raw register values
-    # radio.printDetails()
+    radio.printDetails()
     # (larger) function that prints human readable data
     # radio.printPrettyDetails()
 
@@ -89,6 +89,6 @@ if __name__ == "__main__":
             print("failed")
             print("buffer : ")
             print(buffer)
-            print("buffer size : ")
+            print("uL size : ")
             print(sys.getsizeof(uL))
         time.sleep(1)
