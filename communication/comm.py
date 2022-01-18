@@ -55,7 +55,7 @@ if __name__ == "__main__":
     radio.openWritingPipe(address[radio_number])  # always uses pipe 0
 
     # set the RX address of the TX node into a RX pipe
-    radio.openReadingPipe(1, address[not radio_number])  # using pipe 1
+    # radio.openReadingPipe(1, address[not radio_number])  # using pipe 1
 
     # To save time during transmission, we'll set the payload size to be only
     # what we need. A float value occupies 4 bytes in memory using
@@ -67,9 +67,9 @@ if __name__ == "__main__":
     #print(radio.payloadSize)
     # for debugging, we have 2 options that print a large block of details
     # (smaller) function that prints raw register values
-    radio.printDetails()
+    # radio.printDetails()
     # (larger) function that prints human readable data
-    # radio.printPrettyDetails()
+    radio.printPrettyDetails()
 
     radio.stopListening()  # put radio in TX mode
 
