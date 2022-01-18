@@ -80,4 +80,6 @@ if __name__ == "__main__":
         if result:
             print("OK")
             success = True
+        else :
+            print("failed")
         time.sleep(1)
