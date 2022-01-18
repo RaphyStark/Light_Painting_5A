@@ -91,5 +91,5 @@ if __name__ == "__main__":
             print("buffer : ")
             print(buffer)
             print("buffer size : ")
-            print(asizeof.asizeof(buffer))
+            print(sys.getsizeof(buffer))
         time.sleep(1)
