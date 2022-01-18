@@ -6,7 +6,6 @@ import sys
 import time
 import struct
 from RF24 import RF24, RF24_PA_LOW
-from pympler import asizeof
 
 ########### USER CONFIGURATION ###########
 # See https://github.com/TMRh20/RF24/blob/master/pyRF24/readme.md
