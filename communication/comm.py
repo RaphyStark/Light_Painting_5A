@@ -63,25 +63,25 @@ if __name__ == "__main__":
     
     ##########################
     #radio.payloadSize = len(struct.pack("qq", uL, uR))
-    radio.payloadSize = len(struct.pack("i", uL))
+    # radio.payloadSize = len(struct.pack("i", uL))
     #print(radio.payloadSize)
     # for debugging, we have 2 options that print a large block of details
     # (smaller) function that prints raw register values
     # radio.printDetails()
     # (larger) function that prints human readable data
+
+    buffer = struct.pack("i", uL)
+
+    radio.payloadSize = len(buffer)
+
     radio.printPrettyDetails()
 
     radio.stopListening()  # put radio in TX mode
 
     while (success == False) :
-        # use struct.pack() to packet your data into the payload
-        # "<f" means a single little endian (4 byte) float value.
-        ##########################
-        # buffer = struct.pack("qq", uL, uR)
-        buffer = struct.pack("i", uL)
-        #start_timer = time.monotonic_ns()  # start timer
+
         result = radio.write(buffer)
-        #end_timer = time.monotonic_ns()  # end timer
+
         if result:
             print("OK")
             success = True
