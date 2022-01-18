@@ -51,6 +51,8 @@ if __name__ == "__main__":
     # usually run with nRF24L01 transceivers in close proximity of each other
     radio.setPALevel(RF24_PA_LOW)  # RF24_PA_MAX is default
 
+    radio.setChannel(125)
+
     # set the TX address of the RX node into the TX pipe
     radio.openWritingPipe(address[radio_number])  # always uses pipe 0
 
