@@ -87,4 +87,6 @@ if __name__ == "__main__":
             success = True
         else :
             print("failed")
+            print("buffer : ")
+            print(buffer)
         time.sleep(1)
