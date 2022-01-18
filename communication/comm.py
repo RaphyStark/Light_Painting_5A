@@ -25,7 +25,7 @@ radio = RF24(22, 0)
 
 # using the python keyword global is bad practice. Instead we'll use a 1 item
 # list to store our float number for the payloads sent/received
-uL = 100
+uL = 2
 uR = 200
 
 success = False
