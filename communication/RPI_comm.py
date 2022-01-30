@@ -7,25 +7,12 @@ import time
 import struct
 from RF24 import RF24, RF24_PA_LOW
 
-########### USER CONFIGURATION ###########
-# See https://github.com/TMRh20/RF24/blob/master/pyRF24/readme.md
-# Radio CE Pin, CSN Pin, SPI Speed
-# CE Pin uses GPIO number with BCM and SPIDEV drivers, other platforms use
-# their own pin numbering
-# CS Pin addresses the SPI bus number at /dev/spidev<a>.<b>
-# ie: RF24 radio(<ce_pin>, <a>*10+<b>); spidev1.0 is 10, spidev1.1 is 11 etc..
-
-# Generic:
 radio = RF24(22, 0)
-################## Linux (BBB,x86,etc) #########################
-# See http://nRF24.github.io/RF24/pages.html for more information on usage
-# See http://iotdk.intel.com/docs/master/mraa/ for more information on MRAA
-# See https://www.kernel.org/doc/Documentation/spi/spidev for more
-# information on SPIDEV
 
-# using the python keyword global is bad practice. Instead we'll use a 1 item
-# list to store our float number for the payloads sent/received
-uL = 2
+
+uL = 200
+uR = 250
+
 
 
 success = False
@@ -51,39 +38,17 @@ if __name__ == "__main__":
     # usually run with nRF24L01 transceivers in close proximity of each other
     radio.setPALevel(RF24_PA_LOW)  # RF24_PA_MAX is default
 
-    #radio.setChannel(125)
-
     # set the TX address of the RX node into the TX pipe
-    radio.openWritingPipe(address[radio_number])  # always uses pipe 0
-
-    # set the RX address of the TX node into a RX pipe
-    # radio.openReadingPipe(1, address[not radio_number])  # using pipe 1
-
-    # To save time during transmission, we'll set the payload size to be only
-    # what we need. A float value occupies 4 bytes in memory using
-    # struct.pack(); "<f" means a little endian unsigned float
+    radio.openWritingPipe(address[radio_number])
     
-    ##########################
-    #radio.payloadSize = len(struct.pack("qq", uL, uR))
-    radio.payloadSize = len(struct.pack("i", uL))
-    #print(radio.payloadSize)
-    # for debugging, we have 2 options that print a large block of details
-    # (smaller) function that prints raw register values
-    # radio.printDetails()
-    # (larger) function that prints human readable data
+    radio.payloadSize = len(struct.pack("ii", uL, uR))
 
-    
-
-    #radio.payloadSize = len(buffer)
-
-    # radio.printPrettyDetails()
-
-    radio.stopListening()  # put radio in TX mode
+    radio.stopListening()
 
     while (success == False) :
-        buffer = struct.pack("i", uL)
+        buffer = struct.pack("ii", uL, uR)
         result = radio.write(buffer)
-
+    
         if result:
             print("OK")
             success = True
