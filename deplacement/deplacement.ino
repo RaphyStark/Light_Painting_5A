@@ -4,10 +4,8 @@
     Author: Brendan Doherty (2bndy5)
 */
 
-#include <SPI.h>
-#include "printf.h"
+
 #include "RF24.h"
-#include "math.h"
 #include "motor.h"
 #include <Encoder.h>
 Encoder leftEnc(19, 18);
@@ -43,7 +41,7 @@ double rightKp = 0.07;
 double totalTicksL = 0;
 double totalTicksR = 0;
 double totalTemps = 0;
-int uG, uD = 0;
+
 long payload[2];
 uint8_t pipe;
 long uL = 0;
