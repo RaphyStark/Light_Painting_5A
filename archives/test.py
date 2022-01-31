@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 import math
 
-# TEST FILE : GET LUMPOINT COORD
+# TEST FILE : GET LUMPOINT COORD        RESIZING ....
 
 # TODO
 # 3. Faire correspondre les dimensions de la carte avec celles de la caméra
