@@ -44,6 +44,11 @@ double totalTicksL = 0;
 double totalTicksR = 0;
 double totalTemps = 0;
 int uG, uD = 0;
+long payload[2];
+uint8_t pipe;
+long uL = 0;
+long uR = 0;
+
 // instantiate an object for the nRF24L01 transceiver
 RF24 radio(22, 23); // using pin 22 for the CE pin, and pin 23 for the CSN pin
 
