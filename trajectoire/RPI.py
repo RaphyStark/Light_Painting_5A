@@ -2,7 +2,6 @@
 
 # RF24 imports
 import sys
-import argparse
 import time
 import struct
 from RF24 import RF24, RF24_PA_LOW
@@ -61,29 +60,6 @@ def send_buffer(buffer, payload, failures, SENT):
                 )
             )
             SENT = True
-
-
-def master(payload1, payload2):
-    """Transmits an incrementing float every second"""
-    radio.stopListening()  # put radio in TX mode
-    failures = 0
-    SENT = False
-    SENT1 = False
-    SENT2 = False
-    while (SENT == False or failures < 6) :
-        # use struct.pack() to packet your data into the payload
-        # "<f" means a single little endian (4 byte) float value.
-        buffer = struct.pack("<f", payload1)
-        send_buffer(buffer, payload1, failures, SENT1)
-        buffer = struct.pack("<f", payload2)
-        send_buffer(buffer, payload2, failures, SENT2)
-        time.sleep(1)
-        if (SENT1 == True and SENT2 == True) :
-            SENT = True
-    else : 
-        if failures >= 6 :
-            print(failures, "failures detected. Leaving TX role.")
-            exit()
 
 
 # VARIABLES GLOABLES
@@ -343,11 +319,15 @@ if not radio.begin():
 address = [b"1Node", b"2Node"]
 # It is very helpful to think of an address as a path instead of as
 # an identifying device destination
-print(sys.argv[0])  # print example name
-# to use different addresses on a pair of radios, we need a variable to
-# uniquely identify which address this radio will use to transmit
-# 0 uses address[0] to transmit, 1 uses address[1] to transmit
-radio_number = 1  # force master
+
+uL = 0
+uR = 0
+
+radio_number = 0
+radio.setPALevel(RF24_PA_LOW)
+radio.openWritingPipe(address[radio_number])
+radio.payloadSize = len(struct.pack("ii", uL, uR))
+radio.stopListening()
 
 
 # 11. Calculer V et Omega en fonction de la pose et du noeud suivant
@@ -397,8 +377,10 @@ for t in simu.t:
     #if WPManager.distanceToCurrentWP(robot.x, robot.y) <= epsilonWP :
     #    WPManager.switchToNextWP()
 
-        # 10. calcul de thetaRobot
-        robot.theta = np.arctan2(robot.y - robot.py, robot.x - robot.px)
+        # 10. calcul de robot.theta (theta)
+        Delta_theta = np.arctan2(robot.y - robot.py, robot.x - robot.px)
+
+        robot.theta = robot.theta + Delta_theta
 
         # calcul de thetaRef (reference en orientation)
         thetaRef = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
@@ -417,12 +399,18 @@ for t in simu.t:
         robot.wD = (2 * vConsign) - (thetaRef * d) / (2 * r)
         robot.wG = (2 * vConsign) + (thetaRef * d) / (2 * r)
 
-        # 13. Calculer uD et uL en fonction de wD et wD
-        uD = map(robot.wD, robot.w_min, robot.w_max, -200, 200)
-        uG = map(robot.wG, robot.w_min, robot.w_max, -200, 200)
+        # 13. Calculer uD et uL en fonction de wD et wG
+        uR = map(robot.wD, robot.w_min, robot.w_max, -200, 200)
+        uL = map(robot.wG, robot.w_min, robot.w_max, -200, 200)
 
         # 14. Envoyer uD et uG au robot
-        radio.master(uG, uD)
+        while (success == False) :
+            buffer = struct.pack("ii", uL, uR)
+            result = radio.write(buffer)
+        
+            if result:
+                #print("OK")
+                success = True
 
 
         # fonction de mise à jour de la pose du robot (robot.x, robot.y, robot.theta)
