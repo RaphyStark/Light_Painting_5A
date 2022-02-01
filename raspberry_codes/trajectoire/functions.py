@@ -5,10 +5,13 @@ import numpy as np
 import AStar
 from matplotlib.backend_bases import MouseButton 
 
-LOGITECH_RESIZE_HEIGHT = 288
-LOGITECH_RESIZE_WIDTH = 352
-MACBOOK_CAM_RESIZE_HEIGHT = 288
-MACBOOK_CAM_RESIZE_WIDTH = 352
+LOGITECH_RESIZE_HEIGHT = 90
+LOGITECH_RESIZE_WIDTH = 160
+#MACBOOK_CAM_RESIZE_HEIGHT = 288
+#MACBOOK_CAM_RESIZE_WIDTH = 352
+
+
+# 90, 160 -> resize cam_cap / 5 -> 18, 32
 
 
 # functions
@@ -29,8 +32,8 @@ def get_cam_dimensions() :
     # 2. Set VideoCapture dimensions to (capX = 160, capY = 90)
 
     # 2.0. On vérifie les valeurs des variables avant modification
-    # print("capX = " + str(capX))
-    # print("capY = " + str(capY))
+    print("capX before = " + str(capX))
+    print("capY before = " + str(capY))
 
     # 2.1. Set dimensions
     cap.set(cv.CAP_PROP_FRAME_WIDTH, LOGITECH_RESIZE_WIDTH)
@@ -40,17 +43,22 @@ def get_cam_dimensions() :
     capX = cap.get(cv.CAP_PROP_FRAME_WIDTH)#160
     capY = cap.get(cv.CAP_PROP_FRAME_HEIGHT)#90
 
+    print("capX after set = " + str(capX))
+    print("capY after set = " + str(capY))
+
+    capX = round(capX/10)
+    capY = round(capY/10)
+
     # 2.3. On vérifie les valeurs des variables après modification
-    # print("capX = " + str(capX))
-    # print("capY = " + str(capY))
+    print("capX after = " + str(capX))
+    print("capY after = " + str(capY))
 
     # 2.4. On vérifie la possibilité de prendre une capture dans le flux
     success, frame = cap.read()
     if success is True :
-        capY = int(frame.shape[0])
-        capX = int(frame.shape[1])
-        #print("capX orginal frame = " + str(capX))
-        #print("capY orignal frame = " + str(capY))
+        if capX == int(frame.shape[1]) and capY == int(frame.shape[0]) :
+            print("OK")
+
     else :
         print("Problem capturing a frame")
         exit()
@@ -65,13 +73,8 @@ def set_draw_dimensions(capX, capY):
     # 3.1. Import image
     img = cv.imread("spirale.jpg")
 
-    # 3.2. Resize image at VideoCapture dimensions / 10
-    imgcapX = round(capX/15)
-    imgcapY = round(capY/15)
-    img = cv.resize(img, (imgcapX, imgcapY))
-
-
-    # 4. Générer une grille d'occupation à partir de l'image
+    # 3.2. Resize image at capX, capY
+    img = cv.resize(img, (capX, capY))
 
     # 4.1. Passage en nuances de gris
     img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
@@ -79,7 +82,6 @@ def set_draw_dimensions(capX, capY):
     # 4.2. Passage en binaire
     img = cv.threshold(img, 200, 1, 0)
     img = img[1]
-
 
     # 4.3. Inversion des obstacles et des cases libres
     for i in range(len(img)):
@@ -89,7 +91,7 @@ def set_draw_dimensions(capX, capY):
             else :
                 img[i][j] = 0
     
-    return img, imgcapX, imgcapY
+    return img
 
 
 
@@ -148,12 +150,14 @@ def get_nodes(carte):
     
     # Définition d'un objet coordonnées
     coord = Coord()
-
+    print("click somewhere in a white box...")
     # Affichage de la carte
     plt.show()
         
     node_x = round(coord.x)
     node_y = round(coord.y)
+    print(node_x)
+    print(node_y)
 
     plt.close()
 
@@ -164,7 +168,8 @@ def get_nodes(carte):
 def generate_path(carte, start, goal):
     closedList, successFlag = carte.AStarFindPath(start, goal, epsilon=0.1)
     if (successFlag==True):
-        path, lenpath = carte.builtPath(closedList)
+        path = carte.builtPath(closedList)
+        print("path : " + str(path))
         carte.plotPathOnMap(path, 1)
         plt.show()
     else :
@@ -172,7 +177,7 @@ def generate_path(carte, start, goal):
         exit()
 
     print("please close this final plot")
-    plt.close()
+    plt.close('all')
     return path
 
 # main step 6
@@ -196,6 +201,7 @@ def get_coord(robot, cap, capX, capY) :
     if not success :
         print("cap read not successed")
     # step 2 : resize the frame
+    # 90, 160 => 9, 16
     frame = cv.resize(frame, (capX,capY))
     # step 3 : cvtColor
     frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)

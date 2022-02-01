@@ -1,10 +1,9 @@
 from functions import *
-import matplotlib.pyplot as plt
 import Robot as rob
 import numpy as np
 import math
 
-
+# 850M 849 855 856 855 849 854 857
 
 
 # main step 1 : get camera dimensions
@@ -12,38 +11,30 @@ cap, capX, capY = get_cam_dimensions()
 
 
 # main step 2 : resize light painting image dimensions
-img, imgcapX, imgcapY = set_draw_dimensions(capX, capY)
+img = set_draw_dimensions(capX, capY)
 
 
 # main step 3 : generate carte
-carte = generate_carte(img, imgcapX, imgcapY)
+carte = generate_carte(img, capX, capY)
 
 
 # main step 4.A : get start node from click
 node_x, node_y = get_nodes(carte)
-start = (imgcapX * node_y)  + node_x
+start = (capX * node_y)  + node_x
 #startNode = carte.graph.listOfNodes[start_node_no]
 
 
 # main step 4.B : get goal node from click
 node_x, node_y = get_nodes(carte)
-goal = (imgcapX * node_y)  + node_x
+goal = (capX * node_y)  + node_x
 #goalNode = carte.graph.listOfNodes[goal_node_no]
 
-print(start)
-print(goal)
 
 # main step 5 : generate path
 path = generate_path(carte, start, goal)
 
 # main step 6 : generate WPlist
 WPlist = WP_generator(carte, path)
-
-print("back in main")
-
-print(WPlist)
-
-
 
 # Main step 3 : initialize a robot
 d = 0.135    # en m
@@ -76,8 +67,8 @@ radio.setPALevel(RF24_PA_LOW)
 radio.openWritingPipe(address[radio_number])
 radio.payloadSize = len(struct.pack("ii", uL, uR))
 radio.stopListening()
-"""
 
+"""
 
 # Main step 6 : robot control
 
