@@ -92,13 +92,19 @@ def set_draw_dimensions(capX, capY):
     img = img[1]
 
     # 4.3. Inversion des obstacles et des cases libres
+    #def map(x, in_min, in_max, out_min, out_max):
+    print("inverting bits...")
     for i in range(len(img)):
+        percent_i = map(i, 0, len(img), 0, 100)
+        print(str(percent_i) + "%")
         for j in range (len(img[0])) :
             if img[i][j] == 0:
                 img[i][j] = 1
             else :
                 img[i][j] = 0
-    
+            percent_j = map(i, 0, len(img[0]), 0, 100)
+            print("colomn " + str(i) + " = " + str(percent_i) + "%")    
+            print("line " + str(j) + " = " + str(percent_j) + "%")    
     return img
 
 
@@ -106,6 +112,7 @@ def set_draw_dimensions(capX, capY):
 # main step 3
 def generate_carte(img, capX, capY):
 
+    print("loading occupancy grid...")
     # 3.1 Chargement du tableau occupancyGrid
     wait=[]
     list=[]
@@ -117,6 +124,7 @@ def generate_carte(img, capX, capY):
     list = np.array(list)
     occupancyGrid = list
 
+    print("generating graph...")
     # 3.2 Création de la carte (objet Map)
     adjacency = 4
     carte = AStar.Map(capX, capY, adjacency)
@@ -201,10 +209,13 @@ def WP_generator(carte, path):
 
 
 # every loop functions
-def get_coord(robot, cap, capX, capY) :
+def get_coord(cap, capX, capY, robot) :
+
     success, frame = cap.read()
     if not success :
         print("cap read not successed")
+        exit()
+
     frame = cv.resize(frame, (capX,capY))
     # step 3 : cvtColor
     frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)

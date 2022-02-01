@@ -4,41 +4,43 @@ import numpy as np
 import math
 
 # PROBLEME
-# Si on resize à 100 100 la caméra ne voit pas à plus d'1 mètre
-# Resize à plus que 100 100 (200 200 par exemple) peut résoudre le problème
+# Si on resize à 160 90 la caméra ne voit pas à plus d'1 mètre
+# Resize à plus que 160 90 (200 200 par exemple) peut résoudre le problème
 # mais implique un temps de path build plus long
 # l'autre solution est de jouer sur les paramètres (blur etc.)
 
 
 # main step 1 : get camera dimensions
 #cap, capX, capY = get_cam_dimensions()
-
+"""
 # 1.1. Ouvrir le flux video
 cap = cv.VideoCapture(0)
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
+"""
 
-capX = 160
-capY = 90
+capX = 352
+capY = 288
+coeff = 1
 
 # main step 2 : resize light painting image dimensions
-img = set_draw_dimensions(capX, capY)
+img = set_draw_dimensions(int(capX/coeff), int(capY/coeff))
 
 
 # main step 3 : generate carte
-carte = generate_carte(img, capX, capY)
+carte = generate_carte(img, int(capX/coeff), int(capY/coeff))
 
 
 # main step 4.A : get start node from click
 node_x, node_y = get_nodes(carte)
-start = (capX * node_y)  + node_x
+start = (int(capX/coeff) * node_y)  + node_x
 startNode = carte.graph.listOfNodes[start]
 
 
 # main step 4.B : get goal node from click
 node_x, node_y = get_nodes(carte)
-goal = (capX * node_y)  + node_x
+goal = (int(capX/coeff) * node_y)  + node_x
 goalNode = carte.graph.listOfNodes[goal]
 
 
@@ -49,7 +51,8 @@ closedList, successFlag = carte.AStarFindPath(start, goal, epsilon=0.1)
 if (successFlag==True):
     print("building the path...")
     path, lenpath = carte.builtPath(closedList)
-    print("path : " + str(path))
+    #print("path : " + str(path))
+    print("plotting the path...")
     carte.plotPathOnMap(path, 1)
     plt.show()
 else :
@@ -70,8 +73,7 @@ r = 0.035     # en m
 w_max = 200
 robot = rob.Robot(0, 0, 0, d, r, - w_max, w_max)
 
-# Main step 4 : get robot initial coordinates
-get_coord(robot, cap, capX, capY)
+
 
 # Main step 5 : initialize a radio
 """
@@ -116,10 +118,14 @@ thetaRef = 0.0
 #omegaRef = 0.0 # apparemment pas utile ici
 OK = True
 
+cap = cv.VideoCapture(1)
+if not cap.isOpened():
+    print("Cannot open camera")
+    exit()
 
 while OK is True :
     
-    get_coord(robot, cap, capX, capY)
+    get_coord(cap, int(capX/coeff), int(capY/coeff), robot)
 
     # on vérifie qu'on a pas déjà atteint le noeud de référence courant
     if WPManager.distanceToCurrentWP(robot.x, robot.y) <= epsilonWP :
@@ -173,6 +179,7 @@ while OK is True :
 
     robot.px = robot.x
     robot.py = robot.y
+
 
 # close all figures
 #plt.close("all")
