@@ -1,5 +1,4 @@
-from get_dimensions import get_dimensions
-from WP_generator import *
+from functions import *
 from robot_localisation import get_coord
 
 import matplotlib.pyplot as plt
@@ -13,8 +12,11 @@ def map(x, in_min, in_max, out_min, out_max):
     return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
 
-# Main step 1 : get dimensions
-cap, capX, capY = get_dimensions()
+# Main step 1 : get camera dimensions
+cap, capX, capY = get_cam_dimensions()
+
+# resize light painting image dimensions
+
 
 # Main step 2 : generate WP
 carte, start, goal = get_nodes(capX, capY)
