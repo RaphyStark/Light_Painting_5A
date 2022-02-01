@@ -1,30 +1,49 @@
 from functions import *
-from robot_localisation import get_coord
-
 import matplotlib.pyplot as plt
 import Robot as rob
-import cv2 as cv
 import numpy as np
 import math
 
 
-def map(x, in_min, in_max, out_min, out_max):
-    return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
 
-# Main step 1 : get camera dimensions
+# main step 1 : get camera dimensions
 cap, capX, capY = get_cam_dimensions()
 
-# resize light painting image dimensions
+
+# main step 2 : resize light painting image dimensions
+img, imgcapX, imgcapY = set_draw_dimensions(capX, capY)
 
 
-# Main step 2 : generate WP
-carte, start, goal = get_nodes(capX, capY)
+# main step 3 : generate carte
+carte = generate_carte(img, imgcapX, imgcapY)
 
-# build map
+
+# main step 4.A : get start node from click
+node_x, node_y = get_nodes(carte)
+start = (imgcapX * node_y)  + node_x
+#startNode = carte.graph.listOfNodes[start_node_no]
+
+
+# main step 4.B : get goal node from click
+node_x, node_y = get_nodes(carte)
+goal = (imgcapX * node_y)  + node_x
+#goalNode = carte.graph.listOfNodes[goal_node_no]
+
+print(start)
+print(goal)
+
+# main step 5 : generate path
 path = generate_path(carte, start, goal)
 
+# main step 6 : generate WPlist
 WPlist = WP_generator(carte, path)
+
+print("back in main")
+
+print(WPlist)
+
+
 
 # Main step 3 : initialize a robot
 d = 0.135    # en m
@@ -34,7 +53,7 @@ w_max = 200
 robot = rob.Robot(0, 0, 0, d, r, - w_max, w_max)
 
 # Main step 4 : get robot initial coordinates
-robot.x, robot.y = get_coord(cap, capX, capY)
+get_coord(robot, cap, capX, capY)
 
 # Main step 5 : initialize a radio
 """
@@ -57,7 +76,6 @@ radio.setPALevel(RF24_PA_LOW)
 radio.openWritingPipe(address[radio_number])
 radio.payloadSize = len(struct.pack("ii", uL, uR))
 radio.stopListening()
-
 """
 
 
@@ -83,7 +101,7 @@ OK = True
 
 while OK is True :
     
-    robot.x, robot.y = get_coord(cap, capX, capY)
+    get_coord(robot, cap, capX, capY)
 
     # on vérifie qu'on a pas déjà atteint le noeud de référence courant
     if WPManager.distanceToCurrentWP(robot.x, robot.y) <= epsilonWP :
@@ -125,16 +143,11 @@ while OK is True :
     print()
     print()
 
-
-
-
-
     """
     # 14. Envoyer uD et uG au robot
     while (success == False) :
         buffer = struct.pack("ii", uL, uR)
         result = radio.write(buffer)
-    
         if result:
             #print("OK")
             success = True
@@ -144,4 +157,4 @@ while OK is True :
     robot.py = robot.y
 
 # close all figures
-plt.close("all")
+#plt.close("all")
