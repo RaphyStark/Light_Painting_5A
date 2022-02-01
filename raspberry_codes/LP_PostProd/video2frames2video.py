@@ -1,8 +1,16 @@
-# -*- coding: utf-8 -*-
 """
-Created on Wed Dec  8 10:41:31 2021
+this script takes a video, 
+split it in frames in a directory
+and finally takes all the frames and put them into a video again
 
-@author: Falitiana
+there is also a function to calculate 
+the coord. of a lighting point in a frame
+
+It's usefull when any 
+wants to convert a video into frames,
+frames into video,
+get the coord. of a lighting point in frames and in a video
+.......
 """
 
 from __future__ import print_function
@@ -51,7 +59,7 @@ if __name__=='__main__':
 
     cap = cv.VideoCapture("../E.mp4")
     if not cap.isOpened():
-        print("Cannot open camera")
+        print("Cannot open file")
         exit()
     success, frame = cap.read()
 
