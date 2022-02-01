@@ -3,12 +3,24 @@ import Robot as rob
 import numpy as np
 import math
 
-# 850M 849 855 856 855 849 854 857
+# PROBLEME
+# Si on resize à 100 100 la caméra ne voit pas à plus d'1 mètre
+# Resize à plus que 100 100 (200 200 par exemple) peut résoudre le problème
+# mais implique un temps de path build plus long
+# l'autre solution est de jouer sur les paramètres (blur etc.)
 
 
 # main step 1 : get camera dimensions
-cap, capX, capY = get_cam_dimensions()
+#cap, capX, capY = get_cam_dimensions()
 
+# 1.1. Ouvrir le flux video
+cap = cv.VideoCapture(0)
+if not cap.isOpened():
+    print("Cannot open camera")
+    exit()
+
+capX = 160
+capY = 90
 
 # main step 2 : resize light painting image dimensions
 img = set_draw_dimensions(capX, capY)
@@ -21,17 +33,32 @@ carte = generate_carte(img, capX, capY)
 # main step 4.A : get start node from click
 node_x, node_y = get_nodes(carte)
 start = (capX * node_y)  + node_x
-#startNode = carte.graph.listOfNodes[start_node_no]
+startNode = carte.graph.listOfNodes[start]
 
 
 # main step 4.B : get goal node from click
 node_x, node_y = get_nodes(carte)
 goal = (capX * node_y)  + node_x
-#goalNode = carte.graph.listOfNodes[goal_node_no]
+goalNode = carte.graph.listOfNodes[goal]
 
 
 # main step 5 : generate path
-path = generate_path(carte, start, goal)
+#path = generate_path(carte, start, goal)
+
+closedList, successFlag = carte.AStarFindPath(start, goal, epsilon=0.1)
+if (successFlag==True):
+    print("building the path...")
+    path, lenpath = carte.builtPath(closedList)
+    print("path : " + str(path))
+    carte.plotPathOnMap(path, 1)
+    plt.show()
+else :
+    print("error generating waypoint")
+    exit()
+
+print("please close this final plot")
+plt.close('all')
+
 
 # main step 6 : generate WPlist
 WPlist = WP_generator(carte, path)

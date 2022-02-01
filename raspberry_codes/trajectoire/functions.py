@@ -36,28 +36,36 @@ def get_cam_dimensions() :
     print("capY before = " + str(capY))
 
     # 2.1. Set dimensions
-    cap.set(cv.CAP_PROP_FRAME_WIDTH, LOGITECH_RESIZE_WIDTH)
-    cap.set(cv.CAP_PROP_FRAME_HEIGHT, LOGITECH_RESIZE_HEIGHT)
+    #cap.set(cv.CAP_PROP_FRAME_WIDTH, LOGITECH_RESIZE_WIDTH)
+    #cap.set(cv.CAP_PROP_FRAME_HEIGHT, LOGITECH_RESIZE_HEIGHT)
 
     # 2.2. On récupère les nouvelles valeurs dans capX et capY
-    capX = cap.get(cv.CAP_PROP_FRAME_WIDTH)#160
-    capY = cap.get(cv.CAP_PROP_FRAME_HEIGHT)#90
+    #capX = cap.get(cv.CAP_PROP_FRAME_WIDTH)#160
+    #capY = cap.get(cv.CAP_PROP_FRAME_HEIGHT)#90
 
+    """
     print("capX after set = " + str(capX))
     print("capY after set = " + str(capY))
+    """
+    
+    capX = 100
+    capY = 100
 
-    capX = round(capX/10)
-    capY = round(capY/10)
-
+    """
     # 2.3. On vérifie les valeurs des variables après modification
     print("capX after = " + str(capX))
     print("capY after = " + str(capY))
+    """
 
     # 2.4. On vérifie la possibilité de prendre une capture dans le flux
     success, frame = cap.read()
     if success is True :
+        frame = cv.resize(frame, (capX, capY))
         if capX == int(frame.shape[1]) and capY == int(frame.shape[0]) :
             print("OK")
+        else:
+            print("resizing frame not working")
+            exit()
 
     else :
         print("Problem capturing a frame")
@@ -144,31 +152,29 @@ def get_nodes(carte):
     ## Affichage de la carte
     fig1 = plt.figure()
     carte.plot(1)
+    # Définition d'un objet coordonnées
+    coord = Coord()
     # Connection de la souris et du click
     binding_id = plt.connect('motion_notify_event', on_move)
     plt.connect('button_press_event', on_click)
-    
-    # Définition d'un objet coordonnées
-    coord = Coord()
+    # attente du click de l'utilisateur
     print("click somewhere in a white box...")
     # Affichage de la carte
     plt.show()
-        
     node_x = round(coord.x)
     node_y = round(coord.y)
     print(node_x)
     print(node_y)
-
     plt.close()
-
 
     return node_x, node_y
 
+"""
 # main step 5 : Générer un chemin entre les deux noeuds avec l'algorithme A*
 def generate_path(carte, start, goal):
     closedList, successFlag = carte.AStarFindPath(start, goal, epsilon=0.1)
     if (successFlag==True):
-        path = carte.builtPath(closedList)
+        path, lenpath = carte.builtPath(closedList)
         print("path : " + str(path))
         carte.plotPathOnMap(path, 1)
         plt.show()
@@ -179,6 +185,7 @@ def generate_path(carte, start, goal):
     print("please close this final plot")
     plt.close('all')
     return path
+"""
 
 # main step 6
 def WP_generator(carte, path):
@@ -195,13 +202,9 @@ def WP_generator(carte, path):
 
 # every loop functions
 def get_coord(robot, cap, capX, capY) :
-    #print("update CapX capY")
-    # step 1 : read a frame
     success, frame = cap.read()
     if not success :
         print("cap read not successed")
-    # step 2 : resize the frame
-    # 90, 160 => 9, 16
     frame = cv.resize(frame, (capX,capY))
     # step 3 : cvtColor
     frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -212,11 +215,11 @@ def get_coord(robot, cap, capX, capY) :
     if not success :
         print("threshold not successed")
         exit()
-    """
+    #"""
     cv.imshow('frame', frame)
     if cv.waitKey(1) == ord('q') :
         exit()
-    """
+    #"""
     # step 6 : get lighting point coordinates
     contours, hierarchy = cv.findContours(frame, cv.RETR_TREE,cv.CHAIN_APPROX_TC89_KCOS)
     for c in contours:
