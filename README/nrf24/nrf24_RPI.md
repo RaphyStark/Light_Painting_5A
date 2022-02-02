@@ -3,13 +3,12 @@
     
     $ gedit .bashrc
 
-Ajouter à la fin les lignes suivantes :  \
-
+Ajouter à la fin les lignes suivantes :\
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3 \
 export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv \
-source /usr/local/bin/virtualenvwrapper.sh \
+source /usr/local/bin/virtualenvwrapper.sh
 
-Création d'un environnement virtuel (attention à ne pas de ajouter de "-" cf.setup.py de RF24) \
+Création d'un environnement virtuel (attention à ne pas de ajouter de "-" cf.setup.py de RF24)
 
     $ mkvirtualenv LightPainting --always-copy
     
@@ -31,7 +30,7 @@ L'option --prefix permet d'indiquer à ./configure où installer la lib \
 On remarquera plus loin à la fin de la commande sudo python3 setup.py install : \
 librf24.so found at /home/pi/.virtualenvs/LightPainting/bin/lib \
 Et à la fin de la commande sudo make install : \
-Installing Libs to /home/pi/.virtualenvs/light-painting/bin/lib \
+Installing Libs to /home/pi/.virtualenvs/light-painting/bin/lib
 
     $ sudo make install
 
@@ -43,9 +42,9 @@ Installing Libs to /home/pi/.virtualenvs/light-painting/bin/lib \
 
     $ cd pyRF24/
 
-    $ python3 setup.py build -L/home/pi/.virtualenvs/LightPainting/bin/lib -I/home/pi/.virtualenvs/LightPainting/bin/include/RF24
+    $ /home/pi/.virtualenvs/LightPainting/bin/python3.9 setup.py build
 
-    $ sudo python3 setup.py install
+    $ sudo /home/pi/.virtualenvs/LightPainting/bin/python3.9 setup.py install
 
     $ sudo apt-get install python3-dev python3-rpi.gpio
 
