@@ -1,9 +1,9 @@
 # library imports
 import cv2 as cv
 import matplotlib.pyplot as plt
-import numpy as np
+#import numpy as np
 import AStar
-from matplotlib.backend_bases import MouseButton 
+#from matplotlib.backend_bases import MouseButton 
 
 LOGITECH_RESIZE_HEIGHT = 90
 LOGITECH_RESIZE_WIDTH = 160
