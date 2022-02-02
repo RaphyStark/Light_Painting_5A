@@ -1,5 +1,5 @@
 from functions import *
-from get_wplist import WPlist
+#from get_wplist import WPlist
 import Robot as rob
 import numpy as np
 import math
