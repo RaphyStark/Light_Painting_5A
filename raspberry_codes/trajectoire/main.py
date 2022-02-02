@@ -1,4 +1,5 @@
 from functions import *
+from get_wplist import WPlist
 import Robot as rob
 import numpy as np
 import math
@@ -8,7 +9,8 @@ import os
 import sys
 import time
 import struct
-#from RF24 import RF24, RF24_PA_LOW
+from RF24 import RF24, RF24_PA_LOW
+
 
 # PROBLEME
 # Si on resize à 160 90 la caméra ne voit pas à plus d'1 mètre
@@ -27,54 +29,10 @@ if not cap.isOpened():
     exit()
 """
 
-#capX = 352
-#capY = 288
-capX = 160
-capY = 90
+capX = 352
+capY = 288
 coeff = 1
 
-
-# main step 2 : resize light painting image dimensions
-img = set_draw_dimensions(int(capX/coeff), int(capY/coeff))
-
-
-# main step 3 : generate carte
-carte = generate_carte(img, int(capX/coeff), int(capY/coeff))
-
-
-# main step 4.A : get start node from click
-node_x, node_y = get_nodes(carte)
-start = (int(capX/coeff) * node_y)  + node_x
-startNode = carte.graph.listOfNodes[start]
-
-
-# main step 4.B : get goal node from click
-node_x, node_y = get_nodes(carte)
-goal = (int(capX/coeff) * node_y)  + node_x
-goalNode = carte.graph.listOfNodes[goal]
-
-
-# main step 5 : generate path
-#path = generate_path(carte, start, goal)
-
-closedList, successFlag = carte.AStarFindPath(start, goal, epsilon=0.1)
-if (successFlag==True):
-    print("building the path...")
-    path, lenpath = carte.builtPath(closedList)
-    #print("path : " + str(path))
-    print("plotting the path...")
-    carte.plotPathOnMap(path, 1)
-    plt.show()
-else :
-    print("error generating waypoint")
-    exit()
-
-print("please close this final plot")
-plt.close('all')
-
-
-# main step 6 : generate WPlist
-WPlist = WP_generator(carte, path)
 
 # Main step 3 : initialize a robot
 d = 0.135    # en m
@@ -85,8 +43,10 @@ robot = rob.Robot(0, 0, 0, d, r, - w_max, w_max)
 
 
 
+
+
 # Main step 5 : initialize a radio
-"""
+
 # 11. définir un objet radio pour la communication
 radio = RF24(22,0)
 # initialize the nRF24L01 on the spi bus
@@ -107,12 +67,15 @@ radio.openWritingPipe(address[radio_number])
 radio.payloadSize = len(struct.pack("ii", uL, uR))
 radio.stopListening()
 
-"""
+
 
 # Main step 6 : robot control
 
 # threshold for change to next WP
 epsilonWP = 0.01
+
+# écrire en dur ici après avoir lancé get_wplist.py sur un PC
+WPlist = [[316, 231], [316, 232], [316, 233], [317, 233]]
 
 # init WPManager
 WPManager = rob.WPManager(WPlist, epsilonWP)
