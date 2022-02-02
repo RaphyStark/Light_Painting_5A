@@ -1,44 +1,44 @@
-# Workflow GIT
-## Installer Visual Studio Code (ou pas)
+# Utiliser une clé ssh pour récupérer le repo sur son linux :
 
-# Cloner le repo distant en local
+        $ ssh-keygen -t ed25519 -C "your_email@example.com" \
+        > "Enter a file in which to save the key" \
+        Cliquer sur entrer \
+        Il vous est ensuite demandé de créer un mot de passe pour la clé, entrer une clé \
+        $ eval "$(ssh-agent -s)" \
+        A ce stade, la commande ci-dessus doit retourner : \
+        > Agent pid 59566 (ou un autre nombre) \
+        $ open ~/.ssh/config \
+        Si la commande ci-dessus retourne : \
+        > The file /Users/you/.ssh/config does not exist.
+        Il faut créer le fichier ($ touch ~/.ssh/config)
+        Sinon modifier le simplement \
+        Il faut écrire dans ce fichier : \
+        Host * \
+          AddKeysToAgent yes \
+          IdentityFile ~/.ssh/id_ed25519 \
+        Attention, le tuto sur github demande d'ajouter UseKeychain yes, mais ça ne fonctionne pas (sur une RPI3B+) \
+        Taper ensuite la commande suivante : \
+        $ ssh-add ~/.ssh/id_ed25519 \
+        Attention, le tuto sur github demande d'écrire $ ssh-add -K ~/.ssh/id_ed25519 mais ça ne fonctionne pas non plus \
+        Il faut à présent se rendre sur les paramètres de son compte github (pas les paramètres du repo \
+        Cliquer sur SSH and GPG keys \
+        Ajouter tout le contenu de la clé publique SSH créée précédemment (tout ce qui se trouve dans $ cat ~/.ssh/id_ed25519.pub) \
+        Enfin, cloner le repo dans le repertoire de son choix : \
+        $ sudo apt install git \
+        $ git clone git@github.com:RaphyStark/Light_Painting_5A.git \
+        Tester la configuration
 
-Attention, dans la section "Adding your SSH key to the ssh-agent" il y a une coquille
-Ils demande de copier la clé sans préciser qu'il s'agit de la clé publique
-La commande pour récupérer la clé publique n'est donc pas :
-        $ cat ~/.ssh/id_ed25519
-Mais
-        $ cat ~/.ssh/id_ed25519.pub
-
-Suivre le tuto pour générer la clé sur son PC à l'adresse :
-https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
-
-Une fois la clé ssh de son pc ajoutée sur git, taper la commande pour cloner le repo en local :
-        $ git clone git@github.com:RaphyStark/Light_Painting_5A.git
-
-Si la clé est demandée après chaque commande git pour accéder au server (fetch, pull, push...) :
-        
-        $ ssh-add ~/.ssh/id_ed2551
-
-Réponse trouvée sur ce topic :
-https://superuser.com/questions/988185/how-to-avoid-being-asked-enter-passphrase-for-key-when-im-doing-ssh-operatio
 
 
-
-        $ git commit -a will commit all tracked files, not track untracked files
-        $ git add . will track untracked files in the current directory
-        $ git add -a will track all untracked files
-
-
-## Envoyer un gros fichier sur git
+# Envoyer un gros fichier sur git
   https://git-lfs.github.com/
 
-## Créer et push un fichier
+# Créer et push un fichier
         $ git add README.md
         $ git commit -m 'modification README.md'
         $ git push
 
-## Récupérer un dossier du master vers une branch
+# Récupérer un dossier du master vers une branch
         $ git checkout <branch_name>
         $ git stash (si besoin)
         $ git checkout <branch_name>
