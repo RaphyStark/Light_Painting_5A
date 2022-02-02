@@ -13,6 +13,13 @@ capY = 288
 coeff = 1
 
 
+# PROBLEME
+# Si on resize à 160 90 la caméra ne voit pas à plus d'1 mètre
+# Resize à plus que 160 90 (200 200 par exemple) peut résoudre le problème
+# mais implique un temps de path build plus long
+# l'autre solution est de jouer sur les paramètres (blur etc.)
+
+
 # functions
 
 # main step 1
