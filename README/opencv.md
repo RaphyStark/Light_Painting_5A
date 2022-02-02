@@ -2,9 +2,13 @@
 
       $ python3 -m pip install --user pipx
       $ python3 -m pipx ensurepath
-      $ python3 -m pip install --user -U pipx
       Ouvrir un nouveau terminal pour que les changements prennent effet
+      $ python3 -m pip install --user -U pip
       $ pipx install virtualenv
+      Se déplacer dans le dossier ou installer l'environnement virtuel
+      $ cd Light_Painting_5A/raspberry_codes/trajectoire
+      $ mkdir virtualenv
+      $ cd virtualenv
       $ virtualenv -p python3 .
       $ source ./bin/activate
       A ce moment, le nom du repertoire est écrit avant la ligne de commande
