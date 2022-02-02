@@ -2,6 +2,13 @@ from functions import *
 import Robot as rob
 import numpy as np
 import math
+import os
+
+# RF24 imports
+import sys
+import time
+import struct
+#from RF24 import RF24, RF24_PA_LOW
 
 # PROBLEME
 # Si on resize à 160 90 la caméra ne voit pas à plus d'1 mètre
@@ -20,9 +27,12 @@ if not cap.isOpened():
     exit()
 """
 
-capX = 352
-capY = 288
+#capX = 352
+#capY = 288
+capX = 160
+capY = 90
 coeff = 1
+
 
 # main step 2 : resize light painting image dimensions
 img = set_draw_dimensions(int(capX/coeff), int(capY/coeff))
@@ -118,14 +128,29 @@ thetaRef = 0.0
 #omegaRef = 0.0 # apparemment pas utile ici
 OK = True
 
+
+currentframe = 0
+# créer un dossiers pour stocker les frames s'il n'existe pas 
+if not os.path.exists('frames'):
+    os.mkdir('frames')
+
+
 cap = cv.VideoCapture(1)
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
 
-while OK is True :
-    
-    get_coord(cap, int(capX/coeff), int(capY/coeff), robot)
+#while OK is True :
+
+
+# duration of scenario and time step for numerical integration
+t0 = 0.0
+tf = 1000.0
+dt = 0.01
+simu = rob.RobotSimulation(robot, t0, tf, dt)
+
+for t in simu.t: 
+    get_coord(cap, int(capX/coeff), int(capY/coeff), robot, currentframe)
 
     # on vérifie qu'on a pas déjà atteint le noeud de référence courant
     if WPManager.distanceToCurrentWP(robot.x, robot.y) <= epsilonWP :
@@ -154,7 +179,6 @@ while OK is True :
     # 13. Calculer uD et uL en fonction de wD et wG
     uR = map(robot.wD, robot.w_min, robot.w_max, -200, 200)
     uL = map(robot.wG, robot.w_min, robot.w_max, -200, 200)
-
 
 
     print("current position :")
