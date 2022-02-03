@@ -50,7 +50,7 @@ address = [b"1Node", b"2Node"]
 uL = 0
 uR = 0
 
-radio_number = 0
+radio_number = 1
 radio.setPALevel(RF24_PA_LOW)
 radio.openWritingPipe(address[radio_number])
 radio.payloadSize = len(struct.pack("ii", uL, uR))
@@ -71,8 +71,8 @@ WPManager = rob.WPManager(WPlist, epsilonWP)
 
 
 # gains des correcteurs
-kp_v = 0.2    # pour la vitesse de référence
-kp_theta = 1.0    # pour l'angle de référence
+kp_v     = 0.0001    # pour la vitesse de référence
+kp_theta = 0.00025    # pour l'angle de référence
 
 # initialisation des variables de calcul
 vConsign = 0.0
@@ -101,7 +101,7 @@ tf = 1000.0
 dt = 0.01
 simu = rob.RobotSimulation(robot, t0, tf, dt)
 
-for t in simu.t: 
+while (1):
     get_coord(cap, int(capX/coeff), int(capY/coeff), robot, currentframe)
 
     # on vérifie qu'on a pas déjà atteint le noeud de référence courant
@@ -132,7 +132,7 @@ for t in simu.t:
     uR = map(robot.wD, robot.w_min, robot.w_max, -200, 200)
     uL = map(robot.wG, robot.w_min, robot.w_max, -200, 200)
 
-    """
+    #"""
     print("current position :")
     print("robotX = " + str(robot.x))
     print("robotY = " + str(robot.y))
@@ -142,7 +142,7 @@ for t in simu.t:
     print()
     print()
     print()
-    """
+    #"""
     #success = False
     # 14. Envoyer uD et uG au robot
     #while (success == False) :
@@ -150,7 +150,8 @@ for t in simu.t:
     buff = struct.pack("ii", uL, uR)
     result = radio.write(buff)
     if result:
-        print("OK")
+        print(uL)
+        print(uR)
         #success = True
     else:
         print("failed to send")
