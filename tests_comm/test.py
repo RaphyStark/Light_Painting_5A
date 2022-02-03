@@ -12,7 +12,7 @@ radio = RF24(22, 0)
 
 uL = 200
 uR = 250
-
+success = False
 
 if __name__ == "__main__":
 
@@ -31,13 +31,15 @@ if __name__ == "__main__":
     radio.payloadSize = len(struct.pack("ii", uL, uR))
 
     
-    buffer = struct.pack("ii", uL, uR)
+    while (success == False) :
+        buffer = struct.pack("ii", uL, uR)
+        result = radio.write(buffer)
 
-    result = radio.write(buffer)
-    if not result:
-        print("Transmission failed")
-    else:
-        print("OK")
+        if result:
+            print("OK")
+            success = True
+        else :
+            print("failed")
 
     radio.powerDown()
     sys.exit()
