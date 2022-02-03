@@ -21,10 +21,15 @@ Encoder rightEnc(21, 20);
 clock_prescale_set(clock_div_1);
 #endif
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+
 // Left and right motors with corresponding pins
 #include <motor.h>
 Motor leftMotor(leftMotorPwmPin, leftMotorDirPin);
 Motor rightMotor(rightMotorPwmPin, rightMotorDirPin);
+
+
+
 // PID variables
 double leftError = 0;
 double leftSetpoint = 0;
@@ -49,7 +54,7 @@ RF24 radio(22, 23);
 
 
 uint8_t address[][6] = {"1Node", "2Node"};
-bool radioNumber = 1;
+bool radioNumber = 0;
 bool role = false;
 
 long payload[2];
@@ -60,10 +65,14 @@ long uR = 0;
 
 void setup()
 {
+  // init serial
   Serial.begin(9600);
   while (!Serial) {}
 
-  // initialize the transceiver on the SPI bus
+  //init pixels
+  pixels.begin();
+
+  // init radio
   if (!radio.begin()) {
     Serial.println(F("radio hardware is not responding!!"));
     while (1) {}} // hold in infinite loop
@@ -87,8 +96,9 @@ void loop()
     Serial.println(uL);
     Serial.print("uR : ");
     Serial.println(uR);
+    move(uL, uR);
+    delay(100000);
   }
-  move(uL, uR);
   else
   {
     Serial.println("nothing");

@@ -4,6 +4,7 @@ import Robot as rob
 import numpy as np
 import math
 import os
+import pygame
 
 # RF24 imports
 import sys
@@ -101,6 +102,7 @@ tf = 1000.0
 dt = 0.01
 simu = rob.RobotSimulation(robot, t0, tf, dt)
 
+
 while (1):
     get_coord(cap, int(capX/coeff), int(capY/coeff), robot, currentframe)
 
@@ -112,6 +114,10 @@ while (1):
     # 10. calcul de robot.theta (theta)
     delta_theta = np.arctan2(robot.y - robot.py, robot.x - robot.px)
     robot.theta = robot.theta + delta_theta
+
+    #v1 = pygame.math.Vector2(x1-x0, y1-y0)
+    #v2 = pygame.math.Vector2(x2-x0, y2-y0)
+    #angle = v1.angle_to(v2)
 
     # calcul de thetaRef (reference en orientation)
     thetaRef = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
