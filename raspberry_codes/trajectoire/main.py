@@ -48,13 +48,15 @@ address = [b"1Node", b"2Node"]
 # It is very helpful to think of an address as a path instead of as
 # an identifying device destination
 
-uL = 0
-uR = 0
+#uL = 0
+#uR = 0
+robot.wL = 0
+robot.wD = 0
 
 radio_number = 1
 radio.setPALevel(RF24_PA_LOW)
 radio.openWritingPipe(address[radio_number])
-radio.payloadSize = len(struct.pack("ii", uL, uR))
+radio.payloadSize = len(struct.pack("ii", robot.wL, robot.wD))
 radio.stopListening()
 
 
@@ -135,8 +137,8 @@ while (1):
     robot.wG = (2 * vConsign) + (thetaRef * d) / (2 * r)
 
     # 13. Calculer uD et uL en fonction de wD et wG
-    uR = map(robot.wD, robot.w_min, robot.w_max, -200, 200)
-    uL = map(robot.wG, robot.w_min, robot.w_max, -200, 200)
+    #uR = map(robot.wD, robot.w_min, robot.w_max, -200, 200)
+    #uL = map(robot.wG, robot.w_min, robot.w_max, -200, 200)
 
     #"""
     print("current position :")
@@ -145,6 +147,8 @@ while (1):
     print("next x " + str(WPManager.xr))
     print("next y " + str(WPManager.yr))
     print("robottheta = " + str(robot.theta))
+    print("robot.wD = " + str(robot.wD))
+    print("robot.wG = " + str(robot.wG))  
     print()
     print()
     print()
@@ -153,11 +157,11 @@ while (1):
     # 14. Envoyer uD et uG au robot
     #while (success == False) :
     
-    buff = struct.pack("ii", uL, uR)
+    buff = struct.pack("ii", robot.wG, robot.wD)
     result = radio.write(buff)
     if result:
-        print(uL)
-        print(uR)
+        print(robot.wG)
+        print(robot.wD)
         #success = True
     else:
         print("failed to send")
