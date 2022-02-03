@@ -1,5 +1,8 @@
 ## Environnement virtuel Python avec OpenCV
 
+Attention utiliser plutot : \
+https://opensource.com/article/21/2/python-virtualenvwrapper
+
       $ python3 -m pip install --user pipx
       $ python3 -m pipx ensurepath
       Ouvrir un nouveau terminal pour que les changements prennent effet

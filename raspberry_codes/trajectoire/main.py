@@ -16,13 +16,7 @@ from RF24 import RF24, RF24_PA_LOW
 
 # main step 1 : get camera dimensions
 #cap, capX, capY = get_cam_dimensions()
-"""
-# 1.1. Ouvrir le flux video
-cap = cv.VideoCapture(0)
-if not cap.isOpened():
-    print("Cannot open camera")
-    exit()
-"""
+
 
 capX = 352
 capY = 288
@@ -93,7 +87,7 @@ if not os.path.exists('frames'):
     os.mkdir('frames')
 
 
-cap = cv.VideoCapture(1)
+cap = cv.VideoCapture(0)
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
@@ -138,7 +132,7 @@ for t in simu.t:
     uR = map(robot.wD, robot.w_min, robot.w_max, -200, 200)
     uL = map(robot.wG, robot.w_min, robot.w_max, -200, 200)
 
-
+    """
     print("current position :")
     print("robotX = " + str(robot.x))
     print("robotY = " + str(robot.y))
@@ -148,17 +142,19 @@ for t in simu.t:
     print()
     print()
     print()
-
     """
+    #success = False
     # 14. Envoyer uD et uG au robot
-    while (success == False) :
-        buffer = struct.pack("ii", uL, uR)
-        result = radio.write(buffer)
-        if result:
-            #print("OK")
-            success = True
-    """
-
+    #while (success == False) :
+    
+    buff = struct.pack("ii", uL, uR)
+    result = radio.write(buff)
+    if result:
+        print("OK")
+        #success = True
+    else:
+        print("failed to send")
+    
     robot.px = robot.x
     robot.py = robot.y
 
