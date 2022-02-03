@@ -136,39 +136,15 @@ while (1):
     robot.wD = (2 * vConsign) - (thetaRef * d) / (2 * r)
     robot.wG = (2 * vConsign) + (thetaRef * d) / (2 * r)
 
-    # 13. Calculer uD et uL en fonction de wD et wG
-    #uR = map(robot.wD, robot.w_min, robot.w_max, -200, 200)
-    #uL = map(robot.wG, robot.w_min, robot.w_max, -200, 200)
+    debug(robot, WPManager)
 
-    #"""
-    print("current position :")
-    print("robotX = " + str(robot.x))
-    print("robotY = " + str(robot.y))
-    print("next x " + str(WPManager.xr))
-    print("next y " + str(WPManager.yr))
-    print("robottheta = " + str(robot.theta))
-    print("robot.wD = " + str(robot.wD))
-    print("robot.wG = " + str(robot.wG))  
-    print()
-    print()
-    print()
-    #"""
-    #success = False
-    # 14. Envoyer uD et uG au robot
-    #while (success == False) :
-    
     buff = struct.pack("ii", robot.wG, robot.wD)
     result = radio.write(buff)
     if result:
         print(robot.wG)
         print(robot.wD)
-        #success = True
     else:
         print("failed to send")
     
     robot.px = robot.x
     robot.py = robot.y
-
-
-# close all figures
-#plt.close("all")

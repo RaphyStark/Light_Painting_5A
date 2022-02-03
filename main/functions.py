@@ -43,3 +43,18 @@ def get_coord(cap, capX, capY, robot, current_frame) :
 def map(x, in_min, in_max, out_min, out_max):
     return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
+
+
+
+def debug(robot, WPManager):
+    print("current position :")
+    print("robotX = " + str(robot.x))
+    print("robotY = " + str(robot.y))
+    print("next x " + str(WPManager.xr))
+    print("next y " + str(WPManager.yr))
+    print("robottheta = " + str(robot.theta))
+    print("robot.wD = " + str(robot.wD))
+    print("robot.wG = " + str(robot.wG))  
+    print()
+    print()
+    print()
