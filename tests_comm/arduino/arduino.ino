@@ -21,10 +21,15 @@ Encoder rightEnc(21, 20);
 clock_prescale_set(clock_div_1);
 #endif
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+
 // Left and right motors with corresponding pins
 #include <motor.h>
 Motor leftMotor(leftMotorPwmPin, leftMotorDirPin);
 Motor rightMotor(rightMotorPwmPin, rightMotorDirPin);
+
+
+
 // PID variables
 double leftError = 0;
 double leftSetpoint = 0;
@@ -87,8 +92,9 @@ void loop()
     Serial.println(uL);
     Serial.print("uR : ");
     Serial.println(uR);
+    move(uL, uR);
+    delay(100000);
   }
-  move(uL, uR);
   else
   {
     Serial.println("nothing");
