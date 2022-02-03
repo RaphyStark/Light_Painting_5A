@@ -8,8 +8,8 @@ Encoder rightEnc(21, 20);
 #ifdef __AVR__
 #include <avr/power.h>
 #endif
-#define PIN       8 //a changer////////////////////
-#define NUMPIXELS 7 //a changer////////////////////
+#define PIN       13
+#define NUMPIXELS 7
 #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
 clock_prescale_set(clock_div_1);
 #endif
