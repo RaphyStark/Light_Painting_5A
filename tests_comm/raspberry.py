@@ -55,3 +55,5 @@ if __name__ == "__main__":
         else :
             print("failed")
         time.sleep(1)
+
+#radio.powerDown()
