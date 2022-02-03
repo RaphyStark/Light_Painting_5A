@@ -2,6 +2,7 @@
 from matplotlib.backend_bases import MouseButton
 import matplotlib.pyplot as plt 
 import Robot as rob
+from functions import map
 import numpy as np
 import math
 import AStar
@@ -10,6 +11,8 @@ import cv2 as cv
 
 capX = 352
 capY = 288
+#capX = 160
+#capY = 90
 coeff = 1
 
 
@@ -242,14 +245,13 @@ goalNode = carte.graph.listOfNodes[goal]
 
 # main step 5 : generate path
 #path = generate_path(carte, start, goal)
-print("finding the path")
+print("finding the path...")
 closedList, successFlag = carte.AStarFindPath(start, goal, epsilon=0.1)
 if (successFlag==True):
     print("building the path...")
     path, lenpath = carte.builtPath(closedList)
-    #print("path : " + str(path))
-    #print("plotting the path...")
-    #carte.plotPathOnMap(path, 1)
+    print("plotting the path...")
+    carte.plotPathOnMap(path, 1)
     plt.show()
 else :
     print("error generating waypoint")
