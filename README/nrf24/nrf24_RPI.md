@@ -1,35 +1,50 @@
 ## Environnement RaspberryPi avec NRF24L01
+    $ sudo pip3 install virtualenvwrapper
+    
+    $ gedit .bashrc
 
-    $ mkdir ~/rf24libs
+Ajouter à la fin les lignes suivantes :\
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3 \
+export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv \
+source /usr/local/bin/virtualenvwrapper.sh
 
-    $ cd ~/rf24libs
+Création d'un environnement virtuel (attention à ne pas de ajouter de "-" cf.setup.py de RF24)
+
+    $ mkvirtualenv LightPainting --always-copy
+    
+L'option --always-copy assure (à vérifier) que le virtualenv créer bien les lib dans le virtualenv
+
+    $ cd LightPainting
+    
+    $ mkdir rf24libs
+
+    $ cd rf24libs
 
     $ git clone https://github.com/TMRh20/RF24
 
-    $ cd ~/rf24libs/RF24
+    $ cd RF24
 
-    $ ./configure
+    $ ./configure --prefix=/home/pi/.virtualenvs/LightPainting/bin
+
+L'option --prefix permet d'indiquer à ./configure où installer la lib \
+On remarquera plus loin à la fin de la commande sudo python3 setup.py install : \
+librf24.so found at /home/pi/.virtualenvs/LightPainting/bin/lib \
+Et à la fin de la commande sudo make install : \
+Installing Libs to /home/pi/.virtualenvs/light-painting/bin/lib
 
     $ sudo make install
 
     $ sudo apt-get install python3-dev libboost-python-dev
 
-    $ sudo ln -s $(ls /usr/lib/arm-linux-gnueabihf/libboost_python3-py3*.so | tail -1) /usr/lib/arm-linux-gnueabihf/libboost_python3.so
-    
-Nous avons trouvé une erreur à cette commande \
-Il faut aller trouver le bon fichier dans /usr/lib/arm-linux-gnueabihf/ \
-Pour nous le fichier s'appelle libboost_python39.so \
-La commande est donc pour nous : \
-    
     $ sudo ln -s $(ls /usr/lib/arm-linux-gnueabihf/libboost_python39.so | tail -1) /usr/lib/arm-linux-gnueabihf/libboost_python3.so
 
     $ sudo apt-get install python3-setuptools
 
     $ cd pyRF24/
 
-    $ python3 setup.py build
+    $ /home/pi/.virtualenvs/LightPainting/bin/python3.9 setup.py build
 
-    $ sudo python3 setup.py install
+    $ sudo /home/pi/.virtualenvs/LightPainting/bin/python3.9 setup.py install
 
     $ sudo apt-get install python3-dev python3-rpi.gpio
 
