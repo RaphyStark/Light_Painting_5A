@@ -65,10 +65,14 @@ long uR = 0;
 
 void setup()
 {
+  // init serial
   Serial.begin(9600);
   while (!Serial) {}
 
-  // initialize the transceiver on the SPI bus
+  //init pixels
+  pixels.begin();
+
+  // init radio
   if (!radio.begin()) {
     Serial.println(F("radio hardware is not responding!!"));
     while (1) {}} // hold in infinite loop
