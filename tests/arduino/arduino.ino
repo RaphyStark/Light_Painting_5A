@@ -41,6 +41,10 @@ double totalTicksR = 0;
 double totalTemps = 0;
 
 
+// machine state
+enum State_e {CHECK_RADIO, COMPUTE};
+State_e state;
+
 
 //RF24 radio(7, 8);
 RF24 radio(22, 23);
@@ -58,6 +62,8 @@ long wD = 0;
 
 void setup()
 {
+  state = CHECK_RADIO;
+  
   // init serial
   Serial.begin(9600);
   while (!Serial) {}
@@ -79,73 +85,88 @@ void setup()
 
 void loop()
 {
-  if (radio.available(&pipe))
+  switch (state)
   {
-    uint8_t bytes = radio.getPayloadSize(); 
-    radio.read(&payload, bytes);
-    wG = payload[0];
-    wD = payload[1];
-    Serial.print("wG : ");
-    Serial.println(wG);
-    Serial.print("wD : ");
-    Serial.println(wD);
-    move(wG, wD);
-    delay(100000);
-  }
-  else
-  {
-    Serial.println("nothing");
+    case CHECK_RADIO :
+      if (radio.available(&pipe))
+      {
+      uint8_t bytes = radio.getPayloadSize(); 
+      radio.read(&payload, bytes);
+      wG = payload[0];
+      wD = payload[1];
+      Serial.println("new setpoints received !");
+      Serial.print("new wG : ");
+      Serial.println(wG);
+      Serial.print("new wD : ");
+      Serial.println(wD);
+      state = COMPUTE;
+      //delay(3000);
+      }
+/*
+      else
+      {
+      Serial.print("wG : ");
+      Serial.println(wG);
+      Serial.print("wD : ");
+      Serial.println(wD);
+      }
+*/
+    break;
+    
+    
+    case COMPUTE :
+      compute(wG, wD);
+    break;
   }
 }
 
 
 
-
-
-
-void move(double leftSetpoint, double rightSetpoint)
+void compute(double leftSetpoint, double rightSetpoint)
 {
-  totalTemps = millis();
-  totalTicksL = leftEnc.read();
-  totalTicksR = rightEnc.read();
-  double newTime = 0;
-  double lastTime = 0;
+  if (leftSetpoint == 0 && rightSetpoint == 0)
+  {
+    stopMotors();
+  }
 
-  //while (millis() - totalTemps < stopTime)
-  //{
+  else
+  {
+    totalTicksL = leftEnc.read();
+    totalTicksR = rightEnc.read();
+  
     leftInput = leftEnc.read() - totalTicksL;
     rightInput = rightEnc.read() - totalTicksR;
     totalTicksL = leftEnc.read();
     totalTicksR = rightEnc.read();
-
+  
     leftError = leftSetpoint - leftInput;
     rightError = rightSetpoint - rightInput;
-
+  
     leftOutput = leftPrevOutput + leftKp * leftError;
     rightOutput = rightPrevOutput + rightKp * rightError;
-
+  
     if (leftOutput > 250)   leftOutput = 250;
     if (rightOutput > 250)  rightOutput = 250;
     if (leftOutput < -250)     leftOutput = -250;
     if (rightOutput < -250)    rightOutput = -250;
-
-    leftPrevOutput = leftOutput;
+  
+    leftPrevOutput  = leftOutput;
     rightPrevOutput = rightOutput;
-
+  
     leftMotor.setU(leftOutput);
     rightMotor.setU(rightOutput);
-
+  
     // printInfos();
     // i = i + 1;
-
+  
     // laisser le setU faire effet avant de recalculer l'output
-    lastTime = millis();
-    newTime = millis() - lastTime;
+    double lastTime = millis();
+    double newTime = millis() - lastTime;
     while (newTime < 150)
     {
       newTime = millis() - lastTime;
     }
-  //}
+  }
 }
 
 
