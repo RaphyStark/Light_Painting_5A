@@ -54,7 +54,7 @@ RF24 radio(22, 23);
 
 
 uint8_t address[][6] = {"1Node", "2Node"};
-bool radioNumber = 1;
+bool radioNumber = 0;
 bool role = false;
 
 long payload[2];

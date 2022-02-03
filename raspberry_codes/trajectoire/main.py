@@ -50,7 +50,7 @@ address = [b"1Node", b"2Node"]
 uL = 0
 uR = 0
 
-radio_number = 0
+radio_number = 1
 radio.setPALevel(RF24_PA_LOW)
 radio.openWritingPipe(address[radio_number])
 radio.payloadSize = len(struct.pack("ii", uL, uR))
