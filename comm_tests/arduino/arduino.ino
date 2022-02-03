@@ -1,10 +1,3 @@
-/*
-    See documentation at https://nRF24.github.io/RF24
-    See License information at root directory of this library
-    Author: Brendan Doherty (2bndy5)
-*/
-
-
 #include "RF24.h"
 #include "motor.h"
 #include <Encoder.h>
@@ -59,8 +52,8 @@ bool role = false;
 
 long payload[2];
 uint8_t pipe;
-long uL = 0;
-long uR = 0;
+long wG = 0;
+long wD = 0;
 
 
 void setup()
@@ -90,13 +83,13 @@ void loop()
   {
     uint8_t bytes = radio.getPayloadSize(); 
     radio.read(&payload, bytes);
-    uL = payload[0];
-    uR = payload[1];
-    Serial.print("uL : ");
-    Serial.println(uL);
-    Serial.print("uR : ");
-    Serial.println(uR);
-    move(uL, uR);
+    wG = payload[0];
+    wD = payload[1];
+    Serial.print("wG : ");
+    Serial.println(wG);
+    Serial.print("wD : ");
+    Serial.println(wD);
+    move(wG, wD);
     delay(100000);
   }
   else
@@ -110,7 +103,7 @@ void loop()
 
 
 
-void move(double leftSetpoint, double rightSetpoint)//, double stopTime)
+void move(double leftSetpoint, double rightSetpoint)
 {
   totalTemps = millis();
   totalTicksL = leftEnc.read();
