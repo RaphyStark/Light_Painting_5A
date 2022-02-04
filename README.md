@@ -21,6 +21,7 @@ En revanche, si le module est connecté directement à une chip ATmega328, il fa
 - git
 - VNC (pour travailler sur la RPI en remote sans écran)
 - RF24
+Pour les installations voir le readme: installation
 
 ### Le Projet 
 
