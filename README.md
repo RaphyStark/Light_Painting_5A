@@ -5,7 +5,7 @@ Il a pour but de mettre en place un système de contrôle à distance des robots
 Nous nous affranchissons donc de coder en dur les instructions moteurs en fonction du temps pour la réalisation. \
 Ici, la réalisation sera recréée à partir d'une image/dessin de ce que l'on souhaite faire. 
 
-### Hardware
+## Hardware
 
 - une Raspberry Pi 3B+ ou 4 
 - une Arduino Mega 
@@ -23,7 +23,7 @@ En revanche, si le module est connecté directement à une chip ATmega328, il fa
 - RF24 \
 Pour les installations voir le readme: installation
 
-### Le Projet 
+## Le Projet 
 
 Nous utilisons une Raspberry Pi 4 avec un module nRF24 pour la communication radio, une caméra connectée à la RPI qu'il faudra accrocher au plafond, et une carte Arduino
 MEGA avec module nRF24 qui sera placé sur le robot. Une Neopixel est connecté à l'Arduino. 
