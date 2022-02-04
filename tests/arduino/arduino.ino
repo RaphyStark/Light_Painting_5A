@@ -70,7 +70,7 @@ void setup()
 
   //init pixels
   pixels.begin();
-
+  neopixel(0,100,100,100);
   // init radio
   if (!radio.begin()) {
     Serial.println(F("radio hardware is not responding!!"));
