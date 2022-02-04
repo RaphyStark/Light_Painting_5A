@@ -1,11 +1,11 @@
-### Light_Painting_5A
+# Light_Painting_5A
 
 Light Painting 5A est un projet faisant suite au projet "Mobile Robot LightPainting". \
 Il a pour but de mettre en place un système de contrôle à distance des robots, et d'automatiser les commandes. \
-Nous nous affranchissons donc de coder en dur les instructions moteurs en fonction du temps pour la réalisation.\ 
+Nous nous affranchissons donc de coder en dur les instructions moteurs en fonction du temps pour la réalisation. \ 
 Ici, la réalisation sera recréée à partir d'une image/dessin de ce que l'on souhaite faire. \
 
-# Hardware
+### Hardware
 
 - une Raspberry Pi 3B+ ou 4\
 - une Arduino Mega \
@@ -14,16 +14,17 @@ Ici, la réalisation sera recréée à partir d'une image/dessin de ce que l'on 
 ATTENTION : Les Arduino disposent d'un régulateur de tension (SPX1117M3-L-5 Regulator) qui se chargent de stabiliser l'alimentation électrique. \ En revanche, si le module est connecté directement à une chip ATmega328, il faut ajouter un condensateur. \
 - Caméra
 
-# Software
+#"# Software
  
 - Python + virtualenvs
 - git
 - VNC (pour travailler sur la RPI en remote sans écran)
 - RF24
 
-# Le Projet \
+### Le Projet \
+
 Nous utilisons une Raspberry Pi 4 avec un module nRF24 pour la communication radio, une caméra connectée à la RPI qu'il faudra accrocher au plafond, et une carte Arduino
-MEGA avec module nRF24 qui sera placé sur le robot. Une Neopixel est connecté à l'Arduino. \
+MEGA avec module nRF24 qui sera placé sur le robot. Une Neopixel est connecté à l'Arduino. 
 
 La RPI devra avoir OpenCV d'installé, ainsi que la librairie du nRF24. \
 L'arduino devra avoir la librairie nRF24 d'installée aussi. \
