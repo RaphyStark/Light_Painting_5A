@@ -22,10 +22,10 @@ En revanche, si le module est connecté directement à une chip ATmega328, il fa
 ###Branchement \
 PINTYPE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RPI		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    ARDUINO	&nbsp;&nbsp;	MODULE \
 
-GND		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        GND		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   GND		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   1 \
-VCC	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        1/17	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   3,3V &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    2 (3,3V!) \
-CE0	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      15		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     22	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   	 3 \
-CSN		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        24		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     23		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     4 \
+GND		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        GND		 &nbsp;&nbsp;&nbsp;&nbsp;   GND		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   1 \
+VCC	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        1/17	 &nbsp;&nbsp;&nbsp;   3,3V &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    2 (3,3V!) \
+CE0	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      15		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     22	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  	 3 \
+CSN		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        24		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     23		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     4 \
 SLCK/SCK 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   23	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     52   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	  	5	 \
 MOSI	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        19	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     51	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    	6 \
 MISO	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	       21		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     50  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 		  7 \
