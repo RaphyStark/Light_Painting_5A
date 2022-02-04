@@ -6,10 +6,6 @@ Une autre solution (headless) consiste à écrire dans la partition boot du Rasp
 Une fois le Raspberry Pi configuré et sur le même réseau que le PC, taper raspberrypi.local dans VNC à l'endroit de l'adresse IP de la nouvelle connexion.
 
 
-## Branchements
-http://electroniqueamateur.blogspot.com/2017/02/communication-entre-raspberry-pi-et.html
-
-
 ## Environnement virtuel LightPainting
 https://opensource.com/article/21/2/python-virtualenvwrapper \
 Voir la dernière section de ce fichier pour comprendre l'interet de l'environnement virtuel
@@ -31,6 +27,11 @@ L'option --always-copy assure (à vérifier) que le virtualenv créer bien les l
 
     $ cd LightPainting
     
+
+## Branchements du RF24
+http://electroniqueamateur.blogspot.com/2017/02/communication-entre-raspberry-pi-et.html
+
+
 ## Installation de RF24 depuis les sources sur la RaspberryPi
 https://github.com/nRF24/RF24/issues/615 
 
