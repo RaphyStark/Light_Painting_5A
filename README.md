@@ -1,4 +1,4 @@
-Ce README se présente en deux parties: \
+Ce README se présente en deux parties: 
 - Présentation du projet
 - Configuration de la Raspberry Pi
 
