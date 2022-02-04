@@ -1,5 +1,14 @@
+## Premiere utilisation de la Raspberry Pi
+Bien qu'il soit possible d'utiliser la Raspberry Pi avec VNC sans disposer d'écran, sa configuration au premier lancement nécessite de voir ce qui est écrit à l'écran et pour activer ssh et VNC.
+
+Une autre solution (headless) consiste à écrire dans la partition boot du Raspberry pour configurer ssh et lui donner le SSID et Password du réseau local.
+
+Une fois le Raspberry Pi configuré et sur le même réseau que le PC, taper raspberrypi.local dans VNC à l'endroit de l'adresse IP de la nouvelle connexion.
+
+
 ## Branchements
 http://electroniqueamateur.blogspot.com/2017/02/communication-entre-raspberry-pi-et.html
+
 
 ## Environnement virtuel LightPainting
 https://opensource.com/article/21/2/python-virtualenvwrapper \
