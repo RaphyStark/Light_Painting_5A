@@ -5,7 +5,7 @@ Il a pour but de mettre en place un système de contrôle à distance des robots
 Nous nous affranchissons donc de coder en dur les instructions moteurs en fonction du temps pour la réalisation.\ 
 Ici, la réalisation sera recréée à partir d'une image/dessin de ce que l'on souhaite faire. \
 
-##Hardware
+#Hardware
 
 - une Raspberry Pi 3B+ ou 4\
 - une Arduino Mega \
@@ -14,7 +14,7 @@ Ici, la réalisation sera recréée à partir d'une image/dessin de ce que l'on 
 Attention : Les Arduino disposent d'un régulateur de tension (SPX1117M3-L-5 Regulator) qui se chargent de stabiliser l'alimentation électrique.\ En revanche, si le module est connecté directement à une chip ATmega328, il faut ajouter un condensateur.\
 - Caméra
 
-##Software
+#Software
  
 - Python + virtualenvs
 - git
