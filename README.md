@@ -15,6 +15,17 @@ ATTENTION : Les Arduino disposent d'un régulateur de tension (SPX1117M3-L-5 Reg
 En revanche, si le module est connecté directement à une chip ATmega328, il faut ajouter un condensateur.
 - Caméra 
 
+###Branchement
+PINTYPE		RPI		ARDUINO		MODULE
+
+GND		    GND		GND		    1
+VCC		    1/17	3,3V     2 (3,3V!)
+CE0	     15		 22	     	3
+CSN	 	   24		 23		     4
+SLCK/SCK	23	  52     		5	
+MOSI		   19		 51	     	6
+MISO		   21		 50     		7
+
 ## Software
  
 - Python + virtualenvs
