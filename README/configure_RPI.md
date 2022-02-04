@@ -22,6 +22,7 @@ L'option --always-copy assure (à vérifier) que le virtualenv créer bien les l
     $ cd LightPainting
     
 ## Installation de RF24 depuis les sources sur la RaspberryPi
+https://github.com/nRF24/RF24/issues/615 
 
     $ mkdir rf24libs
 
@@ -63,6 +64,33 @@ Installing Libs to /home/pi/.virtualenvs/light-painting/bin/lib
 L'option -v permet de voir où en est l'installation qui peut être assez longue
 
 
+## Clone du repo Light_Painting_5A avec Git
 
-sources : \
-https://github.com/nRF24/RF24/issues/615
+Utiliser une clé ssh pour récupérer le repo sur son linux :
+
+        $ ssh-keygen -t ed25519 -C "your_email@example.com" \
+        > "Enter a file in which to save the key" \
+        Cliquer sur entrer \
+        Il vous est ensuite demandé de créer un mot de passe pour la clé, entrer une clé \
+        $ eval "$(ssh-agent -s)" \
+        A ce stade, la commande ci-dessus doit retourner : \
+        > Agent pid 59566 (ou un autre nombre) \
+        $ open ~/.ssh/config \
+        Si la commande ci-dessus retourne : \
+        > The file /Users/you/.ssh/config does not exist.
+        Il faut créer le fichier ($ touch ~/.ssh/config)
+        Sinon modifier le simplement \
+        Il faut écrire dans ce fichier : \
+        Host * \
+          AddKeysToAgent yes \
+          IdentityFile ~/.ssh/id_ed25519 \
+        Attention, le tuto sur github demande d'ajouter UseKeychain yes, mais ça ne fonctionne pas (sur une RPI3B+) \
+        Taper ensuite la commande suivante : \
+        $ ssh-add ~/.ssh/id_ed25519 \
+        Attention, le tuto sur github demande d'écrire $ ssh-add -K ~/.ssh/id_ed25519 mais ça ne fonctionne pas non plus \
+        Il faut à présent se rendre sur les paramètres de son compte github (pas les paramètres du repo \
+        Cliquer sur SSH and GPG keys \
+        Ajouter tout le contenu de la clé publique SSH créée précédemment (tout ce qui se trouve dans $ cat ~/.ssh/id_ed25519.pub) \
+        Enfin, cloner le repo dans le repertoire de son choix : \
+        $ sudo apt install git \
+        $ git clone git@github.com:RaphyStark/Light_Painting_5A.git
