@@ -1,3 +1,7 @@
+Ce README se présente en deux parties: \
+- Présentation du projet
+- Configuration de la Raspberry Pi
+
 # Light_Painting_5A
 
 Light Painting 5A est un projet faisant suite au projet "Mobile Robot LightPainting". \
