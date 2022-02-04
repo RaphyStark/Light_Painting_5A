@@ -2,7 +2,7 @@
 http://electroniqueamateur.blogspot.com/2017/02/communication-entre-raspberry-pi-et.html
 
 ## Environnement virtuel LightPainting
-https://opensource.com/article/21/2/python-virtualenvwrapper
+https://opensource.com/article/21/2/python-virtualenvwrapper \
 Voir la dernière section de ce fichier pour comprendre l'interet de l'environnement virtuel
 
     $ sudo pip3 install virtualenvwrapper
