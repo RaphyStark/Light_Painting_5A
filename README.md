@@ -11,7 +11,7 @@ Ici, la réalisation sera recréée à partir d'une image/dessin de ce que l'on 
 - une Arduino Mega 
 - base robotique Romi Chassis Kit de Pololu (réf 3500) + moteurs, encodeurs, roues et Neopixel
 - Modules NRF24L01 (1 pour la RPI et 1 pour le robot) 
-ATTENTION : Les Arduino disposent d'un régulateur de tension (SPX1117M3-L-5 Regulator) qui se chargent de stabiliser l'alimentation électrique. \ 
+ATTENTION : Les Arduino disposent d'un régulateur de tension (SPX1117M3-L-5 Regulator) qui se chargent de stabiliser l'alimentation électrique. \
 En revanche, si le module est connecté directement à une chip ATmega328, il faut ajouter un condensateur.
 - Caméra 
 
