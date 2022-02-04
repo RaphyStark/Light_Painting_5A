@@ -4,7 +4,7 @@ import Robot as rob
 import numpy as np
 import math
 import os
-import pygame
+
 
 # RF24 imports
 import sys
@@ -31,19 +31,14 @@ robot = rob.Robot(0, 0, 0, d, r, - w_max, w_max)
 
 # Main step 5 : initialize a radio
 
-# 11. définir un objet radio pour la communication
+
 radio = RF24(22,0)
-# initialize the nRF24L01 on the spi bus
+
 if not radio.begin():
     raise RuntimeError("radio hardware is not responding")
-# For this example, we will use different addresses
-# An address need to be a buffer protocol object (bytearray)
-address = [b"1Node", b"2Node"]
-# It is very helpful to think of an address as a path instead of as
-# an identifying device destination
 
-#uL = 0
-#uR = 0
+address = [b"1Node", b"2Node"]
+
 robot.wL = 0
 robot.wD = 0
 
@@ -53,9 +48,6 @@ radio.openWritingPipe(address[radio_number])
 radio.payloadSize = len(struct.pack("ii", robot.wL, robot.wD))
 radio.stopListening()
 
-
-
-# Main step 6 : robot control
 
 # threshold for change to next WP
 epsilonWP = 0.01
@@ -108,12 +100,7 @@ while (1):
         WPManager.switchToNextWP()
 
     # 10. calcul de robot.theta (theta)
-    delta_theta = np.arctan2(robot.y - robot.py, robot.x - robot.px)
-    robot.theta = robot.theta + delta_theta
-
-    #v1 = pygame.math.Vector2(x1-x0, y1-y0)
-    #v2 = pygame.math.Vector2(x2-x0, y2-y0)
-    #angle = v1.angle_to(v2)
+    robot.theta = np.arctan2(robot.y - robot.py, robot.x - robot.px)
 
     # calcul de thetaRef (reference en orientation)
     thetaRef = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
@@ -129,6 +116,9 @@ while (1):
     # 12. Calculer wD et wG en fonction de vRef et thetaRef
     robot.wD = (2 * vConsign) - (thetaRef * d) / (2 * r)
     robot.wG = (2 * vConsign) + (thetaRef * d) / (2 * r)
+
+    robot.wD = robot.wD * 4.55 * 1440 * 0.15
+    robot.wG = robot.wG * 4.55 * 1440 * 0.15
 
     debug(robot, WPManager)
 
