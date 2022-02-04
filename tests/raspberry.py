@@ -22,13 +22,11 @@ if __name__ == "__main__":
     radio.setPALevel(RF24_PA_LOW)
 
     radio.openWritingPipe(address[radio_number])
-    
-    # TODO : is it important ?
+
     radio.openReadingPipe(1, address[not radio_number])
 
     radio.payloadSize = len(struct.pack("ii", uL, uR))
 
-    # TODO : is it important ?
     radio.stopListening()
     
     while (success == False) :
@@ -41,6 +39,5 @@ if __name__ == "__main__":
         else :
             print("failed")
 
-    # TODO : is it important ?
     radio.powerDown()
     sys.exit()

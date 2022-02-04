@@ -13,12 +13,6 @@ import struct
 from RF24 import RF24, RF24_PA_LOW
 
 
-
-
-# main step 1 : get camera dimensions
-#cap, capX, capY = get_cam_dimensions()
-
-
 capX = 352
 capY = 288
 coeff = 1
