@@ -94,3 +94,30 @@ Utiliser une clé ssh pour récupérer le repo sur son linux :
         Enfin, cloner le repo dans le repertoire de son choix : \
         $ sudo apt install git \
         $ git clone git@github.com:RaphyStark/Light_Painting_5A.git
+
+
+
+## Instructions utiles concernant l'utilisation de Git
+
+# Envoyer un gros fichier sur git
+  https://git-lfs.github.com/
+
+# Créer et push un fichier
+        $ git add README.md
+        $ git commit -m 'modification README.md'
+        $ git push
+
+# Récupérer un dossier du master vers une branch
+        $ git checkout <branch_name>
+        $ git stash (si besoin)
+        $ git checkout <branch_name>
+        $ git merge origin/master
+        $ git add README.md 
+        $ git commit -m 'modif README.md'
+        $ git push
+        $ git merge origin/master
+        $ git fetch
+        $ git push
+        $ git pull (résoudre les problèmes dans la fenêtre vsc (accept upcoming changes)
+        $ git add README.md
+        $ git commit -m 'update after merge'
