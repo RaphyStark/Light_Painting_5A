@@ -22,7 +22,7 @@ Se trouve un premier dossier, LP_PostProd, permettant de créer, à partir des i
 et l'image final du lightpainting.
 Un dossier trajectoire contenant le programme de la RPI. Les codes AStar.py, Timer.py, Robot.py, functions.py sont utilisés dans le main.py. 
 
-Spirale.jpg est notre image de test. A partir de cette image nous allons créér une grille d'occupation. Une fois un noeud de début et de fin selectionnés, l'algorithme 
+Spirale.jpg est notre image de test. C'est une image en blanc sur fond noir créé sous Paint. A partir de cette image nous allons créér une grille d'occupation. Une fois un noeud de début et de fin selectionnés, l'algorithme 
 va créer une trajectoire entre ces deux noeuds. La grille d'occupation nous permet de faire semblant qu'il y a des obstacles dans notre espace de travail, ainsi forçant
 l'algorithme de génération de trajectoire à en générer une ayant la forme que l'on souhaite. 
 La caméra nous permet d'enregistrer les images de la réalisation. A partir de ces images nous pouvons connaitre la position actuelle du robot. En utilisant les positions
