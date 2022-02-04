@@ -45,7 +45,7 @@ robot.wD = 0
 radio_number = 1
 radio.setPALevel(RF24_PA_LOW)
 radio.openWritingPipe(address[radio_number])
-radio.payloadSize = len(struct.pack("ii", robot.wL, robot.wD))
+radio.payloadSize = len(struct.pack("ff", robot.wL, robot.wD))
 radio.stopListening()
 
 
@@ -122,7 +122,7 @@ while (1):
 
     debug(robot, WPManager)
 
-    buff = struct.pack("ii", robot.wG, robot.wD)
+    buff = struct.pack("ff", robot.wG, robot.wD)
     result = radio.write(buff)
     if result:
         print(robot.wG)
