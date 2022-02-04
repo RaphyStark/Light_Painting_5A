@@ -116,6 +116,7 @@ void loop()
     
     case COMPUTE :
       compute(wG, wD);
+      state = CHECK_RADIO;
     break;
   }
 }

@@ -124,11 +124,6 @@ while (1):
 
     buff = struct.pack("ff", robot.wG, robot.wD)
     result = radio.write(buff)
-    if result:
-        print(robot.wG)
-        print(robot.wD)
-    else:
-        print("failed to send")
     
     robot.px = robot.x
     robot.py = robot.y
