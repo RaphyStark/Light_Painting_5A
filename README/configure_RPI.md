@@ -3,6 +3,7 @@ http://electroniqueamateur.blogspot.com/2017/02/communication-entre-raspberry-pi
 
 ## Environnement virtuel LightPainting
 https://opensource.com/article/21/2/python-virtualenvwrapper
+Voir la dernière section de ce fichier pour comprendre l'interet de l'environnement virtuel
 
     $ sudo pip3 install virtualenvwrapper
     
@@ -121,3 +122,20 @@ Utiliser une clé ssh pour récupérer le repo sur son linux :
         $ git pull (résoudre les problèmes dans la fenêtre vsc (accept upcoming changes)
         $ git add README.md
         $ git commit -m 'update after merge'
+        
+        
+## Pourquoi installer un environnement virtuel ?
+Travailler en python peut sembler difficile : versions 2 et 3 installés sur son PC, différents repertoires d'installations ($ whereis python)...
+
+Il n'est pas recommandé d'utiliser directement l'installation python du système pour travailler.
+De plus, on peut s'y perdre facilement (plusieurs repertoires d'installations, Python, Python3...)
+
+Cela peut poser des problèmes lorsqu'on souhaite développer deux applications avec des versions de modules différents.
+
+Il faut donc mettre en place un environnement virtuel dans son worksplace et y installer les modules nécessaires au projet.
+
+cf. https://stackoverflow.com/questions/41992104/usr-bin-python-vs-usr-local-bin-python :
+“If it's a virtualenv, that also makes cleanup easier; just delete the virtualenv when you no longer need it as opposed to trying to uninstall libraries installed at the system level.”
+
+Il est également recommandé d'utiliser un environnement virtuel lorsque l'utilisation de certains modules nécessitent une élevation de droits :
+https://askubuntu.com/questions/1268870/python-module-not-found-in-sudo-mode-ubuntu-20-04
