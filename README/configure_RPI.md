@@ -99,15 +99,15 @@ Utiliser une clé ssh pour récupérer le repo sur son linux :
 
 ## Instructions utiles concernant l'utilisation de Git
 
-# Envoyer un gros fichier sur git
+### Envoyer un gros fichier sur git
   https://git-lfs.github.com/
 
-# Créer et push un fichier
+### Créer et push un fichier
         $ git add README.md
         $ git commit -m 'modification README.md'
         $ git push
 
-# Récupérer un dossier du master vers une branch
+### Récupérer un dossier du master vers une branch
         $ git checkout <branch_name>
         $ git stash (si besoin)
         $ git checkout <branch_name>
