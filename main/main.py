@@ -112,8 +112,8 @@ while (1):
     kVp = 0.007
     kwp = 0.01
 
-    kVi = 0.000008
-    kwi = 0.000008
+    kVi = 0.000001
+    kwi = 0.000001
 
     robot.theta     = np.arctan2(y - py, x - px)
     robot.theta_ref = np.arctan2(yr - y, xr - x)
