@@ -86,12 +86,13 @@ theta_sum = 0
 n_iteration = 1
 
 kVp = 0.005
-kwp = 0.1
+kwp = 0.01
 
 kVi = 0.00001
 kwi = 0.001
 
 while (1):
+    # récupération des coordonnées du robot dans le plan de la caméra
     get_coord(cap, int(capX/coeff), int(capY/coeff), robot, currentframe)
 
     # on passe au noeud suivant si le noeud de référence est atteint
@@ -99,16 +100,16 @@ while (1):
         print("switch to next WP")
         WPManager.switchToNextWP()
     
-    robot.theta     = np.arctan2(robot.y - robot.py, robot.x - robot.px)
-    robot.theta_ref = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
-
-
-    theta_sum = theta_sum + robot.theta
+    # calcul de theta par moyennation pour éliminer le bruit
+    theta     = np.arctan2(robot.y - robot.py, robot.x - robot.px)
+    theta_sum = theta_sum + theta
     robot.theta = theta_sum / n_iteration
     n_iteration += 1
 
+    # calcul de l'angle que doit prendre le robot
+    robot.theta_ref = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
 
-    # calcul des erreurs
+    # calcul des erreurs et V et w
     errorV = (np.sqrt((WPManager.xr - robot.x) ** 2 + (WPManager.yr - robot.y) ** 2))
     errorw = (robot.theta_ref - robot.theta)
 
@@ -123,19 +124,26 @@ while (1):
     corrVi          = kVi * errorSumV
     corrwi          = kwi * errorSumw
 
+    # calcul de V et w (somme des termes proportionnel et intégral)
     robot.V         = corrVp + corrVi
     robot.w         = corrwp + corrwi
     
+    # calcul de wD et wG selon la formule du cours
     robot_wD_ref    = ((2 * robot.V) + (robot.w * d)) / (2 * r)
     robot.wG_ref    = ((2 * robot.V) - (robot.w * d)) / (2 * r)
 
+    # cast des valeurs en entiers pour l'envoi radio
     robot.wD_ref    = int(robot_wD_ref)
     robot.wG_ref    = int(robot.wG_ref)
 
+    # affichage des valeurs sur le terminal
+    # debug(robot, WPManager)
     debug2(robot, WPManager)
 
+    # envoi des valeurs moteurs au robot
     buff = struct.pack("ii", robot.wD_ref, robot.wG_ref)
     result = radio.write(buff)
     
+    # mise à jour de la position précédente
     robot.px = robot.x
     robot.py = robot.y
