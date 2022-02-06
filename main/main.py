@@ -60,7 +60,7 @@ d = 0.135
 r = 0.035
 # TODO : mesurer la vitesse de rotation maximale du moteur (en m / s)
 w_max = 200
-robot = rob.Robot(0, 0, 0, d, r, - w_max, w_max)
+robot = rob.Robot(d, r, - w_max, w_max)
 wD_ref = 0
 wG_ref = 0
 
@@ -103,23 +103,24 @@ while (1):
     # 12. Calculer wD et wG en fonction de vRef et thetaRef
     #robot.wD_ref = (2 * robot.vitesse_ref) - (robot.w_ref * d) / (2 * r)
     #robot.wG_ref = (2 * robot.vitesse_ref) + (robot.w_ref * d) / (2 * r)
-    #debug(robot, WPManager)
+    #
 
     # calcul du vecteur v
 
     kV = 0.4
     kw = 0.6
 
-    theta  = np.arctan2(y - py, x - px)
-    theta_ref = np.arctan2(yr - y, xr - x)
-    V = kV * (np.sqrt((xr - x) ** 2 + (yr - y) ** 2))
-    w = kw * (theta_ref - theta)
+    robot.theta     = np.arctan2(y - py, x - px)
+    robot.theta_ref = np.arctan2(yr - y, xr - x)
+    robot.V         = kV * (np.sqrt((xr - x) ** 2 + (yr - y) ** 2))
+    robot.w         = kw * (robot.theta_ref - robot.theta)
+    robot_wD_ref    = ((2 * robot.V) + (robot.w * d)) / (2 * r)
+    robot.wG_ref    = ((2 * robot.V) - (robot.w * d)) / (2 * r)
 
-    wD_ref = ((2 * V) + (w * d)) / (2 * r)
-    wG_ref = ((2 * V) - (w * d)) / (2 * r)
+    wD_ref = int(robot_wD_ref)
+    wG_ref = int(robot.wG_ref)
 
-    wD_ref = int(wD_ref)
-    wG_ref = int(wG_ref)
+    debug(robot, WPManager)
 
     buff = struct.pack("ii", wD_ref, wG_ref)
     result = radio.write(buff)
