@@ -109,7 +109,7 @@ while (1):
 
     # calcul du vecteur v
 
-    kVp = 0.007
+    kVp = 0.001
     kwp = 0.01
 
     kVi = 0.000001
