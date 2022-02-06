@@ -34,8 +34,8 @@ double rightInput = 0;
 double rightOutput = 0;
 double leftPrevOutput = 0;
 double rightPrevOutput = 0;
-double leftKp = 0.07;
-double rightKp = 0.07;
+double leftKp = 0.00007;
+double rightKp = 0.00007;
 double totalTicksL = 0;
 double totalTicksR = 0;
 double totalTemps = 0;
@@ -53,9 +53,9 @@ RF24 radio(22, 23);
 uint8_t address[][6] = {"1Node", "2Node"};
 bool radioNumber = 0;
 bool role = false;
+uint8_t pipe;
 
 long payload[2];
-uint8_t pipe;
 long wG = 0;
 long wD = 0;
 
@@ -94,6 +94,8 @@ void loop()
       radio.read(&payload, bytes);
       wD = payload[0];
       wG = payload[1];
+      wD = wD * 4.55 * 1440 * 0.15;
+      wG = wG * 4.55 * 1440 * 0.15;
       Serial.println("new setpoints received !");
       Serial.print("new wG : ");
       Serial.println(wG);
