@@ -133,8 +133,8 @@ while (1):
     corrVi  = kVi * errorSumV
     corrwi  = kwi * errorSumw
 
-    robot.V = corrVp + corrVi
-    robot.w = corrwp + corrwi
+    robot.V = corrVp #+ corrVi
+    robot.w = corrwp #+ corrwi
 
     robot_wD_ref    = ((2 * robot.V) + (robot.w * d)) / (2 * r)
     robot.wG_ref    = ((2 * robot.V) - (robot.w * d)) / (2 * r)
