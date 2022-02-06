@@ -61,6 +61,9 @@ r = 0.035
 # TODO : mesurer la vitesse de rotation maximale du moteur (en m / s)
 w_max = 200
 robot = rob.Robot(0, 0, 0, d, r, - w_max, w_max)
+wD_ref = 0
+wG_ref = 0
+
 
 # initialisation de la radio
 radio = RF24(22,0)
@@ -70,7 +73,7 @@ address = [b"1Node", b"2Node"]
 radio_number = 1
 radio.setPALevel(RF24_PA_LOW)
 radio.openWritingPipe(address[radio_number])
-radio.payloadSize = len(struct.pack("ii", robot.wD, robot.wG))
+radio.payloadSize = len(struct.pack("ii", wD_ref, wG_ref))
 radio.stopListening()
 
 while (1):
@@ -82,44 +85,43 @@ while (1):
         WPManager.switchToNextWP()
 
 
-    # calcul de V et de la direction de référence theta_ref (cv. cours commande slide 10)
-
-    # 1 : calcul de vConsign (reference en vitesse)
-    # attention:
-    # ce n'est pas le calcul d'une vitesse mais d'une sortie d'un correcteur P
-    # calculée grace au gain et au déplacement par unité de temps (une itération)
-    robot.v_consign = kp_v * np.sqrt((WPManager.xr - robot.x)**2 + (WPManager.yr - robot.y)**2)
-
-    # 2 : calcul de theta_ref
-
-    # 2.1 : calcul de robot.theta
-    robot.theta = np.arctan2(robot.y - robot.py, robot.x - robot.px)
-
-    # 2.2 : calcul de theta de réference
-    robot.theta_ref = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
+    px = robot.px
+    py = robot.py
+    x = robot.x
+    y = robot.y
+    xr = WPManager.xr
+    yr = WPManager.yr
     
-    # si la différence entre theta robot et theta ref > 180°
-    # on  ajoute ou soustrait 2pi à theta ref selon le signe de theta robot
-    # attention : jamais le cas car arctan2 fait déjà un process
-    # qui empêche l'angle d'être supérieur à 180°
-    # exemple :
-    # >>> np.arctan2(0,-3) * 57.29577913
-    # 179.9999987965114
-    # >>> np.arctan2(-0.000001,-3) * 57.29577913
-    # -179.99997969791835
-    if math.fabs(robot.theta - robot.theta_ref) > math.pi:
-        robot.theta_ref = robot.theta_ref + math.copysign(2*math.pi,robot.theta)        
-
-    # correcteur P sur le theta
-    robot.theta_consign = kp_theta * (robot.theta_ref - robot.theta)
-
+    # calcul de V et de la direction de référence theta_ref (cv. cours commande slide 10)
+    # robot.vitesse = np.sqrt((WPManager.xr - robot.x)**2 + (WPManager.yr - robot.y)**2)
+    # robot.theta = np.arctan2(robot.y - robot.py, robot.x - robot.px)
+    # calcul de theta de réference
+    #robot.theta_ref = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
+    #robot.w_ref = (robot.theta_ref - robot.theta)
+    #robot.wD = (2 * robot.vitesse) - (robot.theta * d) / (2 * r)
+    #robot.wG = (2 * robot.vitesse) + (robot.theta * d) / (2 * r)
     # 12. Calculer wD et wG en fonction de vRef et thetaRef
-    robot.wD = (2 * robot.v_consign) - (robot.theta_consign * d) / (2 * r)
-    robot.wG = (2 * robot.v_consign) + (robot.theta_consign * d) / (2 * r)
+    #robot.wD_ref = (2 * robot.vitesse_ref) - (robot.w_ref * d) / (2 * r)
+    #robot.wG_ref = (2 * robot.vitesse_ref) + (robot.w_ref * d) / (2 * r)
+    #debug(robot, WPManager)
 
-    debug(robot, WPManager)
+    # calcul du vecteur v
 
-    buff = struct.pack("ii", robot.wD, robot.wG)
+    kV = 0.4
+    kw = 0.6
+
+    theta  = np.arctan2(y - py, x - px)
+    theta_ref = np.arctan2(yr - y, xr - x)
+    V = kV * (np.sqrt((xr - x) ** 2 + (yr - y) ** 2))
+    w = kw * (theta_ref - theta)
+
+    wD_ref = ((2 * V) + (w * d)) / (2 * r)
+    wG_ref = ((2 * V) - (w * d)) / (2 * r)
+
+    wD_ref = int(wD_ref)
+    wG_ref = int(wG_ref)
+
+    buff = struct.pack("ii", wD_ref, wG_ref)
     result = radio.write(buff)
     
     robot.px = robot.x
