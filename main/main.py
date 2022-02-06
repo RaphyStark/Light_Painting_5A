@@ -107,8 +107,8 @@ while (1):
 
     # calcul du vecteur v
 
-    kV = 0.004
-    kw = 0.006
+    kV = 0.007
+    kw = 0.009
 
     robot.theta     = np.arctan2(y - py, x - px)
     robot.theta_ref = np.arctan2(yr - y, xr - x)
