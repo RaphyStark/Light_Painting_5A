@@ -117,12 +117,12 @@ while (1):
     robot_wD_ref    = ((2 * robot.V) + (robot.w * d)) / (2 * r)
     robot.wG_ref    = ((2 * robot.V) - (robot.w * d)) / (2 * r)
 
-    wD_ref = int(robot_wD_ref)
-    wG_ref = int(robot.wG_ref)
+    robot.wD_ref = int(robot_wD_ref)
+    robot.wG_ref = int(robot.wG_ref)
 
     debug(robot, WPManager)
 
-    buff = struct.pack("ii", wD_ref, wG_ref)
+    buff = struct.pack("ii", robot.wD_ref, robot.wG_ref)
     result = radio.write(buff)
     
     robot.px = robot.x
