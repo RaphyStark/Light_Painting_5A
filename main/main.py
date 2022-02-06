@@ -85,11 +85,11 @@ radio.stopListening()
 theta_sum = 0
 n_iteration = 1
 
-kVp = 0.005
-kwp = 0.01
+kpV = 0.005
+kpW = 1
 
-kVi = 0.00001
-kwi = 0.001
+kiV = 0.00001
+kiW = 0.001
 
 while (1):
     # récupération des coordonnées du robot dans le plan de la caméra
@@ -114,23 +114,23 @@ while (1):
     errorw = (robot.theta_ref - robot.theta)
 
     # correction proportionnelle
-    corrVp          = kVp * errorV
-    corrwp          = kwp * errorw
+    corrVp          = kpV * errorV
+    corrwp          = kpW * errorw
 
     # correction intégrale
     errorSumV       += errorV
     errorSumw       += errorw
 
-    corrVi          = kVi * errorSumV
-    corrwi          = kwi * errorSumw
+    corrVi          = kiV * errorSumV
+    corrwi          = kiW * errorSumw
 
     # calcul de V et w (somme des termes proportionnel et intégral)
     robot.V         = corrVp + corrVi
     robot.w         = corrwp + corrwi
-    
+
     # calcul de wD et wG selon la formule du cours
-    robot_wD_ref    = ((2 * robot.V) + (robot.w * d)) / (2 * r)
-    robot.wG_ref    = ((2 * robot.V) - (robot.w * d)) / (2 * r)
+    robot_wD_ref    = (2 * robot.V + robot.w * d) / (2 * r)
+    robot.wG_ref    = (2 * robot.V - robot.w * d) / (2 * r)
 
     # cast des valeurs en entiers pour l'envoi radio
     robot.wD_ref    = int(robot_wD_ref)
@@ -147,3 +147,33 @@ while (1):
     # mise à jour de la position précédente
     robot.px = robot.x
     robot.py = robot.y
+
+# calcul des valeurs maximales pouvant être prises par wD et wG
+# afin de maper ces valeurs entre 0 et 255
+# et pouvoir réaliser un asservissement dessus par la suite
+
+# calcul de max(robot.v) :
+# min(errorV) = 0
+# max(errorV) = sqrt(capX **2 + capY ** 2) = 454
+# sous hyp. correcteur P uniquement et KpV = 0.005
+# max(robot.V) = KpV * errorV = 0.005 * 454 = 2.27
+
+# calcul de max(robot.w) :
+# min(errorw) = 0
+# max(errorw) = 2*Pi
+# sous hyp. correcteur P uniquement et KpW = 1
+# max(robot.w) = KpW * 2Pi = 6.283185307179587
+
+# calcul de max(wD_ref) et max(wG_ref) :
+# ainsi max(wD_ref) = (2 * max(robot.V) + max(robot.w) * 0.135) / (2 * 0.035)
+# et    max(wG_ref) = (2 * max(robot.V) - max(robot.w) * 0.135) / (2 * 0.035)
+
+# testé dans une console Python :
+# max_rob_V = 2.27
+# max_rob_W = 6.283185307179587
+# max_wD = (2 * max_rob_V + max_rob_W * 0.135) / (2 * 0.035)
+# max_wG = (2 * max_rob_V - max_rob_W * 0.135) / (2 * 0.035)
+# max_wD
+# 76.97471452098921
+# max_wG
+# 52.739571193296506
