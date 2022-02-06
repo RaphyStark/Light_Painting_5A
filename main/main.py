@@ -17,38 +17,6 @@ capX = 352
 capY = 288
 coeff = 1
 
-
-# Main step 3 : initialize a robot
-d = 0.135    # en m
-r = 0.035     # en m
-# TODO : mesurer la vitesse de rotation maximale du moteur (en m / s)
-w_max = 200
-robot = rob.Robot(0, 0, 0, d, r, - w_max, w_max)
-
-
-
-
-
-# Main step 5 : initialize a radio
-
-
-radio = RF24(22,0)
-
-if not radio.begin():
-    raise RuntimeError("radio hardware is not responding")
-
-address = [b"1Node", b"2Node"]
-
-robot.wL = 0
-robot.wD = 0
-
-radio_number = 1
-radio.setPALevel(RF24_PA_LOW)
-radio.openWritingPipe(address[radio_number])
-radio.payloadSize = len(struct.pack("ff", robot.wL, robot.wD))
-radio.stopListening()
-
-
 # threshold for change to next WP
 epsilonWP = 0.01
 
@@ -58,10 +26,6 @@ WPlist = [[316, 231], [316, 232], [316, 233], [317, 233]]
 # init WPManager
 WPManager = rob.WPManager(WPlist, epsilonWP)
 
-
-# gains des correcteurs
-kp_v     = 0.0001    # pour la vitesse de référence
-kp_theta = 0.00025    # pour l'angle de référence
 
 # initialisation des variables de calcul
 vConsign = 0.0
@@ -84,12 +48,30 @@ if not cap.isOpened():
 #while OK is True :
 
 
-# duration of scenario and time step for numerical integration
-t0 = 0.0
-tf = 1000.0
-dt = 0.01
-simu = rob.RobotSimulation(robot, t0, tf, dt)
 
+# initialisation de la correction en position
+
+# gains des correcteurs (orientation > vitesse)
+kp_theta = 0.001
+kp_v     = 0.0001
+
+# caractéristiques du robot
+d = 0.135
+r = 0.035
+# TODO : mesurer la vitesse de rotation maximale du moteur (en m / s)
+w_max = 200
+robot = rob.Robot(0, 0, 0, d, r, - w_max, w_max)
+
+# initialisation de la radio
+radio = RF24(22,0)
+if not radio.begin():
+    raise RuntimeError("radio hardware is not responding")
+address = [b"1Node", b"2Node"]
+radio_number = 1
+radio.setPALevel(RF24_PA_LOW)
+radio.openWritingPipe(address[radio_number])
+radio.payloadSize = len(struct.pack("ff", robot.wD, robot.wG))
+radio.stopListening()
 
 while (1):
     get_coord(cap, int(capX/coeff), int(capY/coeff), robot, currentframe)
@@ -99,30 +81,48 @@ while (1):
         print("switch to next WP")
         WPManager.switchToNextWP()
 
-    # 10. calcul de robot.theta (theta)
+
+    # calcul de V et de la direction de référence theta_ref (cv. cours commande slide 10)
+
+    # 1 : calcul de vConsign (reference en vitesse)
+    # attention:
+    # ce n'est pas le calcul d'une vitesse mais d'une sortie d'un correcteur P
+    # calculée grace au gain et au déplacement par unité de temps (une itération)
+    robot.v_consign = kp_v * np.sqrt((WPManager.xr - robot.x)**2 + (WPManager.yr - robot.y)**2)
+
+    # 2 : calcul de theta_ref
+
+    # 2.1 : calcul de robot.theta
     robot.theta = np.arctan2(robot.y - robot.py, robot.x - robot.px)
 
-    # calcul de thetaRef (reference en orientation)
-    thetaRef = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
-    if math.fabs(robot.theta-thetaRef)>math.pi:
-        thetaRef = thetaRef + math.copysign(2*math.pi,robot.theta)        
+    # 2.2 : calcul de theta de réference
+    robot.theta_ref = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
+    
+    # si la différence entre theta robot et theta ref > 180°
+    # on  ajoute ou soustrait 2pi à theta ref selon le signe de theta robot
+    # attention : jamais le cas car arctan2 fait déjà un process
+    # qui empêche l'angle d'être supérieur à 180°
+    # exemple :
+    # >>> np.arctan2(0,-3) * 57.29577913
+    # 179.9999987965114
+    # >>> np.arctan2(-0.000001,-3) * 57.29577913
+    # -179.99997969791835
+    if math.fabs(robot.theta - robot.theta_ref) > math.pi:
+        robot.theta_ref = robot.theta_ref + math.copysign(2*math.pi,robot.theta)        
 
-    # calcul de l'angle de consigne thetaConsign
-    thetaConsign = kp_theta * (thetaRef - robot.theta)
-
-    # calcul de vConsign (reference en vitesse)
-    vConsign = kp_v * np.sqrt((WPManager.xr - robot.x)**2 + (WPManager.yr - robot.y)**2)
+    # correcteur P sur le theta
+    robot.theta_consign = kp_theta * (robot.theta_ref - robot.theta)
 
     # 12. Calculer wD et wG en fonction de vRef et thetaRef
-    robot.wD = (2 * vConsign) - (thetaRef * d) / (2 * r)
-    robot.wG = (2 * vConsign) + (thetaRef * d) / (2 * r)
+    robot.wD = (2 * robot.v_consign) - (robot.theta_consign * d) / (2 * r)
+    robot.wG = (2 * robot.v_consign) + (robot.theta_consign * d) / (2 * r)
 
-    robot.wD = robot.wD * 4.55 * 1440 * 0.15
-    robot.wG = robot.wG * 4.55 * 1440 * 0.15
+    #robot.wD = robot.wD * 4.55 * 1440 * 0.15
+    #robot.wG = robot.wG * 4.55 * 1440 * 0.15
 
     debug(robot, WPManager)
 
-    buff = struct.pack("ff", robot.wG, robot.wD)
+    buff = struct.pack("ff", robot.wD, robot.wG)
     result = radio.write(buff)
     
     robot.px = robot.x

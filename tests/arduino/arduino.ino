@@ -92,8 +92,8 @@ void loop()
       {
       uint8_t bytes = radio.getPayloadSize(); 
       radio.read(&payload, bytes);
-      wG = payload[0];
-      wD = payload[1];
+      wD = payload[0];
+      wG = payload[1];
       Serial.println("new setpoints received !");
       Serial.print("new wG : ");
       Serial.println(wG);
@@ -115,7 +115,7 @@ void loop()
     
     
     case COMPUTE :
-      compute(wG, wD);
+      compute(wD, wG);
       state = CHECK_RADIO;
     break;
   }
@@ -123,7 +123,7 @@ void loop()
 
 
 
-void compute(double leftSetpoint, double rightSetpoint)
+void compute(double rightSetpoint, double leftSetpoint)
 {
   if (leftSetpoint == 0 && rightSetpoint == 0)
   {
