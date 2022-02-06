@@ -112,8 +112,8 @@ while (1):
     kVp = 0.007
     kwp = 0.01
 
-    kVi = 0.0008
-    kwi = 0.0008
+    kVi = 0.000008
+    kwi = 0.000008
 
     robot.theta     = np.arctan2(y - py, x - px)
     robot.theta_ref = np.arctan2(yr - y, xr - x)
@@ -127,14 +127,14 @@ while (1):
     corrwp  = kwp * errorw
 
     # correction intégrale
-    errorSumV = errorSumV + errorV
-    errorSumw = errorSumw + errorw
+    errorSumV += errorV
+    errorSumw += errorw
 
     corrVi  = kVi * errorSumV
     corrwi  = kwi * errorSumw
 
-    robot.V = corrVp #+ corrVi
-    robot.w = corrwp #+ corrwi
+    robot.V = corrVp + corrVi
+    robot.w = corrwp + corrwi
 
     robot_wD_ref    = ((2 * robot.V) + (robot.w * d)) / (2 * r)
     robot.wG_ref    = ((2 * robot.V) - (robot.w * d)) / (2 * r)
