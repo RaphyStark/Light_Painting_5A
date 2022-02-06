@@ -64,6 +64,8 @@ robot = rob.Robot(d, r, - w_max, w_max)
 wD_ref = 0
 wG_ref = 0
 
+errorSumV = 0
+errorSumw = 0
 
 # initialisation de la radio
 radio = RF24(22,0)
@@ -107,13 +109,33 @@ while (1):
 
     # calcul du vecteur v
 
-    kV = 0.007
-    kw = 0.01
+    kVp = 0.007
+    kwp = 0.01
+
+    kVi = 0.08
+    kwi = 0.08
 
     robot.theta     = np.arctan2(y - py, x - px)
     robot.theta_ref = np.arctan2(yr - y, xr - x)
-    robot.V         = kV * (np.sqrt((xr - x) ** 2 + (yr - y) ** 2))
-    robot.w         = kw * (robot.theta_ref - robot.theta)
+
+    # calcul des erreurs
+    errorV = (np.sqrt((xr - x) ** 2 + (yr - y) ** 2))
+    errorw = (robot.theta_ref - robot.theta)
+
+    # correction proportionnelle
+    corrVp  = kVp * errorV
+    corrwp  = kwp * errorw
+
+    # correction intégrale
+    errorSumV = errorSumV + errorV
+    errorSumw = errorSumw + errorw
+
+    corrVi  = kVi * errorSumV
+    corrwi  = kwi * errorSumw
+
+    robot.V = corrVp + corrVi
+    robot.w = corrwp + corrwi
+
     robot_wD_ref    = ((2 * robot.V) + (robot.w * d)) / (2 * r)
     robot.wG_ref    = ((2 * robot.V) - (robot.w * d)) / (2 * r)
 
