@@ -1,6 +1,5 @@
-
 import cv2 as cv
-
+import numpy as np
 
 # every loop functions
 def get_coord(cap, capX, capY, robot, current_frame) :
@@ -47,17 +46,56 @@ def map(x, in_min, in_max, out_min, out_max):
 
 
 def debug(robot, WPManager):
-    print("current position :")
-    print("XP = " + str(robot.px))
-    print("YP = " + str(robot.py))
-    print("XC = " + str(robot.x))
-    print("YC = " + str(robot.y))
-    print("XR = " + str(WPManager.xr))
-    print("YR = " + str(WPManager.yr))
+    name = "./output.csv"
+    XP = "XP = " + str(robot.px)
+    YP = "YP = " + str(robot.py)
+    XC = "XC = " + str(robot.x)
+    YC = "YC = " + str(robot.y)
+    XR = "XR = " + str(WPManager.xr)
+    YR = "YR = " + str(WPManager.yr)
+    THETAC = "thetaC = " + str(robot.theta * 57.295779513)
+    THETAR = "thetaR = " + str(robot.theta_ref * 57.295779513)
+    WD_REF = "wD_ref = " + str(robot.wD_ref)
+    WG_REF = "wG_ref = " + str(robot.wG_ref)
+    
+    with open(name, "a") as o:    
+        print("previous position :")
+        print(XP, file = o)
+        print(YP, file = o)
+        print(XP)
+        print(YP)
+        print("current position :")
+        print(XC, file = o)
+        print(YC, file = o)
+        print(XC)
+        print(YC)
+        print("next position")
+        print(XR, file = o)
+        print(YR, file = o)
+        print(XR)
+        print(YR)
+        print("thetas")
+        print(THETAC, file = o)
+        print(THETAR, file = o)
+        print(THETAC)
+        print(THETAR)
+        print("tensions")
+        print(WD_REF, file = o)
+        print(WG_REF, file = o)
+        print(WD_REF)
+        print(WG_REF)
+        print()
+        print()
+        print()
+        o.close()
+
+
+def debug2(robot, WPManager):
+    # calcul des erreurs
+    errorV = (np.sqrt((WPManager.xr - robot.x) ** 2 + (WPManager.yr - robot.y) ** 2))
+    errorw = (robot.theta_ref - robot.theta)
+    print("error speed = " + str(errorV))
+    print("error theta = " + str(errorw))
     print()
-    print("thetaC = " + str(robot.theta * 57.295779513))
-    print("thetaR = " + str(robot.theta_ref * 57.295779513))
-    print("wD_ref = " + str(robot.wD_ref))
-    print("wG_ref = " + str(robot.wG_ref))  
     print()
     print()

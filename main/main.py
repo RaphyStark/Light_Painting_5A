@@ -21,7 +21,7 @@ coeff = 1
 epsilonWP = 0.01
 
 # écrire en dur ici après avoir lancé get_wplist.py sur un PC
-WPlist = [[316, 231], [316, 232], [316, 233], [317, 233]]
+WPlist = [[270, 210],[270, 210]]    #, [316, 232], [316, 233], [317, 233]]
 
 # init WPManager
 WPManager = rob.WPManager(WPlist, epsilonWP)
@@ -45,14 +45,17 @@ if not cap.isOpened():
     print("Cannot open camera")
     exit()
 
-#while OK is True :
-
-
+"""
+name = "./output.csv"
+with open(name, "w") as o:  
+    print('XP, YP, XC, YC, XR, YR', o)
+    o.close()
+"""
 
 # initialisation de la correction en position
 
 # gains des correcteurs (orientation > vitesse)
-kp_theta = 0.001
+kp_theta = 0.01
 kp_v     = 0.0001
 
 # caractéristiques du robot
@@ -78,71 +81,58 @@ radio.openWritingPipe(address[radio_number])
 radio.payloadSize = len(struct.pack("ii", wD_ref, wG_ref))
 radio.stopListening()
 
+
+theta_sum = 0
+n_iteration = 1
+
+kVp = 0.005
+kwp = 0.1
+
+kVi = 0.00001
+kwi = 0.001
+
 while (1):
     get_coord(cap, int(capX/coeff), int(capY/coeff), robot, currentframe)
 
-    # on vérifie qu'on a pas déjà atteint le noeud de référence courant
+    # on passe au noeud suivant si le noeud de référence est atteint
     if WPManager.distanceToCurrentWP(robot.x, robot.y) <= epsilonWP :
         print("switch to next WP")
         WPManager.switchToNextWP()
-
-
-    px = robot.px
-    py = robot.py
-    x = robot.x
-    y = robot.y
-    xr = WPManager.xr
-    yr = WPManager.yr
     
-    # calcul de V et de la direction de référence theta_ref (cv. cours commande slide 10)
-    # robot.vitesse = np.sqrt((WPManager.xr - robot.x)**2 + (WPManager.yr - robot.y)**2)
-    # robot.theta = np.arctan2(robot.y - robot.py, robot.x - robot.px)
-    # calcul de theta de réference
-    #robot.theta_ref = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
-    #robot.w_ref = (robot.theta_ref - robot.theta)
-    #robot.wD = (2 * robot.vitesse) - (robot.theta * d) / (2 * r)
-    #robot.wG = (2 * robot.vitesse) + (robot.theta * d) / (2 * r)
-    # 12. Calculer wD et wG en fonction de vRef et thetaRef
-    #robot.wD_ref = (2 * robot.vitesse_ref) - (robot.w_ref * d) / (2 * r)
-    #robot.wG_ref = (2 * robot.vitesse_ref) + (robot.w_ref * d) / (2 * r)
-    #
+    robot.theta     = np.arctan2(robot.y - robot.py, robot.x - robot.px)
+    robot.theta_ref = np.arctan2(WPManager.yr - robot.y, WPManager.xr - robot.x)
 
-    # calcul du vecteur v
 
-    kVp = 0.001
-    kwp = 0.01
+    theta_sum = theta_sum + robot.theta
+    robot.theta = theta_sum / n_iteration
+    n_iteration += 1
 
-    kVi = 0.000001
-    kwi = 0.000001
-
-    robot.theta     = np.arctan2(y - py, x - px)
-    robot.theta_ref = np.arctan2(yr - y, xr - x)
 
     # calcul des erreurs
-    errorV = (np.sqrt((xr - x) ** 2 + (yr - y) ** 2))
+    errorV = (np.sqrt((WPManager.xr - robot.x) ** 2 + (WPManager.yr - robot.y) ** 2))
     errorw = (robot.theta_ref - robot.theta)
 
     # correction proportionnelle
-    corrVp  = kVp * errorV
-    corrwp  = kwp * errorw
+    corrVp          = kVp * errorV
+    corrwp          = kwp * errorw
 
     # correction intégrale
-    errorSumV += errorV
-    errorSumw += errorw
+    errorSumV       += errorV
+    errorSumw       += errorw
 
-    corrVi  = kVi * errorSumV
-    corrwi  = kwi * errorSumw
+    corrVi          = kVi * errorSumV
+    corrwi          = kwi * errorSumw
 
-    robot.V = corrVp + corrVi
-    robot.w = corrwp + corrwi
-
+    robot.V         = corrVp + corrVi
+    robot.w         = corrwp + corrwi
+    
     robot_wD_ref    = ((2 * robot.V) + (robot.w * d)) / (2 * r)
     robot.wG_ref    = ((2 * robot.V) - (robot.w * d)) / (2 * r)
 
-    robot.wD_ref = int(robot_wD_ref)
-    robot.wG_ref = int(robot.wG_ref)
+    robot.wD_ref    = int(robot_wD_ref)
+    robot.wG_ref    = int(robot.wG_ref)
 
-    debug(robot, WPManager)
+    debug2(robot, WPManager)
 
     buff = struct.pack("ii", robot.wD_ref, robot.wG_ref)
     result = radio.write(buff)
