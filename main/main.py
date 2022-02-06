@@ -70,7 +70,7 @@ address = [b"1Node", b"2Node"]
 radio_number = 1
 radio.setPALevel(RF24_PA_LOW)
 radio.openWritingPipe(address[radio_number])
-radio.payloadSize = len(struct.pack("ff", robot.wD, robot.wG))
+radio.payloadSize = len(struct.pack("ii", robot.wD, robot.wG))
 radio.stopListening()
 
 while (1):
@@ -117,12 +117,9 @@ while (1):
     robot.wD = (2 * robot.v_consign) - (robot.theta_consign * d) / (2 * r)
     robot.wG = (2 * robot.v_consign) + (robot.theta_consign * d) / (2 * r)
 
-    #robot.wD = robot.wD * 4.55 * 1440 * 0.15
-    #robot.wG = robot.wG * 4.55 * 1440 * 0.15
-
     debug(robot, WPManager)
 
-    buff = struct.pack("ff", robot.wD, robot.wG)
+    buff = struct.pack("ii", robot.wD, robot.wG)
     result = radio.write(buff)
     
     robot.px = robot.x
