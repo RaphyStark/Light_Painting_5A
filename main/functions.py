@@ -28,7 +28,7 @@ def get_coord(cap, capX, capY, robot, current_frame) :
             robot.y = int(robotY)
 
     # save frame for post production
-    cv.imwrite('frames/'+str(current_frame)+ '.jpg', frame)  # save frame as JPEG file
+    cv.imwrite('frames/'+str(current_frame)+ '.jpg', frame)
     current_frame += 1
 
     # show in a window
