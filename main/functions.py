@@ -2,13 +2,13 @@ import cv2 as cv
 import numpy as np
 
 def get_coord(cap, capX, capY, robot, current_frame) :
-    # recuperation d'une frame
+    # get a frame in camera stream
     success, frame = cap.read()
     if not success :
         print("cap read not successed")
         exit()
     
-    # traitement de l'image
+    # image processing
     frame = cv.resize(frame, (capX,capY))
     frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     frame = cv.blur(frame, (5,3))
@@ -17,7 +17,7 @@ def get_coord(cap, capX, capY, robot, current_frame) :
         print("threshold not successed")
         exit()
 
-    # récupèration des coordonnées du point lumineux
+    # get light point coordonates
     contours, hierarchy = cv.findContours(frame, cv.RETR_TREE,cv.CHAIN_APPROX_TC89_KCOS)
     for c in contours:
         M = cv.moments(c)
@@ -27,11 +27,11 @@ def get_coord(cap, capX, capY, robot, current_frame) :
             robotY = int(M["m01"] / M["m00"])
             robot.y = int(robotY)
 
-    # stockage de l'image pour post production
+    # save frame for post production
     cv.imwrite('frames/'+str(current_frame)+ '.jpg', frame)  # save frame as JPEG file
     current_frame += 1
 
-    # affichage dans une fenêtre
+    # show in a window
     cv.imshow('frame', frame)
     if cv.waitKey(1) == ord('q') :
         exit()
