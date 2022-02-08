@@ -29,7 +29,7 @@ def get_coord(cap, capX, capY, robot, current_frame) :
 
     # save frame for post production
     cv.imwrite('frames/'+str(current_frame)+ '.jpg', frame)
-    current_frame += 1
+    #current_frame += 1
 
     # show in a window
     cv.imshow('frame', frame)

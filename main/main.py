@@ -4,6 +4,7 @@ import Robot as rob
 import numpy as np
 import math
 import os
+import time
 
 
 # RF24 imports
@@ -91,10 +92,13 @@ kpW = 1
 kiV = 0.00001
 kiW = 0.001
 
+newTime = 0
+lastTime = 0
+
 while (1):
     # récupération des coordonnées du robot dans le plan de la caméra
     get_coord(cap, int(capX/coeff), int(capY/coeff), robot, currentframe)
-
+    currentframe+=1
     # on passe au noeud suivant si le noeud de référence est atteint
     if WPManager.distanceToCurrentWP(robot.x, robot.y) <= epsilonWP :
         print("switch to next WP")
@@ -132,13 +136,27 @@ while (1):
     robot_wD_ref    = (2 * robot.V + robot.w * d) / (2 * r)
     robot.wG_ref    = (2 * robot.V - robot.w * d) / (2 * r)
 
+    # faire rentrer la valeur dans un int
+    if (robot.wD_ref > 255):
+        robot.wD_ref = 255
+    if (robot.wG_ref > 255):
+        robot.wG_ref = 255
+
+
     # cast des valeurs en entiers pour l'envoi radio
     robot.wD_ref    = int(robot_wD_ref)
     robot.wG_ref    = int(robot.wG_ref)
 
     # affichage des valeurs sur le terminal
-    # debug(robot, WPManager)
+    debug(robot, WPManager)
     debug2(robot, WPManager)
+
+    lastTime = time.time() * 1000
+    newTime = time.time() * 1000 - lastTime
+    
+    while (newTime < 150):
+      newTime = time.time() * 1000 - lastTime
+    
 
     # envoi des valeurs moteurs au robot
     buff = struct.pack("ii", robot.wD_ref, robot.wG_ref)
@@ -147,6 +165,8 @@ while (1):
     # mise à jour de la position précédente
     robot.px = robot.x
     robot.py = robot.y
+
+
 
 # calcul des valeurs maximales pouvant être prises par wD et wG
 # afin de maper ces valeurs entre 0 et 255
