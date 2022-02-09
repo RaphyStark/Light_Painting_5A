@@ -53,10 +53,15 @@ Ce code contient les fonctions pour récupérer les valeurs moteurs via le modul
 Il possède aussi les fonctions pour gérer la neopixel.(deplacement.ino) \
 Le dossier Deplacement contient aussi les librairies pour l'utilisation des encodeurs, des moteurs, et l'asservissement de ceux-ci via un PID. 
 
-Dans le dossier Raspberry_codes: \
+Dans le dossier postprod: \
 Se trouve un premier dossier, LP_PostProd, permettant de créer, à partir des images récupérées lors d'une réalisation, une vidéo de celle-ci, une vidéo du lightpainting, 
 et l'image final du lightpainting. \
-Un dossier trajectoire contenant le programme de la RPI. Les codes AStar.py, Timer.py, Robot.py, functions.py sont utilisés dans le main.py. 
+
+Dans le dossier main : \
+Le fichier getWPlist.py est le fichier permettant de générer une trajectoire entre un point de départ et un point d'arrivé, sélectionné à l'écran par l'utilisateur.
+
+Le fichier main.py est le fichier utilisé par la RPI. Les codes AStar.py, Timer.py, Robot.py, functions.py sont utilisés dans le main.py. 
+
 
 Spirale.jpg est notre image de test. C'est une image en blanc sur fond noir créé sous Paint. A partir de cette image nous allons créér une grille d'occupation. \
 Une fois un noeud de début et de fin selectionnés, l'algorithme va créer une trajectoire entre ces deux noeuds. \
